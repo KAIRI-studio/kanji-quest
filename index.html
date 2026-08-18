@@ -473,6 +473,127 @@ header > div:nth-child(2) #score{
   cursor:pointer;
 }
 </style>
+
+<style id="mobile-battle-fit">
+/* Smartphone battle layout: fit the complete question into one viewport as much as possible. */
+@media (max-width: 600px){
+  #app{width:100%;max-width:520px}
+  header{
+    height:54px;
+    padding:6px 10px;
+    font-size:13px;
+  }
+  header span{font-size:13px}
+  header > div:nth-child(2){font-size:15px}
+  header > div:nth-child(2) #score{
+    font-size:25px;
+    letter-spacing:1px;
+  }
+  #quitBattle{
+    top:6px;
+    right:6px;
+    font-size:14px;
+    padding:6px 10px;
+  }
+
+  #game.screen{padding:7px 8px 10px}
+  #game .battlehead{
+    display:grid;
+    grid-template-columns:1fr 1.15fr .9fr;
+    align-items:center;
+    gap:4px;
+    font-size:12px;
+    line-height:1.15;
+    margin-bottom:6px;
+  }
+  #game .battlehead > span,
+  #game .battlehead > b{min-width:0;text-align:center}
+  #game .battlehead > span{text-align:left}
+  #game .battlehead > b:last-child{text-align:right}
+
+  #game .field{
+    height:300px !important;
+    border-width:2px;
+  }
+  #game .field .enemybox{
+    left:7px !important;
+    top:7px !important;
+    width:45% !important;
+    padding:5px 6px !important;
+    font-size:11px !important;
+    border-width:2px !important;
+  }
+  #game .field .enemybox .hp{height:7px}
+  #game .field .enemy{
+    left:6% !important;
+    top:82px !important;
+    width:27% !important;
+    height:82px !important;
+  }
+  #game .field .enemy img{
+    width:82px !important;
+    height:82px !important;
+    max-width:82px !important;
+    max-height:82px !important;
+  }
+  #game .field .player{
+    right:2% !important;
+    bottom:43px !important;
+    width:47% !important;
+  }
+  #game .field .player img{
+    width:105px !important;
+    height:105px !important;
+  }
+  #game .field .pname{
+    font-size:14px !important;
+    margin-top:0 !important;
+  }
+  #game .field .player .hp{
+    width:84% !important;
+    margin:3px auto !important;
+    height:7px !important;
+  }
+  #game .field .msg{
+    left:5px !important;
+    right:5px !important;
+    bottom:5px !important;
+    min-height:36px !important;
+    height:36px !important;
+    padding:5px !important;
+    border-width:2px !important;
+    font-size:14px !important;
+  }
+  #game .field .combo{
+    left:5% !important;
+    top:55% !important;
+    font-size:23px !important;
+  }
+  #game .field .damage{font-size:30px}
+  #game .field .slash{font-size:70px}
+
+  #game .qpanel{
+    margin-top:6px !important;
+    padding:6px 7px 7px !important;
+    border-width:2px !important;
+  }
+  #game .qpanel .qt{
+    font-size:11px !important;
+    margin:0 !important;
+  }
+  #game .qpanel .kanji{
+    font-size:50px !important;
+    line-height:1 !important;
+    margin:4px 0 7px !important;
+  }
+  #game .qpanel .answers{gap:6px !important}
+  #game .qpanel .answer{
+    height:42px !important;
+    border-width:2px !important;
+    font-size:16px !important;
+  }
+}
+</style>
 </head><body><main id="app"><header><div>HBK GAMING<br><span>KANJI QUEST</span></div><div>スコア <span id="score">00000</span></div><button id="quitBattle" class="battle-back" type="button" style="display:none;">やめる</button></header>
 
 
