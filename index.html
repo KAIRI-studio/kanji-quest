@@ -594,6 +594,199 @@ header > div:nth-child(2) #score{
   }
 }
 </style>
+
+<style id="mobile-viewport-fit">
+@media (max-width: 600px){
+  html,body{
+    width:100%;
+    min-height:100%;
+    overflow-x:hidden;
+  }
+  #app{
+    width:100%;
+    max-width:520px;
+    min-height:100svh;
+    box-sizing:border-box;
+  }
+
+  /* Stage select: keep all six cards and the heading inside one viewport. */
+  #stageSelect{
+    min-height:calc(100svh - 54px);
+    height:calc(100svh - 54px);
+    padding:10px 10px 10px;
+    box-sizing:border-box;
+    overflow:hidden;
+  }
+  #stageSelect .stage-title{
+    margin-top:0;
+    font-size:25px;
+    line-height:1.1;
+  }
+  #stageSelect .stage-sub{
+    margin:3px auto 7px;
+    font-size:12px;
+  }
+  #stageSelect .stage-grid{
+    gap:6px;
+  }
+  #stageSelect .stage-card{
+    min-height:0;
+    height:calc((100svh - 54px - 82px)/3);
+    max-height:118px;
+    padding:5px 4px;
+    border-width:2px;
+  }
+  #stageSelect .stage-icon{font-size:24px;margin-bottom:1px}
+  #stageSelect .stage-name{font-size:17px}
+  #stageSelect .stage-area{font-size:11px;margin-top:1px}
+  #stageSelect .stage-status{font-size:10px;margin-top:2px}
+
+  /* Character select: compact cards so the whole selection fits. */
+  #select{
+    min-height:calc(100svh - 54px);
+    height:calc(100svh - 54px);
+    box-sizing:border-box;
+    overflow:hidden;
+    padding:8px 10px 8px;
+  }
+  #select .title{
+    margin:0;
+    padding:2px 0 1px;
+    font-size:27px;
+    line-height:1;
+  }
+  #select .sub{
+    margin:2px auto 5px;
+    padding:2px 8px;
+    font-size:11px;
+  }
+  #select h1{
+    margin:4px 0 6px;
+    font-size:18px;
+  }
+  #select .grid{
+    gap:5px;
+  }
+  #select .card{
+    border-width:2px;
+    padding:3px;
+    box-shadow:0 2px 0 #03080c;
+  }
+  #select .card img{
+    height:78px;
+    max-height:78px;
+  }
+  #select .card .name{
+    font-size:17px;
+    line-height:1.05;
+  }
+  #select .card .type{
+    font-size:11px;
+    line-height:1.05;
+  }
+  #select .card .stars{
+    font-size:9px;
+    line-height:1.1;
+  }
+  #select .card .ability{
+    font-size:10px;
+    line-height:1.05;
+    margin-top:2px;
+  }
+  #select #characterBack.back-large{
+    margin-top:5px;
+    padding:7px 10px;
+    font-size:14px;
+    height:38px;
+  }
+  #select #start{
+    margin-top:5px;
+    height:42px;
+    font-size:16px !important;
+  }
+
+  /* Battle: use the Safari viewport height, not fullscreen assumptions. */
+  #game.screen{
+    min-height:calc(100svh - 54px);
+    box-sizing:border-box;
+    overflow:hidden;
+  }
+
+  /* Result / game-over screen: compact everything into one viewport. */
+  #result.screen{
+    min-height:calc(100svh - 54px);
+    height:calc(100svh - 54px);
+    box-sizing:border-box;
+    overflow:hidden;
+    padding:8px 10px;
+  }
+  #result .clear{
+    font-size:27px;
+    margin:5px 0 8px;
+    line-height:1.05;
+  }
+  #result .resultchar{
+    border-width:2px;
+    min-height:62px;
+  }
+  #result .resultchar img{
+    width:58px;
+    height:58px;
+  }
+  #result .resultchar strong{font-size:16px}
+  #result .resultchar small{font-size:11px}
+  #result .final{
+    margin-top:6px;
+    padding:5px;
+    border-width:2px;
+    font-size:15px;
+  }
+  #result .final b{font-size:34px;line-height:1}
+  #result .rg{
+    gap:4px;
+    margin-top:5px;
+  }
+  #result .rg div{
+    padding:5px 3px;
+    font-size:9px;
+    border-width:1px;
+  }
+  #result .rg b{font-size:15px;margin-top:2px}
+  #result .record{
+    font-size:16px;
+    margin:5px;
+  }
+  #result .score-breakdown{
+    margin:5px 0 6px;
+    padding:5px 8px;
+    font-size:11px;
+  }
+  #result .score-breakdown .breakdown-title{
+    font-size:10px;
+    margin-bottom:2px;
+  }
+  #result .score-breakdown .breakdown-row{
+    padding:3px 0;
+  }
+  #result .score-breakdown .breakdown-row b{font-size:13px}
+  #result .score-breakdown .breakdown-total{
+    margin-top:2px;
+    padding-top:3px;
+    font-size:13px;
+  }
+  #result .score-breakdown .breakdown-total b{font-size:16px}
+  #result #resultTime{
+    font-size:13px !important;
+  }
+  #result #retry,
+  #result #change{
+    height:42px;
+    margin-top:5px;
+    font-size:16px !important;
+  }
+}
+</style>
+
 </head><body><main id="app"><header><div>HBK GAMING<br><span>KANJI QUEST</span></div><div>スコア <span id="score">00000</span></div><button id="quitBattle" class="battle-back" type="button" style="display:none;">やめる</button></header>
 
 
