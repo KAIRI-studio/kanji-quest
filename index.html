@@ -1,0 +1,1080 @@
+<!doctype html><html lang="ja"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CASTOR KANJI QUEST</title><style>
+*{box-sizing:border-box}body{margin:0;background:#02070c;color:#fff;font-family:monospace}#app{max-width:520px;min-height:100vh;margin:auto;background:#071521}
+header{height:70px;border-bottom:3px solid #fff;padding:9px 12px;display:flex;justify-content:space-between;align-items:center;font-weight:900;font-size:17px}
+header span{color:#ffd83d;font-size:17px}.screen{display:none;padding:14px}.active{display:block}.title{text-align:center;font-size:38px;color:#ffd83d;text-shadow:4px 4px #a33;margin:22px 0 4px}.sub{text-align:center;color:#8fd0ff;margin-bottom:24px;font-size:16px}
+h1{text-align:center;font-size:24px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.card{background:#09131e;color:#fff;border:3px solid #718392;padding:6px;cursor:pointer}.card.sel{border-color:#fff;box-shadow:0 0 0 3px #1594ff}.card img{width:100%;height:145px;object-fit:contain}.name{text-align:center;font-size:22px;font-weight:bold}.type{text-align:center;font-size:13px;color:#b9c6d0}.stars{color:#ffd83d;font-size:10px;text-align:center;line-height:1.7}.とくいわざ{border-top:1px dashed #657584;padding-top:6px;text-align:center;font-size:11px}
+button.primary,button.secondary{width:100%;height:55px;margin-top:14px;border:3px solid #fff;font-weight:bold;font-family:inherit;cursor:pointer}.primary{background:#fff;color:#071521}.primary:disabled{opacity:.4}.secondary{background:#102233;color:#fff}
+.battlehead{display:flex;justify-content:space-between;font-size:16px;margin-bottom:10px;color:#fff;font-weight:900}.field{height:470px;border:3px solid #fff;position:relative;overflow:hidden;background:#000}.field:after{content:none}
+.enemybox{position:absolute;left:10px;top:10px;width:49%;z-index:3;background:#050505;border:3px solid #f04444;padding:8px 9px;font-size:13px}.hp{height:9px;border:2px solid #fff;background:#111}.fill{height:100%;transition:.25s}.red{background:#f44}.green{background:#39df6c}.enemy{position:absolute;left:11%;top:110px;width:30%;height:125px;z-index:2;display:flex;align-items:center;justify-content:center}.enemy img{width:100%;height:100%;max-width:125px;max-height:125px;object-fit:contain;image-rendering:auto;filter:drop-shadow(3px 4px 0 rgba(0,0,0,.65))}.player{position:absolute;right:5%;bottom:62px;width:48%;text-align:center;z-index:3}.player img{width:175px;height:175px;object-fit:contain}.pname{font-size:17px;font-weight:900;text-shadow:2px 2px #000;margin-top:2px}.player .hp{width:88%;margin:6px auto}.msg{position:absolute;left:10px;right:10px;bottom:9px;background:#050505;border:3px solid #fff;padding:10px;text-align:center;font-size:17px;font-weight:900;z-index:5;min-height:47px;display:flex;align-items:center;justify-content:center}.combo{position:absolute;left:15px;top:52%;font-size:31px;color:#ffd83d;font-weight:900;z-index:6;text-shadow:3px 3px #000}.damage{position:absolute;left:32%;top:47%;font-size:42px;color:#ff321f;font-weight:900;z-index:8;animation:up .55s}.slash{position:absolute;left:45%;top:42%;font-size:100px;color:#fff;z-index:8;animation:hit .4s}.hide{display:none!important}@keyframes up{from{transform:translateY(10px);opacity:0}30%{opacity:1}to{transform:translateY(-30px);opacity:0}}@keyframes hit{from{transform:scale(.4) rotate(-20deg);opacity:0}40%{opacity:1}to{transform:scale(1.3);opacity:0}}
+.qpanel{margin-top:10px;border:3px solid #fff;background:#06121e;padding:11px}.qt{text-align:center;font-size:13px;font-weight:900}.kanji{text-align:center;font-size:72px;font-weight:bold;margin:5px 0 10px}.answers{display:grid;gap:8px}.answer{height:52px;border:3px solid #2592ff;background:#0d55a8;color:#fff;font: bold 18px monospace;cursor:pointer}.answer.correct{background:#fff;color:#071521}.answer.wrong{background:#a31d29}
+.clear{text-align:center;color:#ffd83d;font-size:34px;font-weight:bold;margin:55px 0 20px}.resultchar{display:flex;justify-content:center;align-items:center;gap:10px;border:3px solid #fff}.resultchar img{width:90px;height:90px;object-fit:contain;transform:none}.resultchar strong,.resultchar small{display:block}.final{text-align:center;border:3px solid #fff;margin-top:10px;padding:10px}.final b{display:block;color:#ffd83d;font-size:40px}.rg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}.rg div{border:2px solid #718392;text-align:center;padding:9px;font-size:9px}.rg b{display:block;font-size:18px;margin-top:5px}.record{text-align:center;color:#ffd83d;font-size:21px;font-weight:bold;margin:13px}.toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);opacity:0;background:#050a10;border:2px solid #fff;padding:8px 13px;font-weight:bold;transition:.2s}.toast.on{opacity:1;transform:translate(-50%,0)}
+
+.score-breakdown{
+  margin:10px 0 12px;
+  border:2px solid #73879a;
+  background:#0b1b2a;
+  padding:8px 12px;
+  font-size:14px;
+  font-weight:900;
+}
+.score-breakdown .breakdown-title{
+  color:#ffd83d;
+  text-align:center;
+  font-size:13px;
+  letter-spacing:1px;
+  margin-bottom:5px;
+}
+.score-breakdown .breakdown-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-top:1px dotted #52677a;
+  padding:5px 0;
+}
+.score-breakdown .breakdown-row b{
+  color:#ffd83d;
+  font-size:16px;
+}
+
+.score-breakdown .breakdown-total{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-top:2px solid #fff;
+  margin-top:5px;
+  padding-top:7px;
+  font-size:16px;
+}
+.score-breakdown .breakdown-total b{
+  color:#ffd83d;
+  font-size:20px;
+}
+
+.time-rank{font-size:11px;color:#ffd83d;border:1px solid #ffd83d;padding:1px 4px;margin-left:3px;}
+#resultTime b{color:#ffd83d;}
+
+/* v2.8: low-grade elementary readability */
+body{font-size:17px}
+header{font-size:20px}
+header span{font-size:20px}
+.battlehead{font-size:19px}
+.enemybox{font-size:17px}
+.enemy-name{font-size:20px}
+.enemy-status>span{font-size:18px}
+.pname{font-size:21px}
+.player>span{font-size:18px}
+.msg{font-size:21px;min-height:58px;padding:12px}
+.combo{font-size:36px}
+.scorebox{font-size:21px}
+.qpanel{padding:14px}
+.qt{font-size:17px}
+.answer{font-size:24px !important;min-height:58px}
+#kanji{font-size:64px !important}
+.card .name{font-size:22px}
+.card .type{font-size:18px}
+.card .stars{font-size:16px}
+.card .ability{font-size:17px}
+#start,#retry,#change{font-size:20px !important}
+.score-breakdown{font-size:17px;padding:10px 13px}
+.score-breakdown .breakdown-title{font-size:16px}
+.score-breakdown .breakdown-row{padding:7px 0}
+.score-breakdown .breakdown-row b{font-size:19px}
+.score-breakdown .breakdown-total{font-size:19px}
+.score-breakdown .breakdown-total b{font-size:23px}
+#resultTime{font-size:19px !important}
+
+/* v2.8: separate battle card and question card */
+#game{
+  gap:12px;
+}
+#game .battle,
+#game .qpanel{
+  margin:0;
+}
+#game .battle{
+  padding-bottom:10px;
+}
+#game .qpanel{
+  margin-top:0;
+  padding:16px 12px 14px;
+  border:2px solid #dce5ec;
+  background:#081522;
+}
+#game .qpanel .answers{
+  margin-top:12px;
+}
+#game .qpanel .answer{
+  margin-bottom:8px;
+}
+#game .qpanel .answer:last-child{
+  margin-bottom:0;
+}
+/* The explanation line is gone, so the answer instruction gets its own
+   comfortable area and never collides with the player's HP. */
+
+/* v2.8: instruction belongs to the question card, never the battle field */
+#game{
+  gap:12px;
+}
+#game .field{
+  margin-bottom:0;
+}
+#game .qpanel{
+  margin-top:0;
+  padding:12px 12px 14px;
+  border:3px solid #fff;
+  background:#06121e;
+}
+#game .qpanel .msg{
+  position:static;
+  left:auto;
+  right:auto;
+  bottom:auto;
+  margin:0 0 10px;
+  min-height:48px;
+  padding:9px 10px;
+  box-sizing:border-box;
+  border:3px solid #fff;
+  background:#050505;
+  font-size:21px;
+  line-height:1.2;
+  text-align:center;
+}
+#game .qpanel .kanji{
+  margin:4px 0 12px;
+}
+#game .qpanel .answers{
+  margin-top:0;
+}
+
+/* v2.8: instruction card belongs to the battle screen */
+#game .field{
+  position:relative;
+  padding-bottom:10px;
+}
+#game .field .msg{
+  position:absolute;
+  left:10px;
+  right:10px;
+  bottom:9px;
+  margin:0;
+  min-height:48px;
+  padding:9px 10px;
+  box-sizing:border-box;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:3px solid #fff;
+  background:#050505;
+  font-size:21px;
+  line-height:1.2;
+  text-align:center;
+  z-index:5;
+}
+#game .qpanel{
+  padding:14px 12px 14px;
+}
+#game .qpanel .kanji{
+  margin:4px 0 12px;
+}
+#game .qpanel .answers{
+  margin-top:0;
+}
+
+/* v2.8 enemy roster */
+@media(max-width:390px){
+  .enemy{left:10%;width:31%;height:125px;top:110px}
+  .player{right:3%;width:50%;bottom:62px}
+  .player img{width:160px;height:160px}
+}
+
+/* v2.8: battle positioning — enemy above combo area */
+.field .enemy{z-index:2}
+.field .combo{z-index:4}
+
+/* v3.6 stage selection */
+#stageSelect{position:relative;min-height:calc(100vh - 70px);box-sizing:border-box;padding:24px 14px 26px;overflow:hidden;text-align:center;background:radial-gradient(circle at 50% 12%,rgba(39,115,151,.42),transparent 34%),linear-gradient(180deg,#0a2230 0%,#071521 52%,#050d15 100%);}
+#stageSelect:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.22;background:repeating-linear-gradient(0deg,transparent 0 7px,rgba(255,255,255,.035) 7px 8px),repeating-linear-gradient(90deg,transparent 0 7px,rgba(255,216,61,.025) 7px 8px);}
+#stageSelect>*{position:relative;z-index:1}
+.stage-title{margin-top:4px;color:#ffd83d;font-size:34px;font-weight:900;letter-spacing:2px;text-shadow:3px 3px 0 #b52b27,5px 5px 0 #071521}
+.stage-sub{margin:6px auto 18px;color:#a9dfff;font-size:15px;font-weight:900;letter-spacing:1px}
+.stage-grid{width:min(720px,100%);margin:0 auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.stage-card{min-height:126px;padding:10px 8px;border:3px solid #526a78;border-radius:10px;background:linear-gradient(180deg,#122b3b,#091722);color:#fff;box-shadow:0 4px 0 #03080c;cursor:pointer;font-family:inherit}
+.stage-card.active{border-color:#526a78;box-shadow:0 4px 0 #03080c}
+.stage-card.active:hover,.stage-card.active:focus-visible{border-color:#ffd83d;box-shadow:0 0 0 2px #ff8f2d,0 4px 0 #03080c}
+.stage-card:not(.active){opacity:.66}
+.stage-icon{font-size:32px;line-height:1.1;margin-bottom:3px}.stage-name{font-size:22px;font-weight:900;line-height:1.1}.stage-area{font-size:15px;font-weight:900;color:#b9d7e5;margin-top:3px}.stage-status{font-size:13px;font-weight:900;color:#ffd83d;margin-top:5px}.stage-card:not(.active) .stage-status{color:#82909a}
+.stage-back{margin-top:17px;padding:10px 26px;border:2px solid #8294a0;border-radius:8px;background:#17232c;color:#fff;font-size:17px;font-weight:900;box-shadow:0 3px 0 #03080c}
+@media(max-width:390px){#stageSelect{padding-top:20px}.stage-title{font-size:29px}.stage-grid{gap:8px}.stage-card{min-height:116px;padding:8px 5px}.stage-icon{font-size:28px}.stage-name{font-size:19px}.stage-area{font-size:13px}}
+
+
+/* v3.6 final navigation fix */
+#stageSelect.screen{display:none;}
+#stageSelect.screen.active{display:block;}
+#select.screen{display:none;}
+#select.screen.active{display:block;}
+
+</style>
+<style>
+/* v3.1: forest background + fixed battle positions */
+.field{
+  background:#000 url("assets/stages/forest_stage.png") center center / cover no-repeat !important;
+}
+
+/* Enemy: always on the LEFT side of the battle field */
+.field .enemy{
+  left:8% !important;
+  right:auto !important;
+  top:215px !important;
+  bottom:auto !important;
+  width:28% !important;
+  height:110px !important;
+  z-index:2 !important;
+}
+.field .enemy img{
+  width:105px !important;
+  height:105px !important;
+  max-width:105px !important;
+  max-height:105px !important;
+  object-fit:contain !important;
+}
+
+/* Player: always on the RIGHT side of the battle field */
+.field .player{
+  left:auto !important;
+  right:4% !important;
+  top:auto !important;
+  bottom:58px !important;
+  width:44% !important;
+  z-index:3 !important;
+}
+.field .player img{
+  width:155px !important;
+  height:155px !important;
+  object-fit:contain !important;
+}
+
+/* Keep the instruction bar at the bottom of the battle field,
+   below both fighters and their HP displays. */
+#game .field .msg{
+  left:10px !important;
+  right:10px !important;
+  bottom:9px !important;
+  z-index:5 !important;
+}
+</style>
+
+<style>
+/* v3.2: align enemy and player visually at the same battle height */
+@media(max-width:390px){
+  #game .field .enemy{
+    left:8% !important;
+    top:215px !important;
+    width:28% !important;
+    height:110px !important;
+  }
+  #game .field .enemy img{
+    width:105px !important;
+    height:105px !important;
+    max-width:105px !important;
+    max-height:105px !important;
+  }
+}
+</style>
+
+<style>
+/* v3.3: give the player's HP display breathing room above the instruction card */
+.field .player{
+  bottom:82px !important;
+}
+.field .msg{
+  bottom:8px !important;
+}
+</style>
+
+<style>
+/* v3.4
+   - Combo is displayed above the enemy instead of over the enemy.
+   - Home screen gets a stronger retro-game atmosphere without changing
+     the character-selection cards or game logic.
+*/
+
+/* ---- Battle: combo position ---- */
+#game .field .combo{
+  left:8% !important;
+  top:155px !important;
+  width:36% !important;
+  text-align:center !important;
+  z-index:6 !important;
+  pointer-events:none !important;
+}
+
+/* ---- Home screen ---- */
+#select{
+  position:relative;
+  overflow:hidden;
+  min-height:calc(100vh - 70px);
+  padding:20px 14px 24px;
+  background:
+    radial-gradient(circle at 50% 10%, rgba(34,104,138,.38), transparent 30%),
+    linear-gradient(180deg,#0a2230 0%,#071521 48%,#050d15 100%);
+}
+#select:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.28;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0 7px,
+      rgba(255,255,255,.035) 7px 8px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 7px,
+      rgba(255,216,61,.025) 7px 8px
+    );
+}
+#select:after{
+  content:"★  ★  ★";
+  position:absolute;
+  top:13px;
+  left:0;
+  right:0;
+  text-align:center;
+  color:rgba(255,216,61,.18);
+  font-size:22px;
+  letter-spacing:18px;
+  pointer-events:none;
+}
+#select > *{
+  position:relative;
+  z-index:1;
+}
+#select .title{
+  display:inline-block;
+  width:100%;
+  margin:8px 0 2px;
+  padding:8px 0 5px;
+  font-size:38px;
+  letter-spacing:2px;
+  color:#ffd83d;
+  text-shadow:
+    3px 3px 0 #b52b27,
+    6px 6px 0 #071521;
+}
+#select .sub{
+  display:block;
+  width:max-content;
+  max-width:100%;
+  margin:0 auto 18px;
+  padding:4px 13px;
+  border-top:2px solid #3b7187;
+  border-bottom:2px solid #3b7187;
+  color:#a9dfff;
+  font-size:15px;
+  font-weight:900;
+  letter-spacing:1px;
+}
+#select h1{
+  margin:10px 0 14px;
+  font-size:24px;
+  color:#fff;
+  text-shadow:2px 2px #000;
+}
+#select .grid{
+  gap:10px;
+}
+#select .card{
+  background:linear-gradient(180deg,#102536,#091722);
+  border-color:#587284;
+  box-shadow:0 4px 0 #03080c;
+}
+#select .card.sel{
+  border-color:#ffd83d;
+  box-shadow:0 0 0 2px #ff8f2d,0 4px 0 #03080c;
+}
+#select #start{
+  margin-top:16px;
+  background:#ffd83d;
+  color:#071521;
+  border-color:#fff;
+  box-shadow:0 4px 0 #8f5d16;
+}
+#select #start:disabled{
+  background:#66717a;
+  color:#dbe2e7;
+  box-shadow:0 3px 0 #30383d;
+}
+</style>
+
+<style>
+#characterBack.back-large{
+  font-size:18px;
+  font-weight:700;
+  padding:12px 16px;
+  margin-top:10px;
+}
+.battle-back{
+  position:absolute;
+  top:8px;
+  right:8px;
+  z-index:20;
+  font-size:16px;
+  font-weight:700;
+  padding:7px 12px;
+  border:2px solid #fff;
+  background:#0b1825;
+  color:#fff;
+  border-radius:4px;
+  cursor:pointer;
+}
+</style>
+
+<style id="fixed7-layout">
+header{
+  position:relative;
+  justify-content:space-between;
+}
+header > div:nth-child(2){
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  white-space:nowrap;
+}
+header > div:nth-child(2){
+  font-size:18px;
+  font-weight:700;
+}
+header > div:nth-child(2) #score{
+  font-size:30px;
+  font-weight:900;
+  letter-spacing:1px;
+}
+#quitBattle{
+  position:absolute;
+  right:8px;
+  top:8px;
+  z-index:9999;
+  pointer-events:auto;
+  touch-action:manipulation;
+  font-size:16px;
+  font-weight:700;
+  padding:7px 12px;
+  border:2px solid #fff;
+  background:#0b1825;
+  color:#fff;
+  border-radius:4px;
+  cursor:pointer;
+}
+</style>
+</head><body><main id="app"><header><div>HBK GAMING<br><span>KANJI QUEST</span></div><div>スコア <span id="score">00000</span></div><button id="quitBattle" class="battle-back" type="button" style="display:none;">やめる</button></header>
+
+
+<section id="stageSelect" class="screen active" style="display:block;">
+  <div class="stage-title">ステージをえらぼう！</div>
+  <div class="stage-sub">どのぼうけんに いく？</div>
+  <div class="stage-grid">
+    <button class="stage-card active" data-stage="1" type="button" onclick="showStage1Characters()">
+      <div class="stage-icon">🌲</div><div class="stage-name">1ねんせい</div>
+      <div class="stage-area">もりのステージ</div><div class="stage-status">あそべる！</div>
+    </button>
+    <button class="stage-card active" data-stage="2" type="button" onclick="showStage2Characters()"><div class="stage-icon">🌊</div><div class="stage-name">2ねんせい</div><div class="stage-area">うみのステージ</div><div class="stage-status">あそべる！</div></button>
+    <button class="stage-card active" data-stage="3" type="button" onclick="showStage3Characters()"><div class="stage-icon">🏜️</div><div class="stage-name">3ねんせい</div><div class="stage-area">さばくのステージ</div><div class="stage-status">あそべる！</div></button>
+    <button class="stage-card active" data-stage="4" type="button" onclick="showStage4Characters()"><div class="stage-icon">🌋</div><div class="stage-name">4ねんせい</div><div class="stage-area">かざんのステージ</div><div class="stage-status">あそべる！</div></button>
+    <button class="stage-card active" data-stage="5" type="button" onclick="showStage5Characters()"><div class="stage-icon">❄️</div><div class="stage-name">5ねんせい</div><div class="stage-area">ゆきやまのステージ</div><div class="stage-status">あそべる！</div></button>
+    <button class="stage-card active" data-stage="6" type="button" onclick="showStage6Characters()"><div class="stage-icon">🏰</div><div class="stage-name">6ねんせい</div><div class="stage-area">いせきのステージ</div><div class="stage-status">あそべる！</div></button>
+  </div>
+</section>
+
+<section id="select" class="screen" style="display:none;"><div class="title">KANJI QUEST</div><div class="sub">〜 かんじでたたかえ！ 〜</div><h1>キャラクターを えらぼう！</h1><div id="grid" class="grid"></div><button id="characterBack" class="secondary back-large" type="button">ステージせんたくへもどる</button><button id="start" class="primary" disabled>キャラクターをえらんでスタート</button></section>
+
+<section id="game" class="screen"><div class="battlehead"><span>タイム <b id="time">0.0s</b></span><b>STAGE 1-1　もりのエリア</b><b><span id="qn">1</span> / 10問</b></div>
+<div class="field"><div class="enemybox"><b id="enemyName">キッズスライム Lv.1</b><div class="hp"><div id="ehp" class="fill red"></div></div><span id="et">20/20</span></div><div id="enemy" class="enemy"><img id="enemyImg" alt=""></div>
+<div class="player"><img id="ps" src="assets/castor.png"><div id="pn" class="pname">CASTOR Lv.1</div><div class="hp"><div id="php" class="fill green"></div></div><span id="pt">40/40</span></div>
+<div id="combo" class="combo hide">コンボ ×<span>2</span>!</div><div id="slash" class="slash hide">✦</div><div id="damage" class="damage hide">-12</div><div id="msg" class="msg">よみかたを えらぼう！</div></div>
+<div class="qpanel"><div id="kanji" class="kanji">森</div><div id="answers" class="answers"></div></div></section>
+
+<section id="result" class="screen"><div class="clear">★ クリア！ ★</div><div class="resultchar"><img id="rs"><div><strong id="rn"></strong><small id="rt"></small></div></div><div class="final">スコア<b id="fs">0</b></div><div class="rg"><div>正解<b id="cc">0</b>/10</div><div>コンボ<b id="mc">0</b></div><div>たおした<b id="ex">0</b>たい</div></div><div id="rec" class="record hide">NEW RECORD!</div><button id="retry" class="primary">もう一度あそぶ</button><button id="change" class="secondary">キャラクターをかえる</button></section>
+<div id="toast" class="toast"></div></main>
+<script>
+const C={castor:["CASTOR","バランス型","assets/castor.png",3,3,3,"基本性能が安定"],kairi:["KAIRI","こうげき特化型","assets/kairi.png",5,1,3,"正解時のこうげき力UP"],sota:["SOTA","コンボ特化型","assets/sota.png",3,2,5,"コンボ倍率が高い"],kappa:["KAPPA","安定型","assets/kappa.png",2,4,2,"1回ミスしてもコンボが途切れない"]};
+const Q1=[["山","やま","かわ","そら"],["川","かわ","やま","うみ"],["森","もり","はやし","くさ"],["空","そら","あめ","ほし"],["雨","あめ","ゆき","くも"],["花","はな","くさ","き"],["草","くさ","はな","もり"],["木","き","いし","はやし"],["林","はやし","もり","き"],["石","いし","つち","たま"],["土","つち","いし","みず"],["水","みず","ひ","あめ"],["火","ひ","みず","つち"],["月","つき","ひ","ほし"],["犬","いぬ","ねこ","とり"],["虫","むし","とり","さかな"],["鳥","とり","むし","いぬ"],["貝","かい","さかな","とり"],["人","ひと","こ","おとこ"],["男","おとこ","おんな","ひと"],["女","おんな","おとこ","こ"],["子","こ","ひと","おんな"],["目","め","みみ","くち"],["耳","みみ","め","て"],["口","くち","め","あし"],["手","て","あし","みみ"],["足","あし","て","くち"],["車","くるま","ふね","みち"],["本","ほん","えんぴつ","つくえ"],["玉","たま","いし","つき"]];
+const Q2=[["池","いけ","かわ","うみ"],["海","うみ","いけ","かわ"],["岩","いわ","いし","やま"],["谷","たに","やま","いわ"],["園","その","にわ","もり"],["原","はら","たに","やま"],["野","の","はら","やま"],["星","ほし","つき","そら"],["雲","くも","あめ","そら"],["雪","ゆき","あめ","くも"],["風","かぜ","ゆき","あめ"],["春","はる","なつ","あき"],["夏","なつ","はる","あき"],["秋","あき","はる","なつ"],["冬","ふゆ","はる","なつ"],["朝","あさ","よる","ひる"],["昼","ひる","あさ","よる"],["夜","よる","あさ","ひる"],["週","しゅう","つき","とき"],["午","ご","あさ","ひる"],["父","ちち","はは","あに"],["母","はは","ちち","あに"],["兄","あに","あね","ちち"],["姉","あね","あに","ちち"],["弟","おとうと","あに","あね"],["妹","いもうと","あに","あね"],["友","とも","ちち","あに"],["店","みせ","いえ","へや"],["門","もん","いえ","みせ"],["船","ふね","くるま","でんしゃ"],["電","でん","ひかり","かぜ"],["魚","さかな","とり","むし"],["牛","うし","うま","ぶた"],["馬","うま","うし","ぶた"],["鳴","めい","おと","こえ"],["羽","はね","つばさ","とり"],["角","つの","かど","まる"],["米","こめ","むぎ","まめ"],["茶","ちゃ","みず","ゆ"],["色","いろ","かたち","ひかり"]];
+const Q3=[["駅","えき","みせ","みち"],["横","よこ","たて","うえ"],["岸","きし","しま","はま"],["宮","みや","てら","じんじゃ"],["橋","はし","みち","かわ"],["客","きゃく","みせ","ひと"],["君","きみ","とも","ひと"],["係","かかり","しごと","ひと"],["血","ち","ほね","にく"],["皿","さら","はし","ちゃわん"],["死","し","いのち","いき"],["指","ゆび","て","あし"],["歯","は","め","くち"],["祭","まつり","おまつり","みせ"],["酒","さけ","みず","ちゃ"],["州","しゅう","しま","くに"],["拾","じゅう","ご","さん"],["昭","しょう","あき","はる"],["消","しょう","ひ","みず"],["商","しょう","みせ","もの"],["勝","しょう","まけ","かち"],["乗","じょう","くるま","ふね"],["植","しょく","き","はな"],["神","かみ","ほとけ","ひと"],["族","ぞく","かぞく","とも"],["炭","すみ","ひ","いし"],["豆","まめ","こめ","むぎ"],["島","しま","かわ","やま"],["湯","ゆ","みず","あめ"],["箱","はこ","かご","ふくろ"],["畑","はたけ","た","の"],["鼻","はな","くち","め"],["氷","こおり","ゆき","あめ"],["羊","ひつじ","うし","うま"]];
+const Q4=[["愛","あい","ゆめ","こころ"],["案","あん","いけん","かんがえ"],["衣","ころも","ふく","ぬの"],["英","えい","ひで","はな"],["塩","しお","さとう","こめ"],["億","おく","まん","せん"],["加","か","たす","ふやす"],["果","か","くだもの","み"],["貨","か","おかね","もの"],["課","か","べんきょう","しごと"],["芽","め","はな","くき"],["改","かい","あらた","なおす"],["械","かい","どうぐ","きかい"],["害","がい","わざわい","あぶない"],["街","まち","みち","まちば"],["完","かん","おわり","ぜんぶ"],["官","かん","やくしょ","せんせい"],["関","かん","せき","かど"],["観","かん","みる","ながめ"],["希","き","のぞみ","ゆめ"],["季","き","はる","なつ"],["機","き","きかい","はた"],["求","きゅう","もとめる","ほしい"],["共","きょう","いっしょ","とも"],["協","きょう","ちから","なかま"],["鏡","かがみ","ガラス","まど"],["景","けい","けしき","ひかり"],["芸","げい","わざ","おどり"],["欠","けつ","あく","たりない"],["結","けつ","むすぶ","つなぐ"],["建","けん","たてる","つくる"],["固","こ","かたい","つよい"],["功","こう","せいこう","てがら"],["好","こう","すき","よい"],["候","こう","きせつ","てんき"],["航","こう","ふね","うみ"],["差","さ","ちがい","ひらき"],["材","ざい","き","もの"],["札","さつ","ふだ","かね"]];
+const Q5=[["圧","あつ","おもい","ちから"],["移","い","うごき","かわり"],["永","えい","ながい","とおい"],["衛","えい","まもり","まもる"],["液","えき","みず","しる"],["演","えん","しばい","えんぎ"],["応","おう","こたえ","へんじ"],["往","おう","いき","みち"],["桜","さくら","うめ","まつ"],["可","か","よい","できる"],["仮","かり","ほんもの","うそ"],["河","か","かわ","みず"],["過","か","とおり","むかし"],["解","かい","とき","こたえ"],["格","かく","かたち","きまり"],["確","かく","たしか","ほんとう"],["額","がく","ひたい","かお"],["刊","かん","ほん","しんぶん"],["幹","かん","みき","えだ"],["慣","かん","なれ","ならい"],["眼","がん","め","まなこ"],["紀","き","きろく","れきし"],["基","き","もと","きそ"],["寄","き","より","ちかく"],["義","ぎ","ただしさ","いみ"],["逆","ぎゃく","さかさ","うしろ"],["久","きゅう","ひさし","ながい"],["旧","きゅう","ふるい","むかし"],["居","きょ","い","すむ"],["境","きょう","さかい","ばしょ"],["均","きん","ひとしい","おなじ"],["禁","きん","だめ","いけない"],["経","けい","へる","みち"],["潔","けつ","きよい","きれい"],["件","けん","こと","もの"],["限","げん","かぎり","さいご"],["現","げん","いま","あらわ"],["減","げん","へり","すくな"],["個","こ","ひとつ","もの"]];
+const Q6=[["胃","い","はら","むね"],["異","い","ちがい","べつ"],["遺","い","のこり","あと"],["域","いき","くに","ばしょ"],["宇","う","そら","ほし"],["映","えい","うつり","かがみ"],["延","えん","のび","ながさ"],["沿","えん","そい","みち"],["我","われ","じぶん","おれ"],["灰","はい","すみ","こな"],["拡","かく","ひろがり","おおきさ"],["革","かわ","かみ","ぬの"],["株","かぶ","き","ね"],["机","つくえ","いす","たな"],["供","きょう","とも","こども"],["胸","むね","はら","せなか"],["勤","きん","はたらき","しごと"],["筋","すじ","ほね","ちから"],["系","けい","つながり","なかま"],["敬","けい","うやまい","たいせつ"],["劇","げき","しばい","えんげき"],["激","げき","はげしさ","つよさ"],["穴","あな","くぼみ","すきま"],["孝","こう","おや","こども"],["皇","こう","おう","てんのう"],["紅","べに","あか","もも"],["鋼","はがね","てつ","きんぞく"],["刻","こく","とき","じかん"],["裁","さい","きる","はさみ"],["策","さく","ほうほう","かんがえ"],["冊","さつ","ほん","かみ"],["至","し","いたり","ここ"],["私","わたし","ぼく","じぶん"],["姿","すがた","かたち","からだ"],["磁","じ","じしゃく","てつ"]];
+let Q=Q1;
+const GRADE_QUESTIONS={1:Q1,2:Q2,3:Q3,4:Q4,5:Q5,6:Q6};
+let S={
+  char:null,stage:1,q:0,score:0,combo:0,max:0,correct:0,
+  eh:20,emax:20,ph:40,pmax:40,lock:false,best:+localStorage.cqBest||0,
+  enemyIndex:0,kills:0,timer:null,over:false,run:0,
+  startAt:0,endAt:0,elapsed:0
+};
+
+const ENEMIES=[
+  {name:"むらさきスライム",hp:40,img:"assets/enemies/enemy_01.png",bonus:150},
+  {name:"キューブ",hp:44,img:"assets/enemies/enemy_02.png",bonus:170},
+  {name:"ひのたま",hp:48,img:"assets/enemies/enemy_03.png",bonus:190},
+  {name:"コウモリ",hp:50,img:"assets/enemies/enemy_04.png",bonus:200},
+  {name:"くらげ",hp:56,img:"assets/enemies/enemy_05.png",bonus:220},
+  {name:"ロボット",hp:60,img:"assets/enemies/enemy_06.png",bonus:240},
+  {name:"オオカミ",hp:64,img:"assets/enemies/enemy_07.png",bonus:260},
+  {name:"たねモンスター",hp:68,img:"assets/enemies/enemy_08.png",bonus:280},
+  {name:"ダークボール",hp:72,img:"assets/enemies/enemy_09.png",bonus:300},
+  {name:"ブルーキューブ",hp:76,img:"assets/enemies/enemy_10.png",bonus:320},
+  {name:"ゆうれい",hp:80,img:"assets/enemies/enemy_11.png",bonus:340},
+  {name:"ガイコツ",hp:84,img:"assets/enemies/enemy_12.png",bonus:360},
+  {name:"みずたま",hp:88,img:"assets/enemies/enemy_13.png",bonus:380},
+  {name:"やみび",hp:92,img:"assets/enemies/enemy_14.png",bonus:400},
+  {name:"ミミック",hp:96,img:"assets/enemies/enemy_15.png",bonus:430},
+  {name:"きのモンスター",hp:100,img:"assets/enemies/enemy_16.png",bonus:460},
+  {name:"ハチ",hp:104,img:"assets/enemies/enemy_17.png",bonus:480},
+  {name:"サボテン",hp:108,img:"assets/enemies/enemy_18.png",bonus:500},
+  {name:"ガイコツナイト",hp:112,img:"assets/enemies/enemy_19.png",bonus:530},
+  {name:"まほうつかい",hp:120,img:"assets/enemies/enemy_20.png",bonus:600}
+];
+
+const $=x=>document.getElementById(x);
+const show=x=>{
+  ["stageSelect","select","game","result"].forEach(y=>{
+    const el=$(y);
+    if(!el)return;
+    el.classList.remove("active");
+    el.style.display="none";
+  });
+  const target=$(x);
+  if(target){
+    target.classList.add("active");
+    target.style.display="block";
+  }
+  const quit=$("quitBattle");
+  if(quit) quit.style.display=(x==="game")?"block":"none";
+};
+const sh=a=>[...a].sort(()=>Math.random()-.5);
+
+function clearTimer(){
+  if(S.timer!==null){
+    clearTimeout(S.timer);
+    S.timer=null;
+  }
+}
+
+function newRun(){
+  S.run++;
+  clearTimer();
+  return S.run;
+}
+
+function validRun(token){
+  return token===S.run && !S.over;
+}
+
+function setscore(){
+  $("score").textContent=String(S.score).padStart(5,"0");
+}
+
+function updateTime(){
+  if(!validRun(S.run))return;
+  S.elapsed=(performance.now()-S.startAt)/1000;
+  $("time").textContent=S.elapsed.toFixed(1)+"s";
+  requestAnimationFrame(updateTime);
+}
+
+function toast(t){
+  $("toast").textContent=t;
+  $("toast").classList.add("on");
+  clearTimeout(window.cqToastTimer);
+  window.cqToastTimer=setTimeout(()=>$("toast").classList.remove("on"),900);
+}
+
+function cards(){
+  $("grid").innerHTML="";
+  Object.entries(C).forEach(([id,c])=>{
+    let b=document.createElement("button");
+    b.className="card";
+    b.dataset.id=id;
+    b.innerHTML=
+      `<img src="${c[2]}"><div class="name">${c[0]}</div>`+
+      `<div class="type">${c[1]}</div>`+
+      `<div class="stars">こうげき ${"★".repeat(c[3])}<br>`+
+      `HP ${"★".repeat(c[4])}　スコア ${"★".repeat(c[5])}</div>`+
+      `<div class="とくいわざ">${c[6]}</div>`;
+    b.onclick=()=>{
+      S.char=id;
+      document.querySelectorAll(".card").forEach(x=>x.classList.remove("sel"));
+      b.classList.add("sel");
+      $("start").disabled=false;
+      $("start").textContent="▶ "+c[0]+"でスタート";
+    };
+    $("grid").appendChild(b);
+  });
+}
+
+function resetBattleUI(){
+  $("answers").innerHTML="";
+  $("combo").classList.add("hide");
+  $("combo").querySelector("span").textContent="0";
+  $("slash").classList.add("hide");
+  $("damage").classList.add("hide");
+  $("msg").textContent="よみかたを えらぼう！";
+  const hpMax=S.pmax||40;
+  $("php").style.width="100%";
+  $("pt").textContent=hpMax+"/"+hpMax;
+  $("ehp").style.width="100%";
+  $("time").textContent="0.0s";
+}
+
+function start(){
+  $("quitBattle").style.display="block";
+
+  const token=newRun();
+
+  S.over=false;
+  S.lock=false;
+  S.q=0;
+  S.score=0;
+  S.combo=0;
+  S.max=0;
+  S.correct=0;
+  S.pmax={
+    kappa:40,
+    castor:30,
+    sota:20,
+    kairi:10
+  }[S.char] || 30;
+  S.ph=S.pmax;
+  S.enemyIndex=0;
+  S.kills=0;
+  S.elapsed=0;
+  S.startAt=performance.now();
+
+  document.querySelector(".clear").textContent="★ クリア！ ★";
+  document.querySelector(".clear").style.color="#ffd83d";
+
+  $("ps").src=C[S.char][2];
+  $("pn").textContent=C[S.char][0];
+  resetBattleUI();
+  setscore();
+  spawnEnemy(0);
+  show("game");
+  render(token);
+  requestAnimationFrame(updateTime);
+}
+
+function spawnEnemy(index){
+  const e=ENEMIES[index%ENEMIES.length];
+  S.enemyIndex=index%ENEMIES.length;
+  S.emax=e.hp;
+  S.eh=e.hp;
+
+  $("enemyName").textContent=e.name;
+  $("enemyImg").src=e.img;
+  $("enemyImg").alt=e.name;
+  $("enemy").style.filter="none";
+  $("ehp").style.width="100%";
+  $("et").textContent=S.eh+"/"+S.emax;
+}
+
+function render(token=S.run){
+  if(!validRun(token))return;
+
+  S.lock=false;
+  $("qn").textContent=S.q+1;
+  $("ehp").style.width=S.eh/S.emax*100+"%";
+  $("et").textContent=S.eh+"/"+S.emax;
+  $("php").style.width=S.ph/S.pmax*100+"%";
+  $("pt").textContent=S.ph+"/"+S.pmax;
+
+  let q=Q[Math.floor(Math.random()*Q.length)];
+  $("kanji").textContent=q[0];
+  $("answers").innerHTML="";
+
+  sh(q.slice(1)).forEach(v=>{
+    let b=document.createElement("button");
+    b.className="answer";
+    b.textContent=v;
+    b.onclick=()=>ans(v,q[1],b,token);
+    $("answers").appendChild(b);
+  });
+
+  $("combo").classList.toggle("hide",S.combo<2);
+  $("combo").querySelector("span").textContent=S.combo;
+  $("msg").textContent="よみかたを えらぼう！";
+}
+
+function calcScore(gameOver=false){
+  // Time bonus changes by exactly 30 points for every 1 second.
+  // 0-59.9s: 1800 - elapsed*30. 60s or more: 0.
+  const correctPts=S.correct*300;
+  const killPts=S.kills*220;
+  const comboPts=S.max*70;
+
+  // ゲームオーバー時はタイムボーナスを一切加算しない。
+  // クリアした場合だけ、クリアタイムに応じたボーナスを加算する。
+  const timeBonus=gameOver
+    ? 0
+    : Math.max(0,Math.round(1800-S.elapsed*30));
+
+  let timeRank="E";
+  if(!gameOver){
+    if(S.elapsed<20) timeRank="S";
+    else if(S.elapsed<30) timeRank="A";
+    else if(S.elapsed<40) timeRank="B";
+    else if(S.elapsed<50) timeRank="C";
+    else if(S.elapsed<60) timeRank="D";
+  }
+
+  return {
+    correctPts,
+    killPts,
+    comboPts,
+    timeBonus,
+    timeRank,
+    total:correctPts+killPts+comboPts+timeBonus
+  };
+}
+
+function showResult(gameOver){
+  const score=calcScore(gameOver);
+  S.score=score.total;
+
+  // The header score must match the final score shown on the result screen.
+  setscore();
+
+  $("fs").textContent=S.score.toLocaleString();
+  $("cc").textContent=S.correct;
+  $("mc").textContent=S.max;
+  $("ex").textContent=S.correct*10+S.max*5+S.kills*20;
+  $("rs").src=C[S.char][2];
+  $("rn").textContent=C[S.char][0];
+  $("rt").textContent=C[S.char][1];
+
+  const boxes=document.querySelectorAll(".rg div");
+  if(boxes.length>=3){
+    boxes[0].innerHTML="正解<b>"+S.correct+"</b>/10";
+    boxes[1].innerHTML="撃破<b>"+S.kills+"</b>体";
+    boxes[2].innerHTML="コンボ<b>"+S.max+"</b>";
+  }
+
+  // Score breakdown: show exactly how the final score was made.
+  let breakdown=document.getElementById("scoreBreakdown");
+  if(!breakdown){
+    breakdown=document.createElement("div");
+    breakdown.id="scoreBreakdown";
+    breakdown.className="score-breakdown";
+    const scoreBox=$("fs").closest("div");
+    if(scoreBox && scoreBox.parentNode){
+      scoreBox.parentNode.insertBefore(breakdown, scoreBox.nextSibling);
+    }
+  }
+
+  breakdown.innerHTML=
+    '<div class="breakdown-title">スコアのうちわけ</div>'+
+    '<div class="breakdown-row"><span>🈶 せいかい '+S.correct+'もん</span><b>+'+score.correctPts.toLocaleString()+'</b></div>'+
+    '<div class="breakdown-row"><span>⚔️ たおした '+S.kills+'たい</span><b>+'+score.killPts.toLocaleString()+'</b></div>'+
+    '<div class="breakdown-row"><span>🔥 コンボ '+S.max+'</span><b>+'+score.comboPts.toLocaleString()+'</b></div>'+
+    '<div class="breakdown-row"><span>⏱️ タイム '+S.elapsed.toFixed(1)+'秒</span><b>+'+score.timeBonus.toLocaleString()+'</b></div>'+
+    '<div class="breakdown-total"><span>TOTAL</span><b>'+score.total.toLocaleString()+'</b></div>';
+
+  // Show clear time separately as well.
+  let timeBox=document.getElementById("resultTime");
+  if(!timeBox){
+    const rg=document.querySelector(".rg");
+    if(rg){
+      timeBox=document.createElement("div");
+      timeBox.id="resultTime";
+      timeBox.style.cssText="font-size:16px;font-weight:900;margin:10px 0;text-align:center";
+      rg.parentNode.insertBefore(timeBox,rg.nextSibling);
+    }
+  }
+  if(timeBox)timeBox.innerHTML="タイム  "+S.elapsed.toFixed(1)+"秒";
+
+  if(gameOver){
+    $("rec").classList.add("hide");
+    document.querySelector(".clear").textContent="ゲームオーバー";
+    document.querySelector(".clear").style.color="#ff4b4b";
+  }else{
+    let n=S.score>S.best;
+    if(n){
+      S.best=S.score;
+      localStorage.cqBest=S.best;
+    }
+    $("rec").classList.toggle("hide",!n);
+    document.querySelector(".clear").textContent="★ クリア！ ★";
+    document.querySelector(".clear").style.color="#ffd83d";
+  }
+
+  show("result");
+}
+
+function gameOver(token){
+  if(!validRun(token))return;
+  clearTimer();
+  S.elapsed=(performance.now()-S.startAt)/1000;
+  S.over=true;
+  S.lock=true;
+  document.querySelectorAll(".answer").forEach(x=>x.disabled=true);
+  showResult(true);
+}
+
+function finish(token){
+  if(!validRun(token))return;
+  clearTimer();
+  S.elapsed=(performance.now()-S.startAt)/1000;
+  S.over=true;
+  S.lock=true;
+  document.querySelectorAll(".answer").forEach(x=>x.disabled=true);
+  showResult(false);
+}
+
+function ans(v,c,b,token){
+  if(!validRun(token) || S.lock)return;
+
+  S.lock=true;
+  document.querySelectorAll(".answer").forEach(x=>x.disabled=true);
+  let ch=C[S.char];
+
+  if(v===c){
+    b.classList.add("correct");
+    S.correct++;
+    S.combo++;
+
+    // Live score is awarded at the exact moment each event happens.
+    // Correct answer: +300
+    S.score += 300;
+
+    // New maximum combo: +70 immediately.
+    const previousMax = S.max;
+    S.max = Math.max(S.max, S.combo);
+    if(S.max > previousMax){
+      S.score += 70;
+    }
+
+    // Character-specific attack power.
+    // All characters gain a small combo bonus, while their base attack
+    // determines the intended full-correctness defeat ranking:
+    // KAIRI > SOTA > CASTOR > KAPPA.
+    let baseAttack={
+      kairi:42,
+      sota:38,
+      castor:30,
+      kappa:16
+    }[S.char] || 30;
+
+    let dmg=baseAttack + S.combo*2;
+
+    S.eh=Math.max(0,S.eh-dmg);
+
+    $("msg").textContent="✨ せいかい！ "+ch[0]+"のこうげき！";
+    $("slash").classList.remove("hide");
+    $("damage").classList.remove("hide");
+    $("damage").textContent="-"+dmg;
+
+    const fxToken=token;
+    setTimeout(()=>{
+      if(fxToken===S.run){
+        $("slash").classList.add("hide");
+        $("damage").classList.add("hide");
+      }
+    },420);
+
+    toast("コンボ ×"+S.combo+"!");
+
+    if(S.eh<=0){
+      const e=ENEMIES[S.enemyIndex%ENEMIES.length];
+      S.kills++;
+
+      // Enemy defeat: +220 immediately, at the moment of the kill.
+      S.score += 220;
+      setscore();
+
+      // Show the enemy HP reaching zero before switching enemies.
+      S.eh=0;
+      $("ehp").style.width="0%";
+      $("et").textContent="0/"+S.emax;
+      $("msg").textContent="💥 "+e.name+" を たおした！";
+      toast("★ たおした！ ★");
+
+      S.timer=setTimeout(()=>{
+        S.timer=null;
+        if(!validRun(token))return;
+
+        if(S.q>=9){
+          finish(token);
+        }else{
+          S.q++;
+          spawnEnemy(S.enemyIndex+1);
+          render(token);
+        }
+      },1100);
+      return;
+    }
+
+  }else{
+    b.classList.add("wrong");
+    if(S.char!=="kappa")S.combo=0;
+    S.ph=Math.max(0,S.ph-10);
+
+    $("msg").textContent=S.char==="kappa"
+      ?"💧 まちがえた！でもコンボはつづく！"
+      :"💥 ざんねん！ こうげきされた！";
+    toast("もういっかい やってみよう！");
+
+    if(S.ph<=0){
+      $("php").style.width="0%";
+      $("pt").textContent="0/"+S.pmax;
+      $("msg").textContent="💀 HPが 0 になった！ ゲームオーバー";
+
+      S.timer=setTimeout(()=>{
+        S.timer=null;
+        if(validRun(token))gameOver(token);
+      },500);
+      return;
+    }
+  }
+
+  setscore();
+  $("ehp").style.width=S.eh/S.emax*100+"%";
+  $("et").textContent=S.eh+"/"+S.emax;
+  $("php").style.width=S.ph/S.pmax*100+"%";
+  $("pt").textContent=S.ph+"/"+S.pmax;
+  $("combo").classList.toggle("hide",S.combo<2);
+  $("combo").querySelector("span").textContent=S.combo;
+
+  S.timer=setTimeout(()=>{
+    S.timer=null;
+    if(!validRun(token))return;
+
+    S.q++;
+    if(S.q>=10)finish(token);
+    else render(token);
+  },650);
+}
+
+$("start").onclick=start;
+
+$("retry").onclick=()=>{
+  sessionStorage.setItem("cqAutoStart",S.char||"");
+  window.location.reload();
+};
+
+$("change").onclick=()=>{
+  // いったんページを再読み込みして戦闘の実行状態を完全に初期化する。
+  // 現在の学年だけ保存し、再読み込み後は同じ学年のキャラクター選択へ戻す。
+  sessionStorage.removeItem("cqAutoStart");
+  sessionStorage.setItem("cqReturnStage", String(S.stage || 1));
+  window.location.reload();
+};
+
+cards();
+setscore();
+
+const autoChar=sessionStorage.getItem("cqAutoStart");
+sessionStorage.removeItem("cqAutoStart");
+if(autoChar && C[autoChar]){
+  S.char=autoChar;
+  const card=document.querySelector('.card[data-id="'+autoChar+'"]');
+  if(card){
+    card.classList.add("sel");
+    $("start").disabled=false;
+    $("start").textContent="▶ "+C[autoChar][0]+"でスタート";
+  }
+  start();
+}
+
+</script>
+
+
+
+
+<script>
+function selectGradeStage(stage){
+  if(!GRADE_QUESTIONS[stage]) return;
+  S.stage=stage;
+  Q=GRADE_QUESTIONS[stage];
+  show("select");
+  window.scrollTo(0,0);
+}
+function showStage1Characters(){ selectGradeStage(1); }
+function showStage2Characters(){ selectGradeStage(2); }
+function showStage3Characters(){ selectGradeStage(3); }
+function showStage4Characters(){ selectGradeStage(4); }
+function showStage5Characters(){ selectGradeStage(5); }
+function showStage6Characters(){ selectGradeStage(6); }
+
+const returnStage=sessionStorage.getItem("cqReturnStage");
+sessionStorage.removeItem("cqReturnStage");
+if(returnStage){
+  const stageNum=Number(returnStage);
+  if(GRADE_QUESTIONS[stageNum]){
+    selectGradeStage(stageNum);
+  }
+}
+</script>
+
+<script>
+(function(){
+  const back = document.getElementById("characterBack");
+  if(!back) return;
+  back.addEventListener("click", function(){
+    const select = document.getElementById("select");
+    const stage = document.getElementById("stageSelect");
+    if(select) { select.classList.remove("active"); select.style.display="none"; }
+    if(stage) { stage.classList.add("active"); stage.style.display="block"; }
+    window.scrollTo(0,0);
+  });
+})();
+</script>
+
+<script>
+(function(){
+  const quit = document.getElementById("quitBattle");
+  if(!quit) return;
+
+  quit.onclick = function(e){
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Cancel all pending game callbacks and invalidate the current run.
+    newRun();
+
+    S.score=0;
+    S.combo=0;
+    S.max=0;
+    S.correct=0;
+    S.kills=0;
+    S.q=0;
+    S.ph=40;
+    S.pmax=40;
+    S.eh=0;
+    S.elapsed=0;
+    S.lock=true;
+    S.over=true;
+
+    setscore();
+    quit.style.display="none";
+
+    document.getElementById("game").style.display="none";
+    document.getElementById("game").classList.remove("active");
+    document.getElementById("select").style.display="none";
+    document.getElementById("select").classList.remove("active");
+    document.getElementById("result").style.display="none";
+    document.getElementById("result").classList.remove("active");
+
+    const stage=document.getElementById("stageSelect");
+    stage.style.display="block";
+    stage.classList.add("active");
+
+    window.scrollTo(0,0);
+  };
+})();
+</script>
+</body></html>
