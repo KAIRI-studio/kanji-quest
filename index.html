@@ -1582,3 +1582,18 @@ if(returnStage){
   }
 }
 </style>
+
+<style id="v4.11-mobile-combo-position-fix">
+/* v4.11: Smartphone combo must appear at the enemy's feet,
+   slightly overlapping the feet, and remain above the question prompt. */
+@media(max-width:600px){
+  #game .field .combo{
+    left:5% !important;
+    top:205px !important;
+    width:40% !important;
+    text-align:center !important;
+    z-index:6 !important;
+    pointer-events:none !important;
+  }
+}
+</style>
