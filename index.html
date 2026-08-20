@@ -807,6 +807,28 @@ header > div:nth-child(2) #score{
   }
 }
 </style>
+
+<style>
+/* v4.5: all Stage 1 enemies use the same CSS display size.
+   Size differences for small enemies (such as rabbit/slime) are baked into
+   the transparent PNGs themselves, so switching enemies never changes the
+   layout box or position. */
+#game .field .enemy img{
+  width:175px !important;
+  height:175px !important;
+  max-width:175px !important;
+  max-height:175px !important;
+  object-fit:contain !important;
+}
+@media(max-width:600px){
+  #game .field .enemy img{
+    width:160px !important;
+    height:160px !important;
+    max-width:160px !important;
+    max-height:160px !important;
+  }
+}
+</style>
 </head><body><main id="app"><header><div>HBK GAMING<br><span>KANJI QUEST</span></div><div>スコア <span id="score">00000</span></div><button id="quitBattle" class="battle-back" type="button" style="display:none;">やめる</button></header>
 
 
@@ -1047,9 +1069,6 @@ function spawnEnemy(index){
   $("enemyImg").src=e.img;
   $("enemyImg").alt=e.name;
   $("enemy").style.filter="none";
-  // Stage 1: large-bodied enemies are visually larger; small enemies stay at the current size.
-  const isStage1Large = S.stage===1 && (S.enemyIndex===2 || S.enemyIndex===3);
-  $("enemy").classList.toggle("enemy-large", isStage1Large);
   $("ehp").style.width="100%";
   $("et").textContent=S.eh+"/"+S.emax;
 }
@@ -1505,13 +1524,6 @@ if(returnStage){
   max-height:145px !important;
   object-fit:contain !important;
 }
-/* Goblin / Skeleton Knight: larger than rabbit / slime, but not as large as the old v3.9 setting. */
-#game .field .enemy.enemy-large img{
-  width:175px !important;
-  height:175px !important;
-  max-width:175px !important;
-  max-height:175px !important;
-}
 @media(max-width:600px){
   #game .field .enemy{
     left:3% !important;
@@ -1525,12 +1537,6 @@ if(returnStage){
     height:130px !important;
     max-width:130px !important;
     max-height:130px !important;
-  }
-  #game .field .enemy.enemy-large img{
-    width:160px !important;
-    height:160px !important;
-    max-width:160px !important;
-    max-height:160px !important;
   }
 }
 </style>
