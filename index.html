@@ -807,28 +807,6 @@ header > div:nth-child(2) #score{
   }
 }
 </style>
-
-<style>
-/* v4.5: all Stage 1 enemies use the same CSS display size.
-   Size differences for small enemies (such as rabbit/slime) are baked into
-   the transparent PNGs themselves, so switching enemies never changes the
-   layout box or position. */
-#game .field .enemy img{
-  width:175px !important;
-  height:175px !important;
-  max-width:175px !important;
-  max-height:175px !important;
-  object-fit:contain !important;
-}
-@media(max-width:600px){
-  #game .field .enemy img{
-    width:160px !important;
-    height:160px !important;
-    max-width:160px !important;
-    max-height:160px !important;
-  }
-}
-</style>
 </head><body><main id="app"><header><div>HBK GAMING<br><span>KANJI QUEST</span></div><div>スコア <span id="score">00000</span></div><button id="quitBattle" class="battle-back" type="button" style="display:none;">やめる</button></header>
 
 
@@ -899,13 +877,13 @@ const ENEMIES=[
 ];
 
 const STAGE1_ENEMIES=[
-  {name:"イノシシ",hp:50,img:"assets/enemies/stage1_enemy_01.png",bonus:220},
-  {name:"きのこモンスター",hp:50,img:"assets/enemies/stage1_enemy_02.png",bonus:220},
-  {name:"ゴブリン",hp:50,img:"assets/enemies/stage1_enemy_03.png",bonus:220},
-  {name:"ガイコツナイト",hp:50,img:"assets/enemies/stage1_enemy_04.png",bonus:220},
   {name:"しろうさぎ",hp:50,img:"assets/enemies/stage1_enemy_05.png",bonus:220},
   {name:"あおスライム",hp:50,img:"assets/enemies/stage1_enemy_06.png",bonus:220},
-  {name:"リーフモンスター",hp:50,img:"assets/enemies/stage1_enemy_07.png",bonus:220}
+  {name:"きのこモンスター",hp:50,img:"assets/enemies/stage1_enemy_02.png",bonus:220},
+  {name:"イノシシ",hp:50,img:"assets/enemies/stage1_enemy_01.png",bonus:220},
+  {name:"リーフモンスター",hp:50,img:"assets/enemies/stage1_enemy_07.png",bonus:220},
+  {name:"ゴブリン",hp:50,img:"assets/enemies/stage1_enemy_03.png",bonus:220},
+  {name:"ガイコツナイト",hp:50,img:"assets/enemies/stage1_enemy_04.png",bonus:220}
 ];
 const STAGE_ENEMIES={1:STAGE1_ENEMIES};
 // Stage 1 defeat targets are produced by the 10-question damage balance.
@@ -1501,10 +1479,24 @@ if(returnStage){
 }
 </style>
 
+<style id="v4.4-combo-below-enemy">
+/* v4.4: combo must sit below the enemy, without changing enemy/player positions or sizes. */
+#game .field .combo{
+  top:238px !important;
+}
+@media(max-width:600px){
+  #game .field .combo{
+    top:238px !important;
+  }
+}
+</style>
 
 
-<style id="v4.2-enemy-size-position">
-/* v4.2: restore the v4.0 enemy position exactly; only visual size is differentiated. */
+<style id="v4.5-enemy-uniform-size">
+/* v4.5: all Stage 1 enemies use the same display box/size.
+   Visual differences are handled by the transparent padding inside each PNG,
+   so the enemy does not jump larger/smaller when the monster changes.
+   Position is unchanged from v4.4. */
 #game .field .enemy{
   left:4% !important;
   top:125px !important;
@@ -1518,10 +1510,10 @@ if(returnStage){
   justify-content:center !important;
 }
 #game .field .enemy img{
-  width:145px !important;
-  height:145px !important;
-  max-width:145px !important;
-  max-height:145px !important;
+  width:175px !important;
+  height:175px !important;
+  max-width:175px !important;
+  max-height:175px !important;
   object-fit:contain !important;
 }
 @media(max-width:600px){
@@ -1533,10 +1525,47 @@ if(returnStage){
     bottom:auto !important;
   }
   #game .field .enemy img{
-    width:130px !important;
-    height:130px !important;
-    max-width:130px !important;
-    max-height:130px !important;
+    width:160px !important;
+    height:160px !important;
+    max-width:160px !important;
+    max-height:160px !important;
+  }
+}
+</style>
+<style id="v4.6-enemy-larger-combo-below">
+/* v4.6: Stage 1 enemy sprites are larger, and combo is placed clearly below the enemy. */
+#game .field .enemy{
+  left:2% !important;
+  top:105px !important;
+  width:48% !important;
+  height:235px !important;
+}
+#game .field .enemy img{
+  width:220px !important;
+  height:220px !important;
+  max-width:220px !important;
+  max-height:220px !important;
+}
+#game .field .combo{
+  left:8% !important;
+  top:325px !important;
+}
+@media(max-width:600px){
+  #game .field .enemy{
+    left:1% !important;
+    top:38px !important;
+    width:49% !important;
+    height:215px !important;
+  }
+  #game .field .enemy img{
+    width:200px !important;
+    height:200px !important;
+    max-width:200px !important;
+    max-height:200px !important;
+  }
+  #game .field .combo{
+    left:5% !important;
+    top:282px !important;
   }
 }
 </style>
