@@ -1,7 +1,7 @@
 <!doctype html><html lang="ja"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>CASTOR KANJI QUEST</title><style>
-*{box-sizing:border-box}body{margin:0;background:#02070c;color:#fff;font-family:monospace}#app{max-width:520px;min-height:100vh;margin:auto;background:#071521}
+*{box-sizing:border-box}body{margin:0;background:#02070c;color:#fff;font-family:monospace}#app{max-width:520px;min-height:100vh;margin:auto;background:#071521}body.title-open{background:#fff}body.title-open #app{background:#fff;box-shadow:none}body.title-open header{display:none!important}
 header{height:70px;border-bottom:3px solid #fff;padding:9px 12px;display:flex;justify-content:space-between;align-items:center;font-weight:900;font-size:17px}
 header span{color:#ffd83d;font-size:17px}.screen{display:none;padding:14px}.active{display:block}.title{text-align:center;font-size:38px;color:#ffd83d;text-shadow:4px 4px #a33;margin:22px 0 4px}.sub{text-align:center;color:#8fd0ff;margin-bottom:24px;font-size:16px}
 h1{text-align:center;font-size:24px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.card{background:#09131e;color:#fff;border:3px solid #718392;padding:6px;cursor:pointer}.card.sel{border-color:#fff;box-shadow:0 0 0 3px #1594ff}.card img{width:100%;height:145px;object-fit:contain}.name{text-align:center;font-size:22px;font-weight:bold}.type{text-align:center;font-size:13px;color:#b9c6d0}.stars{color:#ffd83d;font-size:10px;text-align:center;line-height:1.7}.とくいわざ{border-top:1px dashed #657584;padding-top:6px;text-align:center;font-size:11px}
@@ -807,10 +807,113 @@ header > div:nth-child(2) #score{
   }
 }
 </style>
-</head><body><main id="app"><header><div>HBK GAMING<br><span>KANJI QUEST</span></div><div>スコア <span id="score">00000</span></div><button id="quitBattle" class="battle-back" type="button" style="display:none;">やめる</button></header>
+<style>
+/* v4.30: title screen unified with the main game UI. The logo intro remains white;
+   once it fades, the title uses the same dark/grid visual language as stage/character select. */
+body.title-open{overflow:hidden;background:#071521}
+body.title-open #app{background:#071521;box-shadow:none}
+body.title-open header{display:none!important}
+.title-screen{
+  min-height:100dvh;height:100dvh;width:100%;padding:0;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 10%,rgba(34,104,138,.38),transparent 30%),
+    linear-gradient(180deg,#0a2230 0%,#071521 48%,#050d15 100%);
+}
+/* Subtle grid texture matching the stage/character selection screens. */
+.title-screen::before{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:0;opacity:.28;
+  background:
+    repeating-linear-gradient(0deg,transparent 0 7px,rgba(255,255,255,.035) 7px 8px),
+    repeating-linear-gradient(90deg,transparent 0 7px,rgba(255,216,61,.025) 7px 8px);
+}
+.title-logo-intro{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  z-index:4;pointer-events:none;background:#fff;
+  animation:titleIntroOut 4.6s ease forwards;
+}
+.title-logo-row{
+  display:flex;align-items:center;justify-content:center;
+  gap:18px;width:min(92%,470px);animation:titleLogoFloat 4s ease-in-out forwards;
+}
+.title-logo-row img{
+  width:40%;height:auto;max-height:150px;object-fit:contain;
+  filter:drop-shadow(0 8px 18px rgba(0,0,0,.45));
+}
+.title-logo-row img:last-child{width:43%;filter:drop-shadow(0 8px 18px rgba(0,0,0,.3));}
+.title-main{
+  position:absolute;inset:0;z-index:3;width:100%;max-width:none;
+  text-align:center;opacity:0;transform:translateY(10px);
+  animation:titleMainIn .9s ease 4.25s forwards;pointer-events:none;
+}
+.title-game{
+  position:absolute;left:50%;top:34%;transform:translateX(-50%);
+  width:94%;margin:0;color:#ffd83d;
+  font-size:clamp(34px,10vw,58px);font-weight:900;letter-spacing:2px;
+  white-space:nowrap;
+  font-family:system-ui,"Noto Sans JP",sans-serif;
+  text-shadow:
+    0 4px 0 #6e3218,
+    0 7px 0 #3b1d12,
+    3px 0 0 #3b1d12,
+    -3px 0 0 #3b1d12,
+    0 0 16px rgba(0,0,0,.45);
+}
+.title-game-en{
+  position:absolute;left:50%;top:41%;transform:translateX(-50%);
+  color:#fff4d2;font-size:clamp(14px,4vw,22px);font-weight:900;
+  letter-spacing:4px;white-space:nowrap;
+  font-family:Georgia,"Times New Roman",serif;
+  text-shadow:2px 3px 0 #4b2617,0 0 10px rgba(0,0,0,.5);
+}
+.title-start{
+  position:absolute;left:50%;top:57%;transform:translate(-50%,-50%);
+  width:min(72%,330px);height:62px;margin:0;
+  border:4px solid #5a2b13;border-radius:12px;
+  background:linear-gradient(#ffe36a,#ffbf24);
+  color:#4b2815;font-size:clamp(22px,6vw,30px);font-weight:900;
+  font-family:system-ui,"Noto Sans JP",sans-serif;
+  box-shadow:0 7px 0 #3a1c10,0 10px 20px rgba(0,0,0,.35),inset 0 2px 0 rgba(255,255,255,.8);
+  cursor:pointer;pointer-events:auto;
+}
+.title-start:hover,.title-start:focus-visible{filter:brightness(1.06);transform:translate(-50%,-50%) scale(1.02)}
+.title-start:active{transform:translate(-50%,-47%)}
+@keyframes titleLogoFloat{
+  0%{opacity:0;transform:translateY(18px) scale(.97)}
+  20%{opacity:1;transform:translateY(0) scale(1)}
+  68%{opacity:1;transform:translateY(-4px) scale(1)}
+  100%{opacity:0;transform:translateY(-14px) scale(1.02)}
+}
+@keyframes titleIntroOut{0%,72%{opacity:1}100%{opacity:0}}
+@keyframes titleMainIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){
+  .title-screen{background-position:center center}
+  .title-game{top:33%;font-size:clamp(32px,10vw,52px)}
+  .title-game-en{top:40%}
+  .title-start{top:56%;height:58px;width:72%}
+}
+</style>
+</head><body class="title-open"><main id="app"><header style="display:none"><div>HBK GAMING<br><span>KANJI QUEST</span></div><div>スコア <span id="score">00000</span></div><button id="quitBattle" class="battle-back" type="button" style="display:none;">やめる</button></header>
 
 
-<section id="stageSelect" class="screen active" style="display:block;">
+
+<section id="titleScreen" class="title-screen active">
+  <div class="title-logo-intro" aria-hidden="true">
+    <div class="title-logo-row">
+      <img src="assets/logos/hbk_gaming.png" alt="">
+      <img src="assets/logos/kairi_studio_transparent.png" alt="">
+    </div>
+  </div>
+
+  <div class="title-main">
+    <div class="title-game">漢字クエスト</div>
+    <div class="title-game-en">KANJI QUEST</div>
+    <button id="titleStart" class="title-start" type="button">はじめる</button>
+  </div>
+</section>
+
+<section id="stageSelect" class="screen" style="display:none;">
   <div class="stage-title">ステージをえらぼう！</div>
   <div class="stage-sub">どのぼうけんに いく？</div>
   <div class="stage-grid">
@@ -854,44 +957,50 @@ let S={
 };
 
 const ENEMIES=[
-  {name:"むらさきスライム",hp:40,img:"assets/enemies/enemy_01.png",bonus:150},
-  {name:"キューブ",hp:44,img:"assets/enemies/enemy_02.png",bonus:170},
-  {name:"ひのたま",hp:48,img:"assets/enemies/enemy_03.png",bonus:190},
-  {name:"コウモリ",hp:50,img:"assets/enemies/enemy_04.png",bonus:200},
-  {name:"くらげ",hp:56,img:"assets/enemies/enemy_05.png",bonus:220},
-  {name:"ロボット",hp:60,img:"assets/enemies/enemy_06.png",bonus:240},
-  {name:"オオカミ",hp:64,img:"assets/enemies/enemy_07.png",bonus:260},
-  {name:"たねモンスター",hp:68,img:"assets/enemies/enemy_08.png",bonus:280},
-  {name:"ダークボール",hp:72,img:"assets/enemies/enemy_09.png",bonus:300},
-  {name:"ブルーキューブ",hp:76,img:"assets/enemies/enemy_10.png",bonus:320},
-  {name:"ゆうれい",hp:80,img:"assets/enemies/enemy_11.png",bonus:340},
-  {name:"ガイコツ",hp:84,img:"assets/enemies/enemy_12.png",bonus:360},
-  {name:"みずたま",hp:88,img:"assets/enemies/enemy_13.png",bonus:380},
-  {name:"やみび",hp:92,img:"assets/enemies/enemy_14.png",bonus:400},
-  {name:"ミミック",hp:96,img:"assets/enemies/enemy_15.png",bonus:430},
-  {name:"きのモンスター",hp:100,img:"assets/enemies/enemy_16.png",bonus:460},
-  {name:"ハチ",hp:104,img:"assets/enemies/enemy_17.png",bonus:480},
-  {name:"サボテン",hp:108,img:"assets/enemies/enemy_18.png",bonus:500},
-  {name:"ガイコツナイト",hp:112,img:"assets/enemies/enemy_19.png",bonus:530},
-  {name:"まほうつかい",hp:120,img:"assets/enemies/enemy_20.png",bonus:600}
+  {name:"あおスライム",hp:50,img:"assets/enemies/enemy_01.png",bonus:150},
+  {name:"マッシュファイター",hp:50,img:"assets/enemies/enemy_02.png",bonus:170},
+  {name:"リーフフェアリー",hp:50,img:"assets/enemies/enemy_03.png",bonus:190},
+  {name:"アースボア",hp:50,img:"assets/enemies/enemy_04.png",bonus:200},
+  {name:"ゴブリン",hp:50,img:"assets/enemies/enemy_05.png",bonus:220},
+  {name:"スカルナイト",hp:50,img:"assets/enemies/enemy_06.png",bonus:240},
+  {name:"フロストウルフ",hp:50,img:"assets/enemies/enemy_07.png",bonus:260},
+  {name:"グリーンスネーク",hp:50,img:"assets/enemies/enemy_08.png",bonus:280},
+  {name:"ダークメイジ",hp:50,img:"assets/enemies/enemy_09.png",bonus:300},
+  {name:"ゴースト",hp:50,img:"assets/enemies/enemy_10.png",bonus:320},
+  {name:"ウッドオーク",hp:50,img:"assets/enemies/enemy_11.png",bonus:340},
+  {name:"グリフォン",hp:50,img:"assets/enemies/enemy_12.png",bonus:360},
+  {name:"レッドドラゴン",hp:50,img:"assets/enemies/enemy_13.png",bonus:380},
+  {name:"ロックゴーレム",hp:50,img:"assets/enemies/enemy_14.png",bonus:400},
+  {name:"クリスタルドラゴン",hp:50,img:"assets/enemies/enemy_15.png",bonus:430},
+  {name:"フォレストゴーレム",hp:50,img:"assets/enemies/enemy_16.png",bonus:460},
+  {name:"マグマビースト",hp:50,img:"assets/enemies/enemy_17.png",bonus:480},
+  {name:"アイスドラゴン",hp:50,img:"assets/enemies/enemy_18.png",bonus:500},
 ];
 
-const STAGE1_ENEMIES=[
-  {name:"しろうさぎ",hp:50,img:"assets/enemies/stage1_enemy_05.png",bonus:220},
-  {name:"あおスライム",hp:50,img:"assets/enemies/stage1_enemy_06.png",bonus:220},
-  {name:"きのこモンスター",hp:50,img:"assets/enemies/stage1_enemy_02.png",bonus:220},
-  {name:"イノシシ",hp:50,img:"assets/enemies/stage1_enemy_01.png",bonus:220},
-  {name:"リーフモンスター",hp:50,img:"assets/enemies/stage1_enemy_07.png",bonus:220},
-  {name:"ゴブリン",hp:50,img:"assets/enemies/stage1_enemy_03.png",bonus:220},
-  {name:"ガイコツナイト",hp:50,img:"assets/enemies/stage1_enemy_04.png",bonus:220}
-];
-const STAGE_ENEMIES={1:STAGE1_ENEMIES};
-// Stage 1 defeat targets are produced by the 10-question damage balance.
-// With 10 correct answers and combo bonus, the intended maximum defeats are:
-// KAIRI 7 / SOTA 6 / CASTOR 5 / KAPPA 4.
-// There is deliberately NO character-specific kill cap: all characters answer the
-// same 10 questions, and their attack power + the common enemy HP determine kills.
-const STAGE1_BALANCE={enemyHp:50, targets:{kairi:7,sota:6,castor:5,kappa:4}};
+// v4.16: Added title/stage/character selection BGM.
+
+// IMPORTANT GAME RULE:
+// Every enemy has HP=50 regardless of stage.
+// STAGE_ENEMIES changes illustration/order only.
+// Never add stage-specific HP, attack, or defeat-count scaling.
+const STAGE_ENEMY_IDS={
+  1:[1,2,3,4,5,6,11],
+  2:[2,3,7,8,9,10,12],
+  3:[3,5,6,9,10,11,13],
+  4:[7,8,11,12,13,14,15],
+  5:[10,12,14,15,16,17,18],
+  6:[12,13,14,15,16,17,18]
+};
+
+const STAGE_ENEMIES=Object.fromEntries(
+  Object.entries(STAGE_ENEMY_IDS).map(([stage,ids])=>[
+    stage,
+    ids.map(id=>({
+      ...ENEMIES[id-1],
+      img:`assets/enemies/enemy_${String(id).padStart(2,"0")}.png`
+    }))
+  ])
+);
 
 function getStageEnemies(){
   return STAGE_ENEMIES[S.stage] || ENEMIES;
@@ -899,7 +1008,7 @@ function getStageEnemies(){
 
 const $=x=>document.getElementById(x);
 const show=x=>{
-  ["stageSelect","select","game","result"].forEach(y=>{
+  ["titleScreen","stageSelect","select","game","result"].forEach(y=>{
     const el=$(y);
     if(!el)return;
     el.classList.remove("active");
@@ -910,9 +1019,21 @@ const show=x=>{
     target.classList.add("active");
     target.style.display="block";
   }
+  const header=document.querySelector("header");
+  if(header) header.style.display=(x==="titleScreen")?"none":"flex";
+  document.body.classList.toggle("title-open", x==="titleScreen");
+  if(x==="game" && window.kqPlayBattleBGM) window.kqPlayBattleBGM();
+  if((x==="stageSelect" || x==="select") && window.kqPlaySelectBGM) window.kqPlaySelectBGM();
   const quit=$("quitBattle");
   if(quit) quit.style.display=(x==="game")?"block":"none";
 };
+window.show=show;
+
+// Initial title screen: no game HUD/header.
+const initialHeader=document.querySelector("header");
+if(initialHeader) initialHeader.style.display="none";
+document.body.classList.add("title-open");
+
 const sh=a=>[...a].sort(()=>Math.random()-.5);
 
 function clearTimer(){
@@ -998,6 +1119,7 @@ function applyStageBackground(){
 }
 
 function start(){
+  if(window.kqPlayBattleBGM) window.kqPlayBattleBGM();
   $("quitBattle").style.display="block";
 
   const token=newRun();
@@ -1231,11 +1353,15 @@ function ans(v,c,b,token){
     // determines the intended full-correctness defeat ranking:
     // KAIRI > SOTA > CASTOR > KAPPA.
     let baseAttack={
-      kairi:36,  // 38,40,...,56 -> 7 defeats against 50 HP
-      sota:32,   // 34,36,...,52 -> 6 defeats against 50 HP
-      castor:22, // 24,26,...,42 -> 5 defeats against 50 HP
-      kappa:13   // 15,17,...,33 -> 4 defeats against 50 HP
-    }[S.char] || 22;
+      // v4.15: Enemy HP is identical in every stage.
+      // Stage differences are illustration + appearance order ONLY.
+      // 10/10 perfect run defeat counts are identical in every stage:
+      // KAIRI 7 / SOTA 6 / CASTOR 5 / KAPPA 4.
+      kairi:36,
+      sota:32,
+      castor:28,
+      kappa:18
+    }[S.char] || 28;
 
     let dmg=baseAttack + S.combo*2;
 
@@ -1334,8 +1460,14 @@ function ans(v,c,b,token){
 $("start").onclick=start;
 
 $("retry").onclick=()=>{
-  sessionStorage.setItem("cqAutoStart",S.char||"");
-  window.location.reload();
+  // Retry must stay in the battle state and use the battle BGM.
+  if(window.kqPlayBattleBGM) window.kqPlayBattleBGM();
+  sessionStorage.setItem("cqAutoStart","");
+  if(typeof start==="function"){
+    start();
+  }else{
+    window.location.reload();
+  }
 };
 
 $("change").onclick=()=>{
@@ -1400,7 +1532,9 @@ if(returnStage){
     const select = document.getElementById("select");
     const stage = document.getElementById("stageSelect");
     if(select) { select.classList.remove("active"); select.style.display="none"; }
-    if(stage) { stage.classList.add("active"); stage.style.display="block"; }
+    if(stage) { if(window.kqPlaySelectBGM) window.kqPlaySelectBGM();
+
+    stage.classList.add("active"); stage.style.display="block"; }
     window.scrollTo(0,0);
   });
 })();
@@ -1447,6 +1581,144 @@ if(returnStage){
 
     window.scrollTo(0,0);
   };
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+(function(){
+  const b=document.getElementById('titleStart');
+  if(!b) return;
+  b.addEventListener('click',function(){
+    if(window.kqPlaySelectBGM) window.kqPlaySelectBGM();
+  },true);
+})();
+</script>
+
+
+
+
+<script>
+(function(){
+  function initTitleButton(){
+    const btn = document.getElementById("titleStart");
+    if(!btn || btn.dataset.kqBound) return;
+    btn.dataset.kqBound = "1";
+
+    btn.addEventListener("click", function(e){
+      e.preventDefault();
+      e.stopPropagation();
+
+      // This click is a valid user gesture, so BGM playback is allowed.
+      if(window.kqPlaySelectBGM) window.kqPlaySelectBGM();
+
+      const title = document.getElementById("titleScreen");
+      if(title){
+        title.classList.remove("active");
+        title.style.display = "none";
+      }
+
+      if(typeof window.show === "function"){
+        window.show("stageSelect");
+      } else {
+        const stage = document.getElementById("stageSelect");
+        if(stage){
+          stage.classList.add("active");
+          stage.style.display = "block";
+        }
+      }
+      window.scrollTo(0,0);
+    });
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", initTitleButton, {once:true});
+  } else {
+    initTitleButton();
+  }
+})();
+</script>
+
+<!-- v4.31: BGM state manager -->
+<!-- Title screen: NO BGM. Select BGM starts from the "はじめる" user gesture. -->
+<audio id="kqSelectBGM" preload="auto" loop playsinline>
+  <source src="assets/audio/Steel_Against_the_Storm.mp3" type="audio/mpeg">
+</audio>
+<audio id="kqBattleBGM" preload="auto" loop playsinline>
+  <source src="assets/audio/Before_the_Final_Strike.mp3" type="audio/mpeg">
+</audio>
+<script>
+(function(){
+  const s=document.getElementById("kqSelectBGM");
+  const b=document.getElementById("kqBattleBGM");
+  if(!s||!b)return;
+  s.volume=.55;
+  b.volume=.55;
+  function stop(a){try{a.pause();a.currentTime=0;}catch(e){}}
+  function play(a){try{const p=a.play();if(p&&p.catch)p.catch(()=>{});return p;}catch(e){return null}}
+  window.kqPlaySelectBGM=function(){stop(b);return play(s)};
+  window.kqPlayBattleBGM=function(){stop(s);return play(b)};
+  window.kqStopAllBGM=function(){stop(s);stop(b)};
+
+  // IMPORTANT: do not autoplay anything on the title screen.
+  // If the page was reloaded while already on a non-title screen, try to
+  // restore the appropriate track. Browsers may block this autoplay; a later
+  // user click/transition will start it reliably.
+  window.addEventListener("load",function(){
+    setTimeout(function(){
+      const title=document.getElementById("titleScreen");
+      const game=document.getElementById("game");
+      const select=document.getElementById("select");
+      const stage=document.getElementById("stageSelect");
+      if(title && title.classList.contains("active")) return;
+      if(game && game.classList.contains("active")){window.kqPlayBattleBGM();return;}
+      if((stage && stage.classList.contains("active")) || (select && select.classList.contains("active"))){window.kqPlaySelectBGM();}
+    },100);
+  });
+})();
+</script>
+
+<script>
+(function(){
+  document.addEventListener("click",function(e){
+    const el=e.target.closest&&e.target.closest("#quitBattle");
+    if(!el)return;
+    if(window.kqStopAllBGM)window.kqStopAllBGM();
+    setTimeout(function(){if(window.kqPlaySelectBGM)window.kqPlaySelectBGM()},0);
+  },true);
+})();
+</script>
+
+<script>
+(function(){
+  function bind(){
+    const btn=document.getElementById("titleStart");
+    if(!btn||btn.dataset.kq428)return;
+    btn.dataset.kq428="1";
+    btn.addEventListener("click",function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      if(window.kqPlaySelectBGM)window.kqPlaySelectBGM();
+      const title=document.getElementById("titleScreen");
+      if(title){title.classList.remove("active");title.style.display="none";}
+      if(typeof window.show==="function")window.show("stageSelect");
+      else{
+        const stage=document.getElementById("stageSelect");
+        if(stage){stage.classList.add("active");stage.style.display="block";}
+      }
+      window.scrollTo(0,0);
+    },true);
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bind,{once:true});else bind();
 })();
 </script>
 </body></html><style>
