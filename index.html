@@ -1426,6 +1426,7 @@ function cards(){
       `HP ${"★".repeat(c[4])}　スコア ${"★".repeat(c[5])}</div>`+
       `<div class="とくいわざ">${c[6]}</div>`;
     b.onclick=()=>{
+      if(window.kqPlaySfx) window.kqPlaySfx("cursor");
       S.char=id;
       document.querySelectorAll(".card").forEach(x=>x.classList.remove("sel"));
       b.classList.add("sel");
@@ -1724,6 +1725,7 @@ function ans(v,c,b,token){
   if(!validRun(token) || S.lock)return;
 
   S.lock=true;
+  if(window.kqPlaySfx) window.kqPlaySfx("answer");
   document.querySelectorAll(".answer").forEach(x=>x.disabled=true);
   let ch=C[S.char];
 
@@ -1832,7 +1834,10 @@ function ans(v,c,b,token){
   scheduleNextQuestionNoEnemyChange(token,650);
 }
 
-$("start").onclick=start;
+$("start").onclick=()=>{
+  if(window.kqPlaySfx) window.kqPlaySfx("battleStart");
+  start();
+};
 
 $("retry").onclick=(e)=>{
   e.preventDefault();
@@ -1881,19 +1886,31 @@ if(autoChar && C[autoChar]){
 
 
 <script>
-function selectGradeStage(stage){
+function selectGradeStage(stage, fromStageButton=false){
   if(!GRADE_QUESTIONS[stage]) return;
+  if(fromStageButton && window.kqPlaySfx) window.kqPlaySfx("stageSelect");
   S.stage=stage;
   Q=GRADE_QUESTIONS[stage];
   show("select");
   window.scrollTo(0,0);
 }
-function showStage1Characters(){ selectGradeStage(1); }
-function showStage2Characters(){ selectGradeStage(2); }
-function showStage3Characters(){ selectGradeStage(3); }
-function showStage4Characters(){ selectGradeStage(4); }
-function showStage5Characters(){ selectGradeStage(5); }
-function showStage6Characters(){ selectGradeStage(6); }
+function showStage1Characters(){ selectGradeStage(1, true); }
+function showStage2Characters(){ selectGradeStage(2, true); }
+function showStage3Characters(){ selectGradeStage(3, true); }
+function showStage4Characters(){ selectGradeStage(4, true); }
+function showStage5Characters(){ selectGradeStage(5, true); }
+function showStage6Characters(){ selectGradeStage(6, true); }
+
+// Pointer and keyboard focus both represent moving the stage-selection cursor.
+// The shared SFX channel below prevents rapid movement from layering sounds.
+document.querySelectorAll("#stageSelect .stage-card").forEach(card=>{
+  card.addEventListener("pointerenter",()=>{
+    if(window.kqPlaySfx) window.kqPlaySfx("cursor");
+  });
+  card.addEventListener("focus",()=>{
+    if(window.kqPlaySfx) window.kqPlaySfx("cursor");
+  });
+});
 
 const returnStage=sessionStorage.getItem("cqReturnStage");
 sessionStorage.removeItem("cqReturnStage");
@@ -1977,19 +1994,6 @@ if(returnStage){
 
 <script>
 (function(){
-  const b=document.getElementById('titleStart');
-  if(!b) return;
-  b.addEventListener('click',function(){
-    if(window.kqPlaySelectBGM) window.kqPlaySelectBGM();
-  },true);
-})();
-</script>
-
-
-
-
-<script>
-(function(){
   function initTitleButton(){
     const btn = document.getElementById("titleStart");
     if(!btn || btn.dataset.kqBound) return;
@@ -2000,6 +2004,7 @@ if(returnStage){
       e.stopPropagation();
 
       // This click is a valid user gesture, so BGM playback is allowed.
+      if(window.kqPlaySfx) window.kqPlaySfx("titleStart");
       if(window.kqPlaySelectBGM) window.kqPlaySelectBGM();
 
       const title = document.getElementById("titleScreen");
@@ -2037,11 +2042,23 @@ if(returnStage){
 <audio id="kqBattleBGM" preload="auto" loop playsinline>
   <source src="assets/audio/Before_the_Final_Strike.mp3" type="audio/mpeg">
 </audio>
+<audio id="kqSfxTitleStart" preload="auto" playsinline><source src="assets/audio/hajimeru.mp3" type="audio/mpeg"></audio>
+<audio id="kqSfxCursor" preload="auto" playsinline><source src="assets/audio/ka-soruidoutokyarasentaku.mp3" type="audio/mpeg"></audio>
+<audio id="kqSfxAnswer" preload="auto" playsinline><source src="assets/audio/kaitousentaku.mp3" type="audio/mpeg"></audio>
+<audio id="kqSfxBattleStart" preload="auto" playsinline><source src="assets/audio/sentousuta-to.mp3" type="audio/mpeg"></audio>
+<audio id="kqSfxStageSelect" preload="auto" playsinline><source src="assets/audio/sute-jisentaku.mp3" type="audio/mpeg"></audio>
 <script>
 (function(){
   const s=document.getElementById("kqSelectBGM");
   const b=document.getElementById("kqBattleBGM");
-  if(!s||!b)return;
+  const sfx={
+    titleStart:document.getElementById("kqSfxTitleStart"),
+    cursor:document.getElementById("kqSfxCursor"),
+    answer:document.getElementById("kqSfxAnswer"),
+    battleStart:document.getElementById("kqSfxBattleStart"),
+    stageSelect:document.getElementById("kqSfxStageSelect")
+  };
+  if(!s||!b||Object.values(sfx).some(a=>!a))return;
   const TARGET=.48;
   const START=.12;
   const FADE_MS=1200;
@@ -2072,6 +2089,19 @@ if(returnStage){
   window.kqPlaySelectBGM=function(){return playTrack(s)};
   window.kqPlayBattleBGM=function(){return playTrack(b)};
   window.kqStopAllBGM=function(){clearFade();active=null;stop(s);stop(b)};
+  window.kqPlaySfx=function(name){
+    const selected=sfx[name];
+    if(!selected)return;
+    // SFX use one channel: a fresh UI action replaces the prior effect instead
+    // of creating overlapping or duplicated playback.  BGM is unaffected.
+    Object.values(sfx).forEach(a=>{
+      try{a.pause();a.currentTime=0;}catch(e){}
+    });
+    try{
+      const p=selected.play();
+      if(p&&p.catch)p.catch(()=>{});
+    }catch(e){}
+  };
 
   window.addEventListener("load",function(){
     setTimeout(function(){
@@ -2095,30 +2125,6 @@ if(returnStage){
     if(window.kqStopAllBGM)window.kqStopAllBGM();
     setTimeout(function(){if(window.kqPlaySelectBGM)window.kqPlaySelectBGM()},0);
   },true);
-})();
-</script>
-
-<script>
-(function(){
-  function bind(){
-    const btn=document.getElementById("titleStart");
-    if(!btn||btn.dataset.kq428)return;
-    btn.dataset.kq428="1";
-    btn.addEventListener("click",function(e){
-      e.preventDefault();
-      e.stopPropagation();
-      if(window.kqPlaySelectBGM)window.kqPlaySelectBGM();
-      const title=document.getElementById("titleScreen");
-      if(title){title.classList.remove("active");title.style.display="none";}
-      if(typeof window.show==="function")window.show("stageSelect");
-      else{
-        const stage=document.getElementById("stageSelect");
-        if(stage){stage.classList.add("active");stage.style.display="block";}
-      }
-      window.scrollTo(0,0);
-    },true);
-  }
-  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bind,{once:true});else bind();
 })();
 </script>
 
