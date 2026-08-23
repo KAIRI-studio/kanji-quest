@@ -1242,7 +1242,7 @@ body.title-open #app{background:#071521;box-shadow:none}
   </div>
 
   <div class="title-main">
-    <button id="titleStart" class="title-start" type="button">はじめる</button>
+    <button id="titleStart" class="title-start" type="button" disabled>はじめる</button>
   </div>
 
   <img class="title-logo-art" src="assets/stages/title_logo.png" alt="漢字クエスト KANJI QUEST">
@@ -1927,6 +1927,8 @@ if(returnStage){
   const back = document.getElementById("characterBack");
   if(!back) return;
   back.addEventListener("click", function(){
+    if(window.kqPlaySfx) window.kqPlaySfx("cancel");
+    if(window.kqBlockCursorSfx) window.kqBlockCursorSfx(500);
     const select = document.getElementById("select");
     const stage = document.getElementById("stageSelect");
     if(select) { select.classList.remove("active"); select.style.display="none"; }
@@ -1946,6 +1948,8 @@ if(returnStage){
   quit.onclick = function(e){
     e.preventDefault();
     e.stopPropagation();
+    if(window.kqPlaySfx) window.kqPlaySfx("cancel");
+    if(window.kqBlockCursorSfx) window.kqBlockCursorSfx(500);
 
     // Cancel all pending game callbacks and invalidate the current run.
     newRun();
@@ -1998,12 +2002,31 @@ if(returnStage){
     const btn = document.getElementById("titleStart");
     if(!btn || btn.dataset.kqBound) return;
     btn.dataset.kqBound = "1";
+    const intro = document.querySelector(".title-logo-intro");
+    let titleReady = false;
+    const unlockTitleStart = function(){
+      if(titleReady) return;
+      titleReady = true;
+      btn.disabled = false;
+      btn.removeAttribute("aria-disabled");
+    };
+
+    // The start button remains unavailable until the two opening logos have
+    // completely finished their exit animation.
+    if(intro){
+      intro.addEventListener("animationend", function(e){
+        if(e.animationName === "titleIntroOut") unlockTitleStart();
+      }, {once:true});
+    }
+    setTimeout(unlockTitleStart, 5200);
 
     btn.addEventListener("click", function(e){
       e.preventDefault();
       e.stopPropagation();
+      if(!titleReady || btn.disabled) return;
 
       // This click is a valid user gesture, so BGM playback is allowed.
+      if(window.kqBlockCursorSfx) window.kqBlockCursorSfx(900);
       if(window.kqPlaySfx) window.kqPlaySfx("titleStart");
       if(window.kqPlaySelectBGM) window.kqPlaySelectBGM();
 
@@ -2047,6 +2070,7 @@ if(returnStage){
 <audio id="kqSfxAnswer" preload="auto" playsinline><source src="assets/audio/kaitousentaku.mp3" type="audio/mpeg"></audio>
 <audio id="kqSfxBattleStart" preload="auto" playsinline><source src="assets/audio/sentousuta-to.mp3" type="audio/mpeg"></audio>
 <audio id="kqSfxStageSelect" preload="auto" playsinline><source src="assets/audio/sute-jisentaku.mp3" type="audio/mpeg"></audio>
+<audio id="kqSfxCancel" preload="auto" playsinline><source src="assets/audio/kyanseru.mp3" type="audio/mpeg"></audio>
 <script>
 (function(){
   const s=document.getElementById("kqSelectBGM");
@@ -2056,14 +2080,16 @@ if(returnStage){
     cursor:document.getElementById("kqSfxCursor"),
     answer:document.getElementById("kqSfxAnswer"),
     battleStart:document.getElementById("kqSfxBattleStart"),
-    stageSelect:document.getElementById("kqSfxStageSelect")
+    stageSelect:document.getElementById("kqSfxStageSelect"),
+    cancel:document.getElementById("kqSfxCancel")
   };
   if(!s||!b||Object.values(sfx).some(a=>!a))return;
-  const TARGET=.48;
+  const TARGET=.34;
   const START=.12;
   const FADE_MS=1200;
   let fadeTimer=null;
   let active=null;
+  let cursorSfxBlockedUntil=0;
   function clearFade(){if(fadeTimer){clearInterval(fadeTimer);fadeTimer=null;}}
   function stop(a){try{a.pause();a.currentTime=0;a.volume=0;}catch(e){}}
   function fadeIn(a){
@@ -2089,7 +2115,11 @@ if(returnStage){
   window.kqPlaySelectBGM=function(){return playTrack(s)};
   window.kqPlayBattleBGM=function(){return playTrack(b)};
   window.kqStopAllBGM=function(){clearFade();active=null;stop(s);stop(b)};
+  window.kqBlockCursorSfx=function(duration){
+    cursorSfxBlockedUntil=Math.max(cursorSfxBlockedUntil, performance.now()+duration);
+  };
   window.kqPlaySfx=function(name){
+    if(name==="cursor" && performance.now()<cursorSfxBlockedUntil)return;
     const selected=sfx[name];
     if(!selected)return;
     // SFX use one channel: a fresh UI action replaces the prior effect instead
@@ -2098,6 +2128,8 @@ if(returnStage){
       try{a.pause();a.currentTime=0;}catch(e){}
     });
     try{
+      // The battle-start sound uses the browser's maximum media volume.
+      selected.volume = 1;
       const p=selected.play();
       if(p&&p.catch)p.catch(()=>{});
     }catch(e){}
