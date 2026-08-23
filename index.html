@@ -2084,12 +2084,14 @@ if(returnStage){
     cancel:document.getElementById("kqSfxCancel")
   };
   if(!s||!b||Object.values(sfx).some(a=>!a))return;
-  const TARGET=.34;
+  const TARGET=.22;
   const START=.12;
   const FADE_MS=1200;
   let fadeTimer=null;
   let active=null;
   let cursorSfxBlockedUntil=0;
+  let sfxAudioContext=null;
+  const sfxGainNodes=new Map();
   function clearFade(){if(fadeTimer){clearInterval(fadeTimer);fadeTimer=null;}}
   function stop(a){try{a.pause();a.currentTime=0;a.volume=0;}catch(e){}}
   function fadeIn(a){
@@ -2128,7 +2130,23 @@ if(returnStage){
       try{a.pause();a.currentTime=0;}catch(e){}
     });
     try{
-      // The battle-start sound uses the browser's maximum media volume.
+      // Keep one playback channel while giving the cancel sound extra gain.
+      // This avoids the distortion and doubled playback caused by layering it.
+      if(!sfxAudioContext){
+        const AudioContextClass=window.AudioContext||window.webkitAudioContext;
+        if(AudioContextClass) sfxAudioContext=new AudioContextClass();
+      }
+      if(sfxAudioContext){
+        let gain=sfxGainNodes.get(selected);
+        if(!gain){
+          const source=sfxAudioContext.createMediaElementSource(selected);
+          gain=sfxAudioContext.createGain();
+          source.connect(gain).connect(sfxAudioContext.destination);
+          sfxGainNodes.set(selected,gain);
+        }
+        gain.gain.value=name==="cancel" ? 1.8 : 1;
+        if(sfxAudioContext.state==="suspended") sfxAudioContext.resume().catch(()=>{});
+      }
       selected.volume = 1;
       const p=selected.play();
       if(p&&p.catch)p.catch(()=>{});
