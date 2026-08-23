@@ -1222,6 +1222,28 @@ body.title-open #app{background:#071521;box-shadow:none}
 }
 </style>
 
+/* v50.8: Reuse the existing title-screen falling-leaf animation
+   on stage selection and character selection as a background layer.
+   No new artwork is introduced. */
+#stageSelect .screen-leaf-layer,
+#select .screen-leaf-layer{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+  z-index:1;
+  filter:blur(.35px);
+}
+#stageSelect .screen-leaf-layer .title-leaf,
+#select .screen-leaf-layer .title-leaf{
+  z-index:1;
+}
+#stageSelect > *:not(.screen-leaf-layer),
+#select > *:not(.screen-leaf-layer){
+  position:relative;
+  z-index:2;
+}
+
 </head><body class="title-open"><main id="app"><header style="display:none"><div>HBK GAMING<br><span>KANJI QUEST</span></div><div>スコア <span id="score">00000</span></div><button id="quitBattle" class="battle-back" type="button" style="display:none;">やめる</button></header>
 
 
@@ -1249,6 +1271,12 @@ body.title-open #app{background:#071521;box-shadow:none}
 </section>
 
 <section id="stageSelect" class="screen" style="display:none;">
+  <div class="screen-leaf-layer" aria-hidden="true">
+  <span class="title-leaf leaf-1"></span><span class="title-leaf leaf-2"></span>
+  <span class="title-leaf leaf-3"></span><span class="title-leaf leaf-4"></span>
+  <span class="title-leaf leaf-5"></span><span class="title-leaf leaf-6"></span>
+  <span class="title-leaf leaf-7"></span><span class="title-leaf leaf-8"></span>
+</div>
   <div class="stage-title">ステージをえらぼう！</div>
   <div class="stage-sub">どのぼうけんに いく？</div>
   <div class="stage-grid">
@@ -1264,7 +1292,13 @@ body.title-open #app{background:#071521;box-shadow:none}
   </div>
 </section>
 
-<section id="select" class="screen" style="display:none;"><div class="title">KANJI QUEST</div><div class="sub">〜 かんじでたたかえ！ 〜</div><h1>キャラクターを えらぼう！</h1><div id="grid" class="grid"></div><button id="characterBack" class="secondary back-large" type="button">ステージせんたくへもどる</button><button id="start" class="primary" disabled>キャラクターをえらんでスタート</button></section>
+<section id="select" class="screen" style="display:none;"><div class="screen-leaf-layer" aria-hidden="true">
+  <span class="title-leaf leaf-1"></span><span class="title-leaf leaf-2"></span>
+  <span class="title-leaf leaf-3"></span><span class="title-leaf leaf-4"></span>
+  <span class="title-leaf leaf-5"></span><span class="title-leaf leaf-6"></span>
+  <span class="title-leaf leaf-7"></span><span class="title-leaf leaf-8"></span>
+</div>
+<div class="title">KANJI QUEST</div><div class="sub">〜 かんじでたたかえ！ 〜</div><h1>キャラクターを えらぼう！</h1><div id="grid" class="grid"></div><button id="characterBack" class="secondary back-large" type="button">ステージせんたくへもどる</button><button id="start" class="primary" disabled>キャラクターをえらんでスタート</button></section>
 
 <section id="game" class="screen"><div class="battlehead"><span>タイム <b id="time">0.0s</b></span><b id="stageLabel">STAGE 1</b><b><span id="qn">1</span> / 10問</b></div>
 <div class="field"><div class="enemybox"><b id="enemyName">キッズスライム Lv.1</b><div class="hp"><div id="ehp" class="fill red"></div></div><span id="et">20/20</span></div><div id="enemy" class="enemy"><img id="enemyImg" alt=""></div>
