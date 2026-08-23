@@ -1888,7 +1888,10 @@ if(autoChar && C[autoChar]){
 <script>
 function selectGradeStage(stage, fromStageButton=false){
   if(!GRADE_QUESTIONS[stage]) return;
-  if(fromStageButton && window.kqPlaySfx) window.kqPlaySfx("stageSelect");
+  if(fromStageButton){
+    if(window.kqBlockCursorSfx) window.kqBlockCursorSfx(450);
+    if(window.kqPlaySfx) window.kqPlaySfx("stageSelect");
+  }
   S.stage=stage;
   Q=GRADE_QUESTIONS[stage];
   show("select");
@@ -1904,6 +1907,11 @@ function showStage6Characters(){ selectGradeStage(6, true); }
 // Pointer and keyboard focus both represent moving the stage-selection cursor.
 // The shared SFX channel below prevents rapid movement from layering sounds.
 document.querySelectorAll("#stageSelect .stage-card").forEach(card=>{
+  // A click first moves focus to the card.  Block that focus event's cursor
+  // sound so a stage decision has only its dedicated confirmation sound.
+  card.addEventListener("pointerdown",()=>{
+    if(window.kqBlockCursorSfx) window.kqBlockCursorSfx(450);
+  }, true);
   card.addEventListener("pointerenter",()=>{
     if(window.kqPlaySfx) window.kqPlaySfx("cursor");
   });
@@ -2144,7 +2152,7 @@ if(returnStage){
           source.connect(gain).connect(sfxAudioContext.destination);
           sfxGainNodes.set(selected,gain);
         }
-        gain.gain.value=name==="cancel" ? 1.8 : 1;
+        gain.gain.value=name==="cancel" ? 1.8 : name==="cursor" ? .55 : 1;
         if(sfxAudioContext.state==="suspended") sfxAudioContext.resume().catch(()=>{});
       }
       selected.volume = 1;
