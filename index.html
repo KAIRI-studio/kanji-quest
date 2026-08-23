@@ -900,6 +900,328 @@ body.title-open header{display:none!important}
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
   <meta name="theme-color" content="#051927">
 
+
+<style>
+/* v50: All stage-selection cards use the existing stage illustrations.
+   No new artwork is required; the same stage images used in battle are reused here. */
+.stage-card.stage-image-card{
+  position:relative;
+  overflow:hidden;
+  background-position:center;
+  background-size:cover;
+  background-repeat:no-repeat;
+}
+.stage-card.stage-image-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,rgba(3,15,22,.16) 0%,rgba(3,15,22,.30) 46%,rgba(3,15,22,.94) 100%);
+  pointer-events:none;
+}
+.stage-card.stage-image-card .stage-icon{display:none;}
+.stage-card.stage-image-card .stage-name,
+.stage-card.stage-image-card .stage-area,
+.stage-card.stage-image-card .stage-status{
+  position:relative;
+  z-index:1;
+  text-shadow:2px 2px 3px rgba(0,0,0,.95);
+}
+.stage-card.stage-image-card .stage-name{margin-top:55px;font-size:23px;}
+.stage-card.stage-image-card .stage-area{color:#fff;}
+.stage-card.stage-image-card .stage-status{color:#ffd83d;}
+@media(max-width:390px){
+  .stage-card.stage-image-card .stage-name{margin-top:48px;font-size:20px;}
+}
+</style>
+<style id="v50.4-title-composition">
+/* v50.4: Title composition
+   Layer 0 = approved fantasy background (slightly blurred)
+   Layer 1 = falling leaves (CSS-only, slightly softened)
+   Layer 2 = UI (start button)
+   Layer 3 = approved transparent title logo */
+body.title-open{background:#071521;overflow:hidden}
+body.title-open #app{background:#071521;box-shadow:none}
+
+.title-screen{
+  min-height:100dvh;height:100dvh;width:100%;padding:0;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+  background:none !important;
+  isolation:isolate;
+}
+
+/* Background image layer */
+.title-screen::after{
+  content:"";
+  position:absolute;
+  inset:-12px;
+  z-index:0;
+  background:url("assets/stages/title_fantasy_vertical.png") center center / cover no-repeat;
+  filter:blur(2.2px);
+  transform:scale(1.025);
+  pointer-events:none;
+}
+
+/* Very subtle dark veil/grid for readability and visual unity */
+.title-screen::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(3,12,20,.10) 0%,rgba(3,12,20,.04) 42%,rgba(2,8,14,.28) 100%),
+    repeating-linear-gradient(0deg,transparent 0 7px,rgba(255,255,255,.018) 7px 8px),
+    repeating-linear-gradient(90deg,transparent 0 7px,rgba(255,216,61,.014) 7px 8px);
+}
+
+/* Logo intro remains exactly as the existing white logo screen */
+.title-logo-intro{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  z-index:10;pointer-events:none;background:#fff;
+  animation:titleIntroOut 4.6s ease forwards;
+}
+.title-logo-row{
+  display:flex;align-items:center;justify-content:center;
+  gap:18px;width:min(92%,470px);animation:titleLogoFloat 4s ease-in-out forwards;
+}
+.title-logo-row img{
+  width:40%;height:auto;max-height:150px;object-fit:contain;
+  filter:drop-shadow(0 8px 18px rgba(0,0,0,.45));
+}
+.title-logo-row img:last-child{width:43%;filter:drop-shadow(0 8px 18px rgba(0,0,0,.3));}
+
+/* Falling leaves layer */
+.title-leaf-layer{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+  z-index:2;
+  filter:blur(.35px);
+}
+.title-leaf{
+  position:absolute;
+  top:-12vh;
+  left:var(--left);
+  width:var(--size);
+  height:calc(var(--size) * .62);
+  opacity:var(--opacity);
+  background:linear-gradient(135deg,#d8e88a 0%,#8fbd48 52%,#557f2c 100%);
+  border-radius:100% 0 100% 0;
+  filter:drop-shadow(1px 2px 2px rgba(0,0,0,.25));
+  transform-origin:50% 50%;
+  animation:titleLeafFall var(--dur) linear var(--delay) infinite;
+}
+.title-leaf::after{
+  content:"";position:absolute;left:10%;top:48%;width:82%;height:1px;
+  background:rgba(48,82,27,.55);transform:rotate(-4deg);transform-origin:left center;
+}
+.leaf-1{--left:8%;--size:13px;--opacity:.72;--dur:8.5s;--delay:-1.5s;--drift:48px;--rot:520deg}
+.leaf-2{--left:22%;--size:17px;--opacity:.62;--dur:10.5s;--delay:-6s;--drift:-72px;--rot:-620deg}
+.leaf-3{--left:39%;--size:11px;--opacity:.58;--dur:7.8s;--delay:-3.2s;--drift:64px;--rot:440deg}
+.leaf-4{--left:55%;--size:16px;--opacity:.68;--dur:11.2s;--delay:-8.1s;--drift:-54px;--rot:-500deg}
+.leaf-5{--left:69%;--size:12px;--opacity:.55;--dur:9.2s;--delay:-4.8s;--drift:82px;--rot:600deg}
+.leaf-6{--left:82%;--size:18px;--opacity:.64;--dur:12.4s;--delay:-10.2s;--drift:-68px;--rot:-560deg}
+.leaf-7{--left:31%;--size:9px;--opacity:.48;--dur:13.5s;--delay:-11.5s;--drift:-92px;--rot:720deg}
+.leaf-8{--left:91%;--size:10px;--opacity:.46;--dur:8.9s;--delay:-5.5s;--drift:38px;--rot:-420deg}
+@keyframes titleLeafFall{
+  0%{transform:translate3d(0,-12vh,0) rotate(0deg)}
+  20%{transform:translate3d(calc(var(--drift) * .18),18vh,0) rotate(calc(var(--rot) * .2))}
+  45%{transform:translate3d(calc(var(--drift) * -.22),46vh,0) rotate(calc(var(--rot) * .52))}
+  70%{transform:translate3d(calc(var(--drift) * .55),73vh,0) rotate(calc(var(--rot) * .76))}
+  100%{transform:translate3d(var(--drift),112vh,0) rotate(var(--rot))}
+}
+
+/* v50.5: premium blue/gold fantasy start button inspired by the approved visual direction. */
+.title-start{
+  border:3px solid #e8b93f !important;border-radius:15px !important;
+  background:linear-gradient(180deg,#2f73c9 0%,#1654a3 48%,#0d3d80 100%) !important;
+  color:#fff !important;
+  text-shadow:0 2px 2px rgba(0,0,0,.55);
+  box-shadow:
+    0 0 0 2px rgba(73,37,11,.92),
+    0 6px 0 #3a1c10,
+    0 11px 24px rgba(0,0,0,.42),
+    inset 0 2px 0 rgba(255,255,255,.48),
+    inset 0 -7px 14px rgba(0,0,0,.18) !important;
+}
+.title-start::before,.title-start::after{
+  width:20px;height:20px;border:1px solid rgba(255,225,116,.72);
+  background:linear-gradient(135deg,rgba(255,239,150,.25),rgba(255,214,70,.05)) !important;
+}
+.title-start:hover,.title-start:focus-visible{
+  filter:brightness(1.08) !important;
+  box-shadow:0 0 0 2px rgba(73,37,11,.92),0 6px 0 #3a1c10,0 0 30px rgba(91,166,255,.22),inset 0 2px 0 rgba(255,255,255,.55),inset 0 -7px 14px rgba(0,0,0,.18) !important;
+}
+.title-start:active{transform:translate(-50%,-47%) scale(.99) !important}
+
+/* UI layer */
+.title-main{
+  position:absolute;inset:0;z-index:3;width:100%;max-width:none;
+  text-align:center;opacity:0;transform:translateY(10px);
+  animation:titleMainIn .9s ease 4.25s forwards;
+  pointer-events:none;
+}
+.title-start{
+  position:absolute;left:50%;top:62%;transform:translate(-50%,-50%);
+  width:min(72%,330px);height:62px;margin:0;
+  border:4px solid #5a2b13;border-radius:12px;
+  background:linear-gradient(#ffe36a,#ffbf24);
+  color:#4b2815;font-size:clamp(22px,6vw,30px);font-weight:900;
+  font-family:system-ui,"Noto Sans JP",sans-serif;
+  box-shadow:0 7px 0 #3a1c10,0 10px 20px rgba(0,0,0,.35),inset 0 2px 0 rgba(255,255,255,.8);
+  cursor:pointer;pointer-events:auto;
+}
+.title-start:hover,.title-start:focus-visible{filter:brightness(1.06);transform:translate(-50%,-50%) scale(1.02)}
+.title-start:active{transform:translate(-50%,-47%)}
+
+/* Approved title logo sits above the UI layer */
+.title-logo-art{
+  position:absolute;
+  z-index:4;
+  left:50%;
+  top:22%;
+  transform:translateX(-50%);
+  width:min(94%,500px);
+  max-height:40vh;
+  height:auto;
+  object-fit:contain;
+  pointer-events:none;
+  opacity:0;
+  filter:drop-shadow(0 8px 18px rgba(0,0,0,.28));
+  animation:titleLogoArtIn .9s ease 4.15s forwards;
+}
+
+@keyframes titleLogoFloat{
+  0%{opacity:0;transform:translateY(18px) scale(.97)}
+  20%{opacity:1;transform:translateY(0) scale(1)}
+  68%{opacity:1;transform:translateY(-4px) scale(1)}
+  100%{opacity:0;transform:translateY(-14px) scale(1.02)}
+}
+@keyframes titleIntroOut{0%,72%{opacity:1}100%{opacity:0}}
+@keyframes titleMainIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes titleLogoArtIn{from{opacity:0;transform:translate(-50%,12px) scale(.98)}to{opacity:1;transform:translate(-50%,0) scale(1)}}
+
+@media(max-width:600px){
+  .title-logo-art{top:20%;width:94%;max-height:42vh}
+  .title-start{top:62%;height:58px;width:72%}
+}
+@media(prefers-reduced-motion:reduce){
+  .title-leaf{animation:none;top:22%}
+  .title-logo-art{animation:none;opacity:1}
+}
+</style>
+
+<style id="v50.6-reuse-title-background">
+/* v50.6: Reuse the approved title background across the main game screens.
+   No new artwork is generated or introduced. Cloud animation removed. */
+#stageSelect, #select, #game{
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(180deg,rgba(3,12,20,.30),rgba(3,12,20,.46)) !important;
+  background-attachment:scroll !important;
+}
+/* Shared fantasy background: blurred independently so the UI stays crisp. */
+#stageSelect::after, #select::after, #game::after{
+  content:"";
+  position:absolute;
+  z-index:0;
+  inset:-18px;
+  pointer-events:none;
+  background:url("assets/stages/title_fantasy_vertical.png") center center / cover no-repeat;
+  filter:blur(4px);
+  transform:scale(1.03);
+  opacity:.92;
+}
+#stageSelect::before, #select::before{
+  background:
+    linear-gradient(180deg,rgba(3,12,20,.16),rgba(3,12,20,.34)),
+    repeating-linear-gradient(0deg,transparent 0 7px,rgba(255,255,255,.025) 7px 8px),
+    repeating-linear-gradient(90deg,transparent 0 7px,rgba(255,216,61,.018) 7px 8px) !important;
+}
+/* The battle field itself is the main visual background of the battle screen,
+   so reuse the same approved fantasy background there as well. */
+#game .field{
+  position:relative;
+  background:linear-gradient(180deg,rgba(3,12,20,.12),rgba(3,12,20,.30)) !important;
+}
+#game .field::before{
+  content:"";
+  position:absolute;
+  z-index:0;
+  inset:-14px;
+  pointer-events:none;
+  background:url("assets/stages/title_fantasy_vertical.png") center center / cover no-repeat;
+  filter:blur(4px);
+  transform:scale(1.03);
+  opacity:.96;
+}
+/* Keep all screen UI above the blurred background layers. */
+#stageSelect > *, #select > *, #game > *{
+  position:relative;
+  z-index:1;
+}
+#game .field > *{
+  position:relative;
+  z-index:2;
+}
+#game .field::before{
+  z-index:0;
+}
+#game .qpanel{
+  background:rgba(6,18,30,.90) !important;
+  position:relative;
+  z-index:2;
+}
+</style>
+
+
+<style id="v50.7.2-battle-position-fix">
+/* v50.7.2: Keep battle actors/UI absolutely positioned.
+   The shared-background layer must never change their positioning context. */
+#game .field > .enemybox{
+  position:absolute !important;
+}
+#game .field > .enemy{
+  position:absolute !important;
+  display:flex !important;
+}
+#game .field > .player{
+  position:absolute !important;
+}
+#game .field > .combo,
+#game .field > .slash,
+#game .field > .damage,
+#game .field > .msg{
+  position:absolute !important;
+}
+#game .field > .enemy img,
+#game .field > .player img{
+  position:relative !important;
+}
+</style>
+
+
+<style id="v50.7.3-stage-background-fix">
+/* v50.7.3: Battle field uses the selected stage artwork.
+   The blurred layer follows the current stage; it never covers it with the title background. */
+#game .field{
+  background-color:#071521 !important;
+}
+#game .field::before{
+  background-image:none !important;
+  opacity:0 !important;
+}
+#game .field{
+  background-image:var(--battle-bg-image) !important;
+  background-position:center 60% !important;
+  background-size:cover !important;
+  background-repeat:no-repeat !important;
+  background-color:#071521 !important;
+}
+</style>
+
 </head><body class="title-open"><main id="app"><header style="display:none"><div>HBK GAMING<br><span>KANJI QUEST</span></div><div>スコア <span id="score">00000</span></div><button id="quitBattle" class="battle-back" type="button" style="display:none;">やめる</button></header>
 
 
@@ -912,26 +1234,33 @@ body.title-open header{display:none!important}
     </div>
   </div>
 
+  <div class="title-leaf-layer" aria-hidden="true">
+    <span class="title-leaf leaf-1"></span><span class="title-leaf leaf-2"></span>
+    <span class="title-leaf leaf-3"></span><span class="title-leaf leaf-4"></span>
+    <span class="title-leaf leaf-5"></span><span class="title-leaf leaf-6"></span>
+    <span class="title-leaf leaf-7"></span><span class="title-leaf leaf-8"></span>
+  </div>
+
   <div class="title-main">
-    <div class="title-game">漢字クエスト</div>
-    <div class="title-game-en">KANJI QUEST</div>
     <button id="titleStart" class="title-start" type="button">はじめる</button>
   </div>
+
+  <img class="title-logo-art" src="assets/stages/title_logo.png" alt="漢字クエスト KANJI QUEST">
 </section>
 
 <section id="stageSelect" class="screen" style="display:none;">
   <div class="stage-title">ステージをえらぼう！</div>
   <div class="stage-sub">どのぼうけんに いく？</div>
   <div class="stage-grid">
-    <button class="stage-card active" data-stage="1" type="button" onclick="showStage1Characters()">
-      <div class="stage-icon">🌲</div><div class="stage-name">1ねんせい</div>
+    <button class="stage-card active stage-image-card" data-stage="1" style="background-image:url('assets/stages/1.png')" type="button" onclick="showStage1Characters()">
+      <div class="stage-name">1ねんせい</div>
       <div class="stage-area">もりのステージ</div><div class="stage-status">あそべる！</div>
     </button>
-    <button class="stage-card active" data-stage="2" type="button" onclick="showStage2Characters()"><div class="stage-icon">💧</div><div class="stage-name">2ねんせい</div><div class="stage-area">みずのどうくつ</div><div class="stage-status">あそべる！</div></button>
-    <button class="stage-card active" data-stage="3" type="button" onclick="showStage3Characters()"><div class="stage-icon">🏛️</div><div class="stage-name">3ねんせい</div><div class="stage-area">いにしえのいせき</div><div class="stage-status">あそべる！</div></button>
-    <button class="stage-card active" data-stage="4" type="button" onclick="showStage4Characters()"><div class="stage-icon">✨</div><div class="stage-name">4ねんせい</div><div class="stage-area">まほうのもり</div><div class="stage-status">あそべる！</div></button>
-    <button class="stage-card active" data-stage="5" type="button" onclick="showStage5Characters()"><div class="stage-icon">🏰</div><div class="stage-name">5ねんせい</div><div class="stage-area">くらやみじょう</div><div class="stage-status">あそべる！</div></button>
-    <button class="stage-card active" data-stage="6" type="button" onclick="showStage6Characters()"><div class="stage-icon">⚔️</div><div class="stage-name">6ねんせい</div><div class="stage-area">さいしゅうけっせん</div><div class="stage-status">あそべる！</div></button>
+    <button class="stage-card active stage-image-card" data-stage="2" style="background-image:url('assets/stages/2.png')" type="button" onclick="showStage2Characters()"><div class="stage-icon">💧</div><div class="stage-name">2ねんせい</div><div class="stage-area">みずのどうくつ</div><div class="stage-status">あそべる！</div></button>
+    <button class="stage-card active stage-image-card" data-stage="3" style="background-image:url('assets/stages/3.png')" type="button" onclick="showStage3Characters()"><div class="stage-icon">🏛️</div><div class="stage-name">3ねんせい</div><div class="stage-area">いにしえのいせき</div><div class="stage-status">あそべる！</div></button>
+    <button class="stage-card active stage-image-card" data-stage="4" style="background-image:url('assets/stages/4.png')" type="button" onclick="showStage4Characters()"><div class="stage-icon">✨</div><div class="stage-name">4ねんせい</div><div class="stage-area">まほうのもり</div><div class="stage-status">あそべる！</div></button>
+    <button class="stage-card active stage-image-card" data-stage="5" style="background-image:url('assets/stages/5.png')" type="button" onclick="showStage5Characters()"><div class="stage-icon">🏰</div><div class="stage-name">5ねんせい</div><div class="stage-area">くらやみじょう</div><div class="stage-status">あそべる！</div></button>
+    <button class="stage-card active stage-image-card" data-stage="6" style="background-image:url('assets/stages/6.png')" type="button" onclick="showStage6Characters()"><div class="stage-icon">⚔️</div><div class="stage-name">6ねんせい</div><div class="stage-area">さいしゅうけっせん</div><div class="stage-status">あそべる！</div></button>
   </div>
 </section>
 
@@ -959,7 +1288,7 @@ let S={
   char:null,stage:1,q:0,score:0,combo:0,max:0,correct:0,
   eh:20,emax:20,ph:40,pmax:40,lock:false,best:+localStorage.cqBest||0,
   enemyIndex:0,kills:0,timer:null,over:false,run:0,
-  startAt:0,endAt:0,elapsed:0
+  startAt:0,endAt:0,elapsed:0,resultShown:false
 };
 
 const ENEMIES=[
@@ -1047,6 +1376,10 @@ function clearTimer(){
     clearTimeout(S.timer);
     S.timer=null;
   }
+  if(S.timeFrame){
+    cancelAnimationFrame(S.timeFrame);
+    S.timeFrame=null;
+  }
 }
 
 function newRun(){
@@ -1063,11 +1396,14 @@ function setscore(){
   $("score").textContent=String(S.score).padStart(5,"0");
 }
 
-function updateTime(){
-  if(!validRun(S.run))return;
+function updateTime(token){
+  if(!validRun(token)){
+    S.timeFrame=null;
+    return;
+  }
   S.elapsed=(performance.now()-S.startAt)/1000;
   $("time").textContent=S.elapsed.toFixed(1)+"s";
-  requestAnimationFrame(updateTime);
+  S.timeFrame=requestAnimationFrame(()=>updateTime(token));
 }
 
 function toast(t){
@@ -1118,7 +1454,9 @@ function applyStageBackground(){
   const field=document.querySelector("#game .field");
   if(!field)return;
   const stage=Math.min(6,Math.max(1,Number(S.stage)||1));
-  field.style.setProperty("background-image", `url("assets/stages/${stage}.png")`, "important");
+  const bg = `url("assets/stages/${stage}.png")`;
+  field.style.setProperty("background-image", bg, "important");
+  field.style.setProperty("--battle-bg-image", bg);
   field.style.setProperty("background-position", "center 60%", "important");
   field.style.setProperty("background-size", "cover", "important");
   field.style.setProperty("background-repeat", "no-repeat", "important");
@@ -1132,6 +1470,7 @@ function start(){
 
   S.over=false;
   S.lock=false;
+  S.resultShown=false;
   S.q=0;
   S.score=0;
   S.combo=0;
@@ -1161,7 +1500,7 @@ function start(){
   show("game");
   applyStageBackground();
   render(token);
-  requestAnimationFrame(updateTime);
+  S.timeFrame=requestAnimationFrame(()=>updateTime(token));
 }
 
 function spawnEnemy(index){
@@ -1312,7 +1651,7 @@ function showResult(gameOver){
 }
 
 function gameOver(token){
-  if(!validRun(token))return;
+  if(!validRun(token) || S.over)return;
   clearTimer();
   S.elapsed=(performance.now()-S.startAt)/1000;
   S.over=true;
@@ -1322,13 +1661,63 @@ function gameOver(token){
 }
 
 function finish(token){
-  if(!validRun(token))return;
+  // The 10th question is the authoritative end of a run.
+  // A stale callback must never block the result screen, while the guard
+  // below prevents the same run from showing the result twice.
+  if(S.resultShown || S.over)return;
+  if(token!==S.run && S.q<9)return;
+  if(S.q<9)return;
+
   clearTimer();
   S.elapsed=(performance.now()-S.startAt)/1000;
   S.over=true;
   S.lock=true;
+  S.resultShown=true;
   document.querySelectorAll(".answer").forEach(x=>x.disabled=true);
-  showResult(false);
+
+  try{
+    showResult(false);
+  }catch(err){
+    console.error("Result screen error:",err);
+    // Last-resort fallback: never leave the user trapped on question 10.
+    const game=document.getElementById("game");
+    const result=document.getElementById("result");
+    if(game){game.classList.remove("active");game.style.display="none";}
+    if(result){result.classList.add("active");result.style.display="block";}
+  }
+}
+
+function scheduleNextQuestion(token, delay){
+  clearTimeout(S.timer);
+  S.timer=setTimeout(()=>{
+    S.timer=null;
+
+    if(S.q>=9){
+      finish(token);
+      return;
+    }
+    if(token!==S.run || S.over)return;
+
+    S.q++;
+    spawnEnemy(S.enemyIndex+1);
+    render(token);
+  },delay);
+}
+
+function scheduleNextQuestionNoEnemyChange(token, delay){
+  clearTimeout(S.timer);
+  S.timer=setTimeout(()=>{
+    S.timer=null;
+
+    if(S.q>=9){
+      finish(token);
+      return;
+    }
+    if(token!==S.run || S.over)return;
+
+    S.q++;
+    render(token);
+  },delay);
 }
 
 function ans(v,c,b,token){
@@ -1404,21 +1793,8 @@ function ans(v,c,b,token){
       $("msg").textContent="💥 "+e.name+" を たおした！";
       toast("★ たおした！ ★");
 
-      S.timer=setTimeout(()=>{
-        S.timer=null;
-        if(!validRun(token))return;
-
-        // Everyone gets the same 10 questions. Reaching an intended kill count
-        // never ends the run early; it is the damage balance that determines the
-        // final defeat count.
-        if(S.q>=9){
-          finish(token);
-        }else{
-          S.q++;
-          spawnEnemy(S.enemyIndex+1);
-          render(token);
-        }
-      },1100);
+      // Everyone gets exactly 10 questions.
+      scheduleNextQuestion(token,1100);
       return;
     }
 
@@ -1453,27 +1829,26 @@ function ans(v,c,b,token){
   $("combo").classList.toggle("hide",S.combo<2);
   $("combo").querySelector("span").textContent=S.combo;
 
-  S.timer=setTimeout(()=>{
-    S.timer=null;
-    if(!validRun(token))return;
-
-    S.q++;
-    if(S.q>=10)finish(token);
-    else render(token);
-  },650);
+  scheduleNextQuestionNoEnemyChange(token,650);
 }
 
 $("start").onclick=start;
 
-$("retry").onclick=()=>{
-  // Retry must stay in the battle state and use the battle BGM.
-  if(window.kqPlayBattleBGM) window.kqPlayBattleBGM();
+$("retry").onclick=(e)=>{
+  e.preventDefault();
+  e.stopImmediatePropagation();
+
+  // The result screen is already the end of the previous run.
+  // Do not increment the run here: start() owns the single newRun() call.
+  clearTimer();
+  S.over=false;
+  S.lock=false;
+  S.resultShown=false;
+  $("result").style.display="none";
+  $("result").classList.remove("active");
   sessionStorage.setItem("cqAutoStart","");
-  if(typeof start==="function"){
-    start();
-  }else{
-    window.location.reload();
-  }
+
+  start();
 };
 
 $("change").onclick=()=>{
@@ -1667,18 +2042,37 @@ if(returnStage){
   const s=document.getElementById("kqSelectBGM");
   const b=document.getElementById("kqBattleBGM");
   if(!s||!b)return;
-  s.volume=.55;
-  b.volume=.55;
-  function stop(a){try{a.pause();a.currentTime=0;}catch(e){}}
-  function play(a){try{const p=a.play();if(p&&p.catch)p.catch(()=>{});return p;}catch(e){return null}}
-  window.kqPlaySelectBGM=function(){stop(b);return play(s)};
-  window.kqPlayBattleBGM=function(){stop(s);return play(b)};
-  window.kqStopAllBGM=function(){stop(s);stop(b)};
+  const TARGET=.48;
+  const START=.12;
+  const FADE_MS=1200;
+  let fadeTimer=null;
+  let active=null;
+  function clearFade(){if(fadeTimer){clearInterval(fadeTimer);fadeTimer=null;}}
+  function stop(a){try{a.pause();a.currentTime=0;a.volume=0;}catch(e){}}
+  function fadeIn(a){
+    clearFade();
+    try{a.volume=START; const p=a.play(); if(p&&p.catch)p.catch(()=>{});}catch(e){return null;}
+    const t0=performance.now();
+    fadeTimer=setInterval(()=>{
+      const t=Math.min(1,(performance.now()-t0)/FADE_MS);
+      try{a.volume=START+(TARGET-START)*t;}catch(e){}
+      if(t>=1)clearFade();
+    },40);
+    return true;
+  }
+  function playTrack(a){
+    const other=a===s?b:s;
+    if(active===a && !a.paused){return true;}
+    clearFade();
+    stop(other);
+    try{a.pause();a.currentTime=0;a.volume=0;}catch(e){}
+    active=a;
+    return fadeIn(a);
+  }
+  window.kqPlaySelectBGM=function(){return playTrack(s)};
+  window.kqPlayBattleBGM=function(){return playTrack(b)};
+  window.kqStopAllBGM=function(){clearFade();active=null;stop(s);stop(b)};
 
-  // IMPORTANT: do not autoplay anything on the title screen.
-  // If the page was reloaded while already on a non-title screen, try to
-  // restore the appropriate track. Browsers may block this autoplay; a later
-  // user click/transition will start it reliably.
   window.addEventListener("load",function(){
     setTimeout(function(){
       const title=document.getElementById("titleScreen");
@@ -1727,6 +2121,117 @@ if(returnStage){
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bind,{once:true});else bind();
 })();
 </script>
+
+<style>
+/* v50.2: premium UI title screen — no new artwork; keeps the same dark/grid world. */
+.title-screen{
+  background:
+    radial-gradient(ellipse at 50% 38%, rgba(44,115,145,.22) 0%, rgba(7,21,33,0) 43%),
+    radial-gradient(ellipse at 50% 85%, rgba(255,216,61,.055) 0%, rgba(7,21,33,0) 34%),
+    linear-gradient(180deg,#0b2533 0%,#071a27 46%,#050d15 100%) !important;
+}
+.title-screen::before{
+  opacity:.32 !important;
+  background:
+    repeating-linear-gradient(0deg,transparent 0 7px,rgba(255,255,255,.028) 7px 8px),
+    repeating-linear-gradient(90deg,transparent 0 7px,rgba(255,216,61,.022) 7px 8px) !important;
+}
+.title-screen::after{
+  content:"";
+  position:absolute;inset:5.5% 6%;
+  border:1px solid rgba(166,210,230,.16);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.18),0 0 35px rgba(0,0,0,.16);
+  pointer-events:none;z-index:1;
+}
+.title-main{
+  z-index:3 !important;
+  animation:titleMainIn .9s ease 4.25s forwards !important;
+}
+.title-main::before{
+  content:"CASTOR PROJECT  •  KANJI QUEST";
+  position:absolute;left:50%;top:18%;transform:translateX(-50%);
+  color:rgba(214,235,245,.62);font-family:system-ui,"Noto Sans JP",sans-serif;
+  font-size:clamp(9px,2.5vw,12px);font-weight:700;letter-spacing:3px;
+  white-space:nowrap;
+  text-shadow:0 1px 5px rgba(0,0,0,.6);
+}
+.title-main::after{
+  content:"";
+  position:absolute;left:50%;top:24%;transform:translateX(-50%);
+  width:min(62%,270px);height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,216,61,.55),rgba(255,255,255,.75),rgba(255,216,61,.55),transparent);
+  box-shadow:0 0 9px rgba(255,216,61,.12);
+}
+.title-game{
+  top:34% !important;
+  font-size:clamp(38px,11vw,60px) !important;
+  letter-spacing:4px !important;
+  color:#ffe47a !important;
+  background:linear-gradient(180deg,#fff5b0 0%,#ffd83d 42%,#e7a900 100%);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+  text-shadow:
+    0 3px 0 rgba(82,48,13,.95),
+    0 6px 0 rgba(48,28,10,.95),
+    0 0 18px rgba(255,216,61,.14) !important;
+}
+.title-game-en{
+  top:42% !important;
+  color:#dcecf3 !important;
+  font-size:clamp(12px,3.5vw,18px) !important;
+  letter-spacing:6px !important;
+  text-shadow:0 2px 0 #071521,0 0 10px rgba(0,0,0,.55) !important;
+}
+.title-start{
+  top:58% !important;
+  width:min(68%,315px) !important;height:60px !important;
+  border:2px solid #f7d45b !important;border-radius:8px !important;
+  background:
+    linear-gradient(180deg,rgba(255,239,145,.98) 0%,rgba(255,214,74,.98) 46%,rgba(218,158,25,.98) 100%) !important;
+  color:#2d2412 !important;
+  font-size:clamp(21px,5.5vw,28px) !important;
+  letter-spacing:2px;
+  box-shadow:
+    0 0 0 1px rgba(73,42,10,.9),
+    0 5px 0 #4a2a12,
+    0 9px 22px rgba(0,0,0,.38),
+    inset 0 1px 0 rgba(255,255,255,.95),
+    inset 0 -5px 10px rgba(143,86,8,.16) !important;
+}
+.title-start::before,.title-start::after{
+  content:"";position:absolute;top:50%;width:18px;height:18px;transform:translateY(-50%) rotate(45deg);
+  border:1px solid rgba(116,73,11,.45);background:rgba(255,244,165,.22);
+}
+.title-start::before{left:13px}.title-start::after{right:13px}
+.title-start:hover,.title-start:focus-visible{
+  filter:brightness(1.06) !important;
+  box-shadow:0 0 0 1px rgba(73,42,10,.9),0 5px 0 #4a2a12,0 0 28px rgba(255,216,61,.18),inset 0 1px 0 rgba(255,255,255,.95) !important;
+}
+@media(max-width:600px){
+  .title-screen::after{inset:4% 4.5%}
+  .title-main::before{top:15%;letter-spacing:2px}
+  .title-main::after{top:21%;width:58%}
+  .title-game{top:32% !important}
+  .title-game-en{top:40% !important}
+  .title-start{top:56% !important;width:72% !important}
+}
+</style>
+
+<style id="v50.5-cloud-button-final">
+/* Final v50.5 overrides: keep clouds behind UI and preserve the blue/gold button. */
+.title-main{z-index:3 !important;}
+.title-logo-art{z-index:4 !important;}
+.title-start{
+  background:linear-gradient(180deg,#3a80d6 0%,#1a5eaf 48%,#0d3e82 100%) !important;
+  border:3px solid #efc34e !important;border-radius:15px !important;color:#fff !important;
+  text-shadow:0 2px 2px rgba(0,0,0,.6) !important;
+  box-shadow:0 0 0 2px rgba(72,36,10,.95),0 6px 0 #3b1d10,0 11px 24px rgba(0,0,0,.42),inset 0 2px 0 rgba(255,255,255,.5),inset 0 -7px 14px rgba(0,0,0,.18) !important;
+}
+.title-start::before,.title-start::after{
+  border-color:rgba(255,226,112,.8) !important;
+  background:rgba(255,240,160,.12) !important;
+}
+</style>
 </body></html><style>
 /* v3.9: enemy size increase — make stage enemies visually prominent */
 #game .field .enemy{
