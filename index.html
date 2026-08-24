@@ -2406,6 +2406,17 @@ function kqBattleStartSafeVolume(){
 window.addEventListener("load", kqBattleStartSafeVolume);
 </script>
 
+
+<script>
+/* Immediate SE helper */
+function kqPlayImmediateSE(id){
+  const se = document.getElementById(id);
+  if(!se) return;
+  se.currentTime = 0;
+  se.play().catch(()=>{});
+}
+</script>
+
 </body></html><style>
 /* v3.9: enemy size increase — make stage enemies visually prominent */
 #game .field .enemy{
