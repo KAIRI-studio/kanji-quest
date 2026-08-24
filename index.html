@@ -1246,47 +1246,6 @@ body.title-open #app{background:#071521;box-shadow:none}
 </style>
 
 
-
-
-
-<script>
-/* KANJI QUEST battle SE v2 */
-const kqBattleSE = {
-  correct: new Audio("assets/audio/seikai.mp3"),
-  wrong: new Audio("assets/audio/zannen.mp3"),
-  kairiCastor: new Audio("assets/audio/kairiandcastorkougeki.mp3"),
-  sota: new Audio("assets/audio/sotakougeki.mp3"),
-  kappa: new Audio("assets/audio/kappakougeki.mp3")
-};
-
-Object.values(kqBattleSE).forEach(s => s.volume = 0.5);
-
-function kqPlayBattleSE(type){
-  const s = kqBattleSE[type];
-  if(!s) return;
-  s.setAttribute("playsinline","");
-  s.preload = "auto";
-  s.currentTime = 0;
-  s.play().catch(()=>{});
-}
-
-function kqPlayAttackByCharacter(name){
-  name = String(name || "").toLowerCase();
-  if(name.includes("sota")) return kqPlayBattleSE("sota");
-  if(name.includes("kappa")) return kqPlayBattleSE("kappa");
-  return kqPlayBattleSE("kairiCastor");
-}
-</script>
-
-
-<script>
-function kqPlayFinalBattleSE(file){
-  const a = new Audio("assets/audio/" + file);
-  a.volume = 0.5;
-  a.play().catch(()=>{});
-}
-</script>
-
 </head><body class="title-open"><main id="app"><header style="display:none"><div>HBK GAMING<br><span>KANJI QUEST</span></div><div>スコア <span id="score">00000</span></div><button id="quitBattle" class="battle-back" type="button" style="display:none;">やめる</button></header>
 
 
@@ -1843,8 +1802,8 @@ function ans(v,c,b,token){
 
     S.eh=Math.max(0,S.eh-dmg);
 
-    kqPlayFinalBattleSE('seikai.mp3');
-    kqPlayFinalBattleSE('kairiandcastorkougeki.mp3');
+    window.kqPlayBattleSE("correct");
+    window.kqPlayAttackByCharacter(S.char);
     $("msg").textContent="✨ せいかい！ "+ch[0]+"のこうげき！";
     $("slash").classList.remove("hide");
     $("damage").classList.remove("hide");
@@ -1882,7 +1841,7 @@ function ans(v,c,b,token){
     }
 
   }else{
-    kqPlayBattleSE('wrong');
+    window.kqPlayBattleSE("wrong");
     b.classList.add("wrong");
     if(S.char!=="kappa")S.combo=0;
     S.ph=Math.max(0,S.ph-10);
@@ -2161,6 +2120,12 @@ if(returnStage){
 <audio id="kqSfxBattleStart" preload="auto" playsinline><source src="assets/audio/sentousuta-to.mp3" type="audio/mpeg"></audio>
 <audio id="kqSfxStageSelect" preload="auto" playsinline><source src="assets/audio/sute-jisentaku.mp3" type="audio/mpeg"></audio>
 <audio id="kqSfxCancel" preload="auto" playsinline><source src="assets/audio/kyanseru.mp3" type="audio/mpeg"></audio>
+<!-- Battle SE: kept separate from UI SE so correct + attack can overlap cleanly. -->
+<audio id="kqBattleCorrect" preload="auto" playsinline><source src="assets/audio/seikai.mp3" type="audio/mpeg"></audio>
+<audio id="kqBattleWrong" preload="auto" playsinline><source src="assets/audio/zannen.mp3" type="audio/mpeg"></audio>
+<audio id="kqAttackKairiCastor" preload="auto" playsinline><source src="assets/audio/kairiandcastorkougeki.mp3" type="audio/mpeg"></audio>
+<audio id="kqAttackSota" preload="auto" playsinline><source src="assets/audio/sotakougeki.mp3" type="audio/mpeg"></audio>
+<audio id="kqAttackKappa" preload="auto" playsinline><source src="assets/audio/kappakougeki.mp3" type="audio/mpeg"></audio>
 <script>
 /* KANJI QUEST audio manager: one direct-play SFX channel, no AudioContext. */
 (function(){
@@ -2173,6 +2138,13 @@ if(returnStage){
     battleStart:document.getElementById("kqSfxBattleStart"),
     stageSelect:document.getElementById("kqSfxStageSelect"),
     cancel:document.getElementById("kqSfxCancel")
+  };
+  const battleSfx={
+    correct:document.getElementById("kqBattleCorrect"),
+    wrong:document.getElementById("kqBattleWrong"),
+    kairiCastor:document.getElementById("kqAttackKairiCastor"),
+    sota:document.getElementById("kqAttackSota"),
+    kappa:document.getElementById("kqAttackKappa")
   };
   if(!s||!b||Object.values(sfx).some(a=>!a)) return;
 
@@ -2230,6 +2202,20 @@ if(returnStage){
       const p=a.play();
       if(p&&p.catch)p.catch(()=>{});
     }catch(e){}
+
+  const battleVolumes={correct:0.5,wrong:0.5,kairiCastor:0.5,sota:0.5,kappa:0.5};
+  function playBattle(name){
+    const a=battleSfx[name];
+    if(!a)return;
+    try{a.pause();a.currentTime=0;a.volume=battleVolumes[name]??0.5;const p=a.play();if(p&&p.catch)p.catch(()=>{});}catch(e){}
+  }
+  window.kqPlayBattleSE=playBattle;
+  window.kqPlayAttackByCharacter=function(name){
+    name=String(name||"").toLowerCase();
+    if(name.includes("sota")) return playBattle("sota");
+    if(name.includes("kappa")) return playBattle("kappa");
+    return playBattle("kairiCastor");
+  };
   };
 })();
 </script>
@@ -2354,6 +2340,14 @@ if(returnStage){
 
 
 
+<script>
+/* Audio organization: preload only; never call play() during preload. */
+(function(){
+  window.addEventListener("load",function(){
+    document.querySelectorAll("audio[preload=\"auto\"]").forEach(function(a){try{a.load();}catch(e){}});
+  },{once:true});
+})();
+</script>
 </body></html><style>
 /* v3.9: enemy size increase — make stage enemies visually prominent */
 #game .field .enemy{
