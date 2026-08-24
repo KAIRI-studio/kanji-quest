@@ -2396,24 +2396,14 @@ window.addEventListener("load", kqBattleStartVolumeUp);
 
 
 <script>
-/* Battle start SE amplification */
-function kqBattleStartGainBoost(){
+/* Safe battle start SE volume adjustment */
+function kqBattleStartSafeVolume(){
   const se = document.getElementById("kqSfxBattleStart");
-  if(!se || se.dataset.boosted) return;
-
-  se.dataset.boosted = "true";
-
-  const ctx = new (window.AudioContext || window.webkitAudioContext)();
-  const source = ctx.createMediaElementSource(se);
-  const gain = ctx.createGain();
-
-  // 約1.8倍相当。戦闘開始SEのみ増幅
-  gain.gain.value = 1.8;
-
-  source.connect(gain);
-  gain.connect(ctx.destination);
+  if(se){
+    se.volume = 1.0;
+  }
 }
-window.addEventListener("load", kqBattleStartGainBoost);
+window.addEventListener("load", kqBattleStartSafeVolume);
 </script>
 
 </body></html><style>
