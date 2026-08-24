@@ -1264,6 +1264,8 @@ Object.values(kqBattleSE).forEach(s => s.volume = 0.5);
 function kqPlayBattleSE(type){
   const s = kqBattleSE[type];
   if(!s) return;
+  s.setAttribute("playsinline","");
+  s.preload = "auto";
   s.currentTime = 0;
   s.play().catch(()=>{});
 }
@@ -2440,6 +2442,11 @@ window.kqStartBattleBgmAfterSE = function(startBgm){
 
     const sounds = [
       "assets/audio/hajimeru.mp3",
+      "assets/audio/ka-soruidoutokyarasentaku.mp3",
+      "assets/audio/kaitousentaku.mp3",
+      "assets/audio/sentousuta-to.mp3",
+      "assets/audio/sute-jisentaku.mp3",
+      "assets/audio/kyanseru.mp3",
       "assets/audio/seikai.mp3",
       "assets/audio/zannen.mp3",
       "assets/audio/kairiandcastorkougeki.mp3",
