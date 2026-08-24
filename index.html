@@ -2382,6 +2382,18 @@ if(returnStage){
   background:rgba(255,240,160,.12) !important;
 }
 </style>
+
+<script>
+/* Preload title start SE to reduce button response delay */
+function kqPreloadTitleStartSE(){
+  const s = document.getElementById("kqSfxTitleStart");
+  if(s){
+    s.load();
+  }
+}
+window.addEventListener("load", kqPreloadTitleStartSE);
+</script>
+
 </body></html><style>
 /* v3.9: enemy size increase — make stage enemies visually prominent */
 #game .field .enemy{
