@@ -1302,8 +1302,748 @@ body.title-open #app{background:#071521;box-shadow:none}
 
 <section id="result" class="screen"><div class="clear">★ クリア！ ★</div><div class="resultchar"><img id="rs"><div><strong id="rn"></strong><small id="rt"></small></div></div><div class="final">スコア<b id="fs">0</b></div><div class="rg"><div>正解<b id="cc">0</b>/10</div><div>コンボ<b id="mc">0</b></div><div>たおした<b id="ex">0</b>たい</div></div><div id="rec" class="record hide">NEW RECORD!</div><button id="retry" class="primary">もう一度あそぶ</button><button id="change" class="secondary">キャラクターをかえる</button></section>
 <div id="toast" class="toast"></div></main>
+<script>
+const C={castor:["CASTOR","バランス型","assets/castor.png",3,3,3,"基本性能が安定"],kairi:["KAIRI","こうげき特化型","assets/kairi.png",5,1,3,"正解時のこうげき力UP"],sota:["SOTA","コンボ特化型","assets/sota.png",4,2,5,"コンボ倍率が高い"],kappa:["KAPPA","安定型","assets/kappa.png",2,4,2,"1回ミスしてもコンボが途切れない"]};
+const Q1=[["山","やま","かわ","そら"],["川","かわ","やま","うみ"],["森","もり","はやし","くさ"],["空","そら","あめ","ほし"],["雨","あめ","ゆき","くも"],["花","はな","くさ","き"],["草","くさ","はな","もり"],["木","き","いし","はやし"],["林","はやし","もり","き"],["石","いし","つち","たま"],["土","つち","いし","みず"],["水","みず","ひ","あめ"],["火","ひ","みず","つち"],["月","つき","ひ","ほし"],["犬","いぬ","ねこ","とり"],["虫","むし","とり","さかな"],["鳥","とり","むし","いぬ"],["貝","かい","さかな","とり"],["人","ひと","こ","おとこ"],["男","おとこ","おんな","ひと"],["女","おんな","おとこ","こ"],["子","こ","ひと","おんな"],["目","め","みみ","くち"],["耳","みみ","め","て"],["口","くち","め","あし"],["手","て","あし","みみ"],["足","あし","て","くち"],["車","くるま","ふね","みち"],["本","ほん","えんぴつ","つくえ"],["玉","たま","いし","つき"]];
+const Q2=[["池","いけ","かわ","うみ"],["海","うみ","いけ","かわ"],["岩","いわ","いし","やま"],["谷","たに","やま","いわ"],["園","その","にわ","もり"],["原","はら","たに","やま"],["野","の","はら","やま"],["星","ほし","つき","そら"],["雲","くも","あめ","そら"],["雪","ゆき","あめ","くも"],["風","かぜ","ゆき","あめ"],["春","はる","なつ","あき"],["夏","なつ","はる","あき"],["秋","あき","はる","なつ"],["冬","ふゆ","はる","なつ"],["朝","あさ","よる","ひる"],["昼","ひる","あさ","よる"],["夜","よる","あさ","ひる"],["週","しゅう","つき","とき"],["父","ちち","はは","あに"],["母","はは","ちち","あに"],["兄","あに","あね","ちち"],["姉","あね","あに","ちち"],["弟","おとうと","あに","あね"],["妹","いもうと","あに","あね"],["友","とも","ちち","あに"],["店","みせ","いえ","へや"],["門","もん","いえ","みせ"],["船","ふね","くるま","でんしゃ"],["魚","さかな","とり","むし"],["牛","うし","うま","ぶた"],["馬","うま","うし","ぶた"],["羽","はね","つばさ","とり"],["米","こめ","むぎ","まめ"],["茶","ちゃ","みず","ゆ"],["色","いろ","かたち","ひかり"]];
+const Q3=[["駅","えき","みせ","みち"],["横","よこ","たて","うえ"],["岸","きし","しま","はま"],["橋","はし","みち","かわ"],["客","きゃく","みせ","ひと"],["君","きみ","とも","ひと"],["係","かかり","しごと","ひと"],["血","ち","ほね","にく"],["皿","さら","はし","ちゃわん"],["指","ゆび","て","あし"],["歯","は","め","くち"],["酒","さけ","みず","ちゃ"],["神","かみ","ほとけ","ひと"],["炭","すみ","ひ","いし"],["豆","まめ","こめ","むぎ"],["島","しま","かわ","やま"],["湯","ゆ","みず","あめ"],["箱","はこ","かご","ふくろ"],["畑","はたけ","た","の"],["鼻","はな","くち","め"],["氷","こおり","ゆき","あめ"],["羊","ひつじ","うし","うま"]];
+const Q4=[["愛","あい","ゆめ","こころ"],["塩","しお","さとう","こめ"],["億","おく","まん","せん"],["芽","め","はな","くき"],["街","まち","みち","いえ"],["鏡","かがみ","ガラス","まど"],["芸","げい","わざ","おどり"],["差","さ","ちがい","ひらき"],["札","さつ","ふだ","かね"]];
+const Q5=[["圧","あつ","おもい","ちから"],["液","えき","みず","しる"],["桜","さくら","うめ","まつ"],["可","か","よい","できる"],["仮","かり","ほんもの","うそ"],["格","かく","かたち","きまり"],["刊","かん","ほん","しんぶん"],["逆","ぎゃく","まえ","うしろ"],["旧","きゅう","ふるい","むかし"],["個","こ","ひとつ","もの"]];
+const Q6=[["胃","い","はら","むね"],["域","いき","くに","ばしょ"],["我","われ","じぶん","おれ"],["革","かわ","かみ","ぬの"],["株","かぶ","き","ね"],["机","つくえ","いす","たな"],["胸","むね","はら","せなか"],["筋","すじ","ほね","ちから"],["系","けい","つながり","なかま"],["穴","あな","くぼみ","すきま"],["孝","こう","おや","こども"],["鋼","はがね","てつ","きんぞく"],["冊","さつ","ほん","かみ"],["私","わたし","ぼく","じぶん"],["姿","すがた","かたち","からだ"]];
+let Q=Q1;
+const GRADE_QUESTIONS={1:Q1,2:Q2,3:Q3,4:Q4,5:Q5,6:Q6};
+let S={
+  char:null,stage:1,q:0,score:0,combo:0,max:0,correct:0,
+  eh:20,emax:20,ph:40,pmax:40,lock:false,best:+localStorage.cqBest||0,
+  enemyIndex:0,kills:0,timer:null,over:false,run:0,
+  startAt:0,endAt:0,elapsed:0,resultShown:false
+};
 
-<!-- Battle SE: kept separate from UI SE so correct + attack can overlap cleanly. -->
+const ENEMIES=[
+  {name:"あおスライム",hp:50,img:"assets/enemies/enemy_01.png",bonus:150},
+  {name:"マッシュファイター",hp:50,img:"assets/enemies/enemy_02.png",bonus:170},
+  {name:"リーフフェアリー",hp:50,img:"assets/enemies/enemy_03.png",bonus:190},
+  {name:"アースボア",hp:50,img:"assets/enemies/enemy_04.png",bonus:200},
+  {name:"ゴブリン",hp:50,img:"assets/enemies/enemy_05.png",bonus:220},
+  {name:"スカルナイト",hp:50,img:"assets/enemies/enemy_06.png",bonus:240},
+  {name:"フロストウルフ",hp:50,img:"assets/enemies/enemy_07.png",bonus:260},
+  {name:"グリーンスネーク",hp:50,img:"assets/enemies/enemy_08.png",bonus:280},
+  {name:"ダークメイジ",hp:50,img:"assets/enemies/enemy_09.png",bonus:300},
+  {name:"ゴースト",hp:50,img:"assets/enemies/enemy_10.png",bonus:320},
+  {name:"ウッドオーク",hp:50,img:"assets/enemies/enemy_11.png",bonus:340},
+  {name:"グリフォン",hp:50,img:"assets/enemies/enemy_12.png",bonus:360},
+  {name:"レッドドラゴン",hp:50,img:"assets/enemies/enemy_13.png",bonus:380},
+  {name:"ロックゴーレム",hp:50,img:"assets/enemies/enemy_14.png",bonus:400},
+  {name:"クリスタルドラゴン",hp:50,img:"assets/enemies/enemy_15.png",bonus:430},
+  {name:"フォレストゴーレム",hp:50,img:"assets/enemies/enemy_16.png",bonus:460},
+  {name:"マグマビースト",hp:50,img:"assets/enemies/enemy_17.png",bonus:480},
+  {name:"アイスドラゴン",hp:50,img:"assets/enemies/enemy_18.png",bonus:500},
+];
+
+// IMPORTANT GAME RULE:
+// Every enemy has HP=50 regardless of stage.
+// STAGE_ENEMIES changes illustration/order only.
+// Never add stage-specific HP, attack, or defeat-count scaling.
+const STAGE_ENEMY_IDS={
+  1:[1,2,3,4,5,6,11],
+  2:[2,3,7,8,9,10,12],
+  3:[3,5,6,9,10,11,13],
+  4:[7,8,11,12,13,14,15],
+  5:[10,12,14,15,16,17,18],
+  6:[12,13,14,15,16,17,18]
+};
+
+const STAGE_ENEMIES=Object.fromEntries(
+  Object.entries(STAGE_ENEMY_IDS).map(([stage,ids])=>[
+    stage,
+    ids.map(id=>({
+      ...ENEMIES[id-1],
+      img:`assets/enemies/enemy_${String(id).padStart(2,"0")}.png`
+    }))
+  ])
+);
+
+function getStageEnemies(){
+  return STAGE_ENEMIES[S.stage] || ENEMIES;
+}
+
+const $=x=>document.getElementById(x);
+const show=x=>{
+  ["titleScreen","stageSelect","select","game","result"].forEach(y=>{
+    const el=$(y);
+    if(!el)return;
+    el.classList.remove("active");
+    el.style.display="none";
+  });
+  const target=$(x);
+  if(target){
+    target.classList.add("active");
+    target.style.display="block";
+  }
+  const header=document.querySelector("header");
+  if(header) header.style.display=(x==="titleScreen")?"none":"flex";
+  document.body.classList.toggle("title-open", x==="titleScreen");
+  const quit=$("quitBattle");
+  if(quit) quit.style.display=(x==="game")?"block":"none";
+};
+window.show=show;
+
+// Initial title screen: no game HUD/header.
+const initialHeader=document.querySelector("header");
+if(initialHeader) initialHeader.style.display="none";
+document.body.classList.add("title-open");
+
+const sh=a=>[...a].sort(()=>Math.random()-.5);
+
+function clearTimer(){
+  if(S.timer!==null){
+    clearTimeout(S.timer);
+    S.timer=null;
+  }
+  if(S.timeFrame){
+    cancelAnimationFrame(S.timeFrame);
+    S.timeFrame=null;
+  }
+}
+
+function newRun(){
+  S.run++;
+  clearTimer();
+  return S.run;
+}
+
+function validRun(token){
+  return token===S.run && !S.over;
+}
+
+function setscore(){
+  $("score").textContent=String(S.score).padStart(5,"0");
+}
+
+function updateTime(token){
+  if(!validRun(token)){
+    S.timeFrame=null;
+    return;
+  }
+  S.elapsed=(performance.now()-S.startAt)/1000;
+  $("time").textContent=S.elapsed.toFixed(1)+"s";
+  S.timeFrame=requestAnimationFrame(()=>updateTime(token));
+}
+
+function toast(t){
+  $("toast").textContent=t;
+  $("toast").classList.add("on");
+  clearTimeout(window.cqToastTimer);
+  window.cqToastTimer=setTimeout(()=>$("toast").classList.remove("on"),900);
+}
+
+function cards(){
+  $("grid").innerHTML="";
+  Object.entries(C).forEach(([id,c])=>{
+    let b=document.createElement("button");
+    b.className="card";
+    b.dataset.id=id;
+    b.innerHTML=
+      `<img src="${c[2]}"><div class="name">${c[0]}</div>`+
+      `<div class="type">${c[1]}</div>`+
+      `<div class="stars">こうげき ${"★".repeat(c[3])}<br>`+
+      `HP ${"★".repeat(c[4])}　スコア ${"★".repeat(c[5])}</div>`+
+      `<div class="とくいわざ">${c[6]}</div>`;
+    b.onclick=()=>{
+      S.char=id;
+      document.querySelectorAll(".card").forEach(x=>x.classList.remove("sel"));
+      b.classList.add("sel");
+      $("start").disabled=false;
+      $("start").textContent="▶ "+c[0]+"でスタート";
+    };
+    $("grid").appendChild(b);
+  });
+}
+
+function resetBattleUI(){
+  $("answers").innerHTML="";
+  $("combo").classList.add("hide");
+  $("combo").querySelector("span").textContent="0";
+  $("slash").classList.add("hide");
+  $("damage").classList.add("hide");
+  $("msg").textContent="よみかたを えらぼう！";
+  const hpMax=S.pmax||40;
+  $("php").style.width="100%";
+  $("pt").textContent=hpMax+"/"+hpMax;
+  $("ehp").style.width="100%";
+  $("time").textContent="0.0s";
+}
+
+function applyStageBackground(){
+  const field=document.querySelector("#game .field");
+  if(!field)return;
+  const stage=Math.min(6,Math.max(1,Number(S.stage)||1));
+  const bg = `url("assets/stages/${stage}.png")`;
+  field.style.setProperty("background-image", bg, "important");
+  field.style.setProperty("--battle-bg-image", bg);
+  field.style.setProperty("background-position", "center 60%", "important");
+  field.style.setProperty("background-size", "cover", "important");
+  field.style.setProperty("background-repeat", "no-repeat", "important");
+}
+
+function start(){
+$("quitBattle").style.display="block";
+
+  const token=newRun();
+
+  S.over=false;
+  S.lock=false;
+  S.resultShown=false;
+  S.q=0;
+  S.score=0;
+  S.combo=0;
+  S.max=0;
+  S.correct=0;
+  S.pmax={
+    kappa:40,
+    castor:30,
+    sota:20,
+    kairi:10
+  }[S.char] || 30;
+  S.ph=S.pmax;
+  S.enemyIndex=0;
+  S.kills=0;
+  S.elapsed=0;
+  S.startAt=performance.now();
+
+  document.querySelector(".clear").textContent="★ クリア！ ★";
+  document.querySelector(".clear").style.color="#ffd83d";
+
+  $("stageLabel").textContent="STAGE "+S.stage;
+  $("ps").src=C[S.char][2];
+  $("pn").textContent=C[S.char][0];
+  resetBattleUI();
+  setscore();
+  spawnEnemy(0);
+  show("game");
+  applyStageBackground();
+  render(token);
+  S.timeFrame=requestAnimationFrame(()=>updateTime(token));
+}
+
+function spawnEnemy(index){
+  const enemies=getStageEnemies();
+  const e=enemies[index%enemies.length];
+  S.enemyIndex=index%enemies.length;
+  S.emax=e.hp;
+  S.eh=e.hp;
+
+  $("enemyName").textContent=e.name;
+  $("enemyImg").src=e.img;
+  $("enemyImg").alt=e.name;
+  $("enemy").style.filter="none";
+  $("ehp").style.width="100%";
+  $("et").textContent=S.eh+"/"+S.emax;
+}
+
+function render(token=S.run){
+  if(!validRun(token))return;
+
+  S.lock=false;
+  $("qn").textContent=S.q+1;
+  $("ehp").style.width=S.eh/S.emax*100+"%";
+  $("et").textContent=S.eh+"/"+S.emax;
+  $("php").style.width=S.ph/S.pmax*100+"%";
+  $("pt").textContent=S.ph+"/"+S.pmax;
+
+  let q=Q[Math.floor(Math.random()*Q.length)];
+  $("kanji").textContent=q[0];
+  $("answers").innerHTML="";
+
+  sh(q.slice(1)).forEach(v=>{
+    let b=document.createElement("button");
+    b.className="answer";
+    b.textContent=v;
+    b.onclick=()=>ans(v,q[1],b,token);
+    $("answers").appendChild(b);
+  });
+
+  $("combo").classList.toggle("hide",S.combo<2);
+  $("combo").querySelector("span").textContent=S.combo;
+  $("msg").textContent="よみかたを えらぼう！";
+}
+
+function calcScore(gameOver=false){
+  const correctPts=S.correct*300;
+  const killPts=S.kills*220;
+  const comboPts=S.max*70;
+
+  // ゲームオーバー時はタイムボーナスを一切加算しない。
+  // クリアした場合だけ、クリアタイムに応じたボーナスを加算する。
+  const timeBonus=gameOver
+    ? 0
+    : Math.max(0,Math.round(1800-S.elapsed*30));
+
+  let timeRank="E";
+  if(!gameOver){
+    if(S.elapsed<20) timeRank="S";
+    else if(S.elapsed<30) timeRank="A";
+    else if(S.elapsed<40) timeRank="B";
+    else if(S.elapsed<50) timeRank="C";
+    else if(S.elapsed<60) timeRank="D";
+  }
+
+  return {
+    correctPts,
+    killPts,
+    comboPts,
+    timeBonus,
+    timeRank,
+    total:correctPts+killPts+comboPts+timeBonus
+  };
+}
+
+function showResult(gameOver){
+  const score=calcScore(gameOver);
+  S.score=score.total;
+
+  // The header score must match the final score shown on the result screen.
+  setscore();
+
+  $("fs").textContent=S.score.toLocaleString();
+  $("cc").textContent=S.correct;
+  $("mc").textContent=S.max;
+  $("ex").textContent=S.correct*10+S.max*5+S.kills*20;
+  $("rs").src=C[S.char][2];
+  $("rn").textContent=C[S.char][0];
+  $("rt").textContent=C[S.char][1];
+
+  const boxes=document.querySelectorAll(".rg div");
+  if(boxes.length>=3){
+    boxes[0].innerHTML="正解<b>"+S.correct+"</b>/10";
+    boxes[1].innerHTML="撃破<b>"+S.kills+"</b>体";
+    boxes[2].innerHTML="コンボ<b>"+S.max+"</b>";
+  }
+
+  // Score breakdown: show exactly how the final score was made.
+  let breakdown=document.getElementById("scoreBreakdown");
+  if(!breakdown){
+    breakdown=document.createElement("div");
+    breakdown.id="scoreBreakdown";
+    breakdown.className="score-breakdown";
+    const scoreBox=$("fs").closest("div");
+    if(scoreBox && scoreBox.parentNode){
+      scoreBox.parentNode.insertBefore(breakdown, scoreBox.nextSibling);
+    }
+  }
+
+  breakdown.innerHTML=
+    '<div class="breakdown-title">スコアのうちわけ</div>'+
+    '<div class="breakdown-row"><span>🈶 せいかい '+S.correct+'もん</span><b>+'+score.correctPts.toLocaleString()+'</b></div>'+
+    '<div class="breakdown-row"><span>⚔️ たおした '+S.kills+'たい</span><b>+'+score.killPts.toLocaleString()+'</b></div>'+
+    '<div class="breakdown-row"><span>🔥 コンボ '+S.max+'</span><b>+'+score.comboPts.toLocaleString()+'</b></div>'+
+    '<div class="breakdown-row"><span>⏱️ タイム '+S.elapsed.toFixed(1)+'秒</span><b>+'+score.timeBonus.toLocaleString()+'</b></div>'+
+    '<div class="breakdown-total"><span>TOTAL</span><b>'+score.total.toLocaleString()+'</b></div>';
+  let timeBox=document.getElementById("resultTime");
+  if(!timeBox){
+    const rg=document.querySelector(".rg");
+    if(rg){
+      timeBox=document.createElement("div");
+      timeBox.id="resultTime";
+      timeBox.style.cssText="font-size:16px;font-weight:900;margin:10px 0;text-align:center";
+      rg.parentNode.insertBefore(timeBox,rg.nextSibling);
+    }
+  }
+  if(timeBox)timeBox.innerHTML="タイム  "+S.elapsed.toFixed(1)+"秒";
+
+  if(gameOver){
+    $("rec").classList.add("hide");
+    document.querySelector(".clear").textContent="ゲームオーバー";
+    document.querySelector(".clear").style.color="#ff4b4b";
+  }else{
+    let n=S.score>S.best;
+    if(n){
+      S.best=S.score;
+      localStorage.cqBest=S.best;
+    }
+    $("rec").classList.toggle("hide",!n);
+    document.querySelector(".clear").textContent="★ クリア！ ★";
+    document.querySelector(".clear").style.color="#ffd83d";
+  }
+
+  show("result");
+}
+
+function gameOver(token){
+  if(!validRun(token) || S.over)return;
+  clearTimer();
+  S.elapsed=(performance.now()-S.startAt)/1000;
+  S.over=true;
+  S.lock=true;
+  document.querySelectorAll(".answer").forEach(x=>x.disabled=true);
+  showResult(true);
+}
+
+function finish(token){
+  // The 10th question is the authoritative end of a run.
+  // A stale callback must never block the result screen, while the guard
+  // below prevents the same run from showing the result twice.
+  if(S.resultShown || S.over)return;
+  if(token!==S.run && S.q<9)return;
+  if(S.q<9)return;
+
+  clearTimer();
+  S.elapsed=(performance.now()-S.startAt)/1000;
+  S.over=true;
+  S.lock=true;
+  S.resultShown=true;
+  document.querySelectorAll(".answer").forEach(x=>x.disabled=true);
+
+  try{
+    showResult(false);
+  }catch(err){
+    console.error("Result screen error:",err);
+    const game=document.getElementById("game");
+    const result=document.getElementById("result");
+    if(game){game.classList.remove("active");game.style.display="none";}
+    if(result){result.classList.add("active");result.style.display="block";}
+  }
+}
+
+function scheduleNextQuestion(token, delay){
+  clearTimeout(S.timer);
+  S.timer=setTimeout(()=>{
+    S.timer=null;
+
+    if(S.q>=9){
+      finish(token);
+      return;
+    }
+    if(token!==S.run || S.over)return;
+
+    S.q++;
+    spawnEnemy(S.enemyIndex+1);
+    render(token);
+  },delay);
+}
+
+function scheduleNextQuestionNoEnemyChange(token, delay){
+  clearTimeout(S.timer);
+  S.timer=setTimeout(()=>{
+    S.timer=null;
+
+    if(S.q>=9){
+      finish(token);
+      return;
+    }
+    if(token!==S.run || S.over)return;
+
+    S.q++;
+    render(token);
+  },delay);
+}
+
+function ans(v,c,b,token){
+  if(!validRun(token) || S.lock)return;
+
+  S.lock=true;
+  document.querySelectorAll(".answer").forEach(x=>x.disabled=true);
+  let ch=C[S.char];
+
+  if(v===c){
+    b.classList.add("correct");
+    S.correct++;
+    S.combo++;
+
+    // Live score is awarded at the exact moment each event happens.
+    // Correct answer: +300
+    S.score += 300;
+
+    // New maximum combo: +70 immediately.
+    const previousMax = S.max;
+    S.max = Math.max(S.max, S.combo);
+    if(S.max > previousMax){
+      S.score += 70;
+    }
+
+    // Character-specific attack power.
+    // determines the intended full-correctness defeat ranking:
+    // KAIRI > SOTA > CASTOR > KAPPA.
+    let baseAttack={
+      // v4.15: Enemy HP is identical in every stage.
+      // Stage differences are illustration + appearance order ONLY.
+      // 10/10 perfect run defeat counts are identical in every stage:
+      // KAIRI 7 / SOTA 6 / CASTOR 5 / KAPPA 4.
+      kairi:36,
+      sota:32,
+      castor:28,
+      kappa:18
+    }[S.char] || 28;
+
+    let dmg=baseAttack + S.combo*2;
+
+    S.eh=Math.max(0,S.eh-dmg);
+    $("msg").textContent="✨ せいかい！ "+ch[0]+"のこうげき！";
+    $("slash").classList.remove("hide");
+    $("damage").classList.remove("hide");
+    $("damage").textContent="-"+dmg;
+
+    const fxToken=token;
+    setTimeout(()=>{
+      if(fxToken===S.run){
+        $("slash").classList.add("hide");
+        $("damage").classList.add("hide");
+      }
+    },420);
+
+    toast("コンボ ×"+S.combo+"!");
+
+    if(S.eh<=0){
+      const enemies=getStageEnemies();
+      const e=enemies[S.enemyIndex%enemies.length];
+      S.kills++;
+
+      // Enemy defeat: +220 immediately, at the moment of the kill.
+      S.score += 220;
+      setscore();
+
+      // Show the enemy HP reaching zero before switching enemies.
+      S.eh=0;
+      $("ehp").style.width="0%";
+      $("et").textContent="0/"+S.emax;
+      $("msg").textContent="💥 "+e.name+" を たおした！";
+      toast("★ たおした！ ★");
+
+      // Everyone gets exactly 10 questions.
+      scheduleNextQuestion(token,1100);
+      return;
+    }
+
+  }else{
+    b.classList.add("wrong");
+    if(S.char!=="kappa")S.combo=0;
+    S.ph=Math.max(0,S.ph-10);
+
+    $("msg").textContent=S.char==="kappa"
+      ?"💧 まちがえた！でもコンボはつづく！"
+      :"💥 ざんねん！ こうげきされた！";
+    toast("もういっかい やってみよう！");
+
+    if(S.ph<=0){
+      $("php").style.width="0%";
+      $("pt").textContent="0/"+S.pmax;
+      $("msg").textContent="💀 HPが 0 になった！ ゲームオーバー";
+
+      S.timer=setTimeout(()=>{
+        S.timer=null;
+        if(validRun(token))gameOver(token);
+      },500);
+      return;
+    }
+  }
+
+  setscore();
+  $("ehp").style.width=S.eh/S.emax*100+"%";
+  $("et").textContent=S.eh+"/"+S.emax;
+  $("php").style.width=S.ph/S.pmax*100+"%";
+  $("pt").textContent=S.ph+"/"+S.pmax;
+  $("combo").classList.toggle("hide",S.combo<2);
+  $("combo").querySelector("span").textContent=S.combo;
+
+  scheduleNextQuestionNoEnemyChange(token,650);
+}
+
+$("start").onclick=()=>{
+  start();
+};
+
+$("retry").onclick=(e)=>{
+  e.preventDefault();
+  e.stopImmediatePropagation();
+
+  // The result screen is already the end of the previous run.
+  // Do not increment the run here: start() owns the single newRun() call.
+  clearTimer();
+  S.over=false;
+  S.lock=false;
+  S.resultShown=false;
+  $("result").style.display="none";
+  $("result").classList.remove("active");
+  sessionStorage.setItem("cqAutoStart","");
+
+  start();
+};
+
+$("change").onclick=()=>{
+  // いったんページを再読み込みして戦闘の実行状態を完全に初期化する。
+  // 現在の学年だけ保存し、再読み込み後は同じ学年のキャラクター選択へ戻す。
+  sessionStorage.removeItem("cqAutoStart");
+  sessionStorage.setItem("cqReturnStage", String(S.stage || 1));
+  window.location.reload();
+};
+
+cards();
+setscore();
+
+const autoChar=sessionStorage.getItem("cqAutoStart");
+sessionStorage.removeItem("cqAutoStart");
+if(autoChar && C[autoChar]){
+  S.char=autoChar;
+  const card=document.querySelector('.card[data-id="'+autoChar+'"]');
+  if(card){
+    card.classList.add("sel");
+    $("start").disabled=false;
+    $("start").textContent="▶ "+C[autoChar][0]+"でスタート";
+  }
+  start();
+}
+
+</script>
+
+<script>
+function selectGradeStage(stage, fromStageButton=false){
+  if(!GRADE_QUESTIONS[stage]) return;
+  if(fromStageButton){
+  }
+  S.stage=stage;
+  Q=GRADE_QUESTIONS[stage];
+  show("select");
+  window.scrollTo(0,0);
+}
+function showStage1Characters(){ selectGradeStage(1, true); }
+function showStage2Characters(){ selectGradeStage(2, true); }
+function showStage3Characters(){ selectGradeStage(3, true); }
+function showStage4Characters(){ selectGradeStage(4, true); }
+function showStage5Characters(){ selectGradeStage(5, true); }
+function showStage6Characters(){ selectGradeStage(6, true); }
+document.querySelectorAll("#stageSelect .stage-card").forEach(card=>{
+  // A click first moves focus to the card.  Block that focus event's cursor
+  // sound so a stage decision has only its dedicated confirmation sound.
+  card.addEventListener("pointerdown",()=>{
+  }, true);
+  card.addEventListener("pointerenter",()=>{
+  });
+  card.addEventListener("focus",()=>{
+  });
+});
+
+const returnStage=sessionStorage.getItem("cqReturnStage");
+sessionStorage.removeItem("cqReturnStage");
+if(returnStage){
+  const stageNum=Number(returnStage);
+  if(GRADE_QUESTIONS[stageNum]){
+    selectGradeStage(stageNum);
+  }
+}
+</script>
+
+<script>
+(function(){
+  const back = document.getElementById("characterBack");
+  if(!back) return;
+  back.addEventListener("click", function(){
+    const select = document.getElementById("select");
+    const stage = document.getElementById("stageSelect");
+    if(select) { select.classList.remove("active"); select.style.display="none"; }
+     if(stage) {
+    stage.classList.add("active"); stage.style.display="block"; }
+    window.scrollTo(0,0);
+  });
+})();
+</script>
+
+<script>
+(function(){
+  const quit = document.getElementById("quitBattle");
+  if(!quit) return;
+
+  quit.onclick = function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    // Cancel all pending game callbacks and invalidate the current run.
+    newRun();
+
+    S.score=0;
+    S.combo=0;
+    S.max=0;
+    S.correct=0;
+    S.kills=0;
+    S.q=0;
+    S.ph=40;
+    S.pmax=40;
+    S.eh=0;
+    S.elapsed=0;
+    S.lock=true;
+    S.over=true;
+
+    setscore();
+    quit.style.display="none";
+
+    document.getElementById("game").style.display="none";
+    document.getElementById("game").classList.remove("active");
+    document.getElementById("select").style.display="none";
+    document.getElementById("select").classList.remove("active");
+    document.getElementById("result").style.display="none";
+    document.getElementById("result").classList.remove("active");
+
+    const stage=document.getElementById("stageSelect");
+    stage.style.display="block";
+    stage.classList.add("active");
+
+    window.scrollTo(0,0);
+  };
+})();
+</script>
+
+<script>
+(function(){
+  function initTitleButton(){
+    const btn = document.getElementById("titleStart");
+    if(!btn || btn.dataset.kqBound) return;
+    btn.dataset.kqBound = "1";
+    const intro = document.querySelector(".title-logo-intro");
+    let titleReady = false;
+    const unlockTitleStart = function(){
+      if(titleReady) return;
+      titleReady = true;
+      btn.disabled = false;
+      btn.removeAttribute("aria-disabled");
+    };
+
+    // The start button remains unavailable until the two opening logos have
+    // completely finished their exit animation.
+    if(intro){
+      intro.addEventListener("animationend", function(e){
+        if(e.animationName === "titleIntroOut") unlockTitleStart();
+      }, {once:true});
+    }
+    setTimeout(unlockTitleStart, 5200);
+
+    btn.addEventListener("click", function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      if(!titleReady || btn.disabled) return;
+      const title = document.getElementById("titleScreen");
+      if(title){
+        title.classList.remove("active");
+        title.style.display = "none";
+      }
+
+      if(typeof window.show === "function"){
+        window.show("stageSelect");
+      } else {
+        const stage = document.getElementById("stageSelect");
+        if(stage){
+          stage.classList.add("active");
+          stage.style.display = "block";
+        }
+      }
+      window.scrollTo(0,0);
+    });
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", initTitleButton, {once:true});
+  } else {
+    initTitleButton();
+  }
+})();
+</script>
 
 <style>
 /* v50.2: premium UI title screen — no new artwork; keeps the same dark/grid world. */
@@ -1416,14 +2156,6 @@ body.title-open #app{background:#071521;box-shadow:none}
 }
 </style>
 
-<script>
-/* Audio organization: preload only; never call play() during preload. */
-(function(){
-  window.addEventListener("load",function(){
-    document.querySelectorAll("audio[preload=\"auto\"]").forEach(function(a){try{a.load();}catch(e){}});
-  },{once:true});
-})();
-</script>
 </body></html><style>
 /* v3.9: enemy size increase — make stage enemies visually prominent */
 #game .field .enemy{
