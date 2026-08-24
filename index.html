@@ -1276,6 +1276,15 @@ function kqPlayAttackByCharacter(name){
 }
 </script>
 
+
+<script>
+function kqPlayFinalBattleSE(file){
+  const a = new Audio("assets/audio/" + file);
+  a.volume = 0.5;
+  a.play().catch(()=>{});
+}
+</script>
+
 </head><body class="title-open"><main id="app"><header style="display:none"><div>HBK GAMING<br><span>KANJI QUEST</span></div><div>スコア <span id="score">00000</span></div><button id="quitBattle" class="battle-back" type="button" style="display:none;">やめる</button></header>
 
 
@@ -1797,8 +1806,6 @@ function ans(v,c,b,token){
 
   if(v===c){
     b.classList.add("correct");
-    kqPlayExtraSE('correct');
-    kqPlayBattleSE('correct');
     S.correct++;
     S.combo++;
 
@@ -1830,13 +1837,10 @@ function ans(v,c,b,token){
 
     let dmg=baseAttack + S.combo*2;
 
-    // 正解クリック → キャラクター攻撃開始
-    if(window.kqPlayCharacterAttackSound){
-      window.kqPlayCharacterAttackSound(S.char);
-    }
-
     S.eh=Math.max(0,S.eh-dmg);
 
+    kqPlayFinalBattleSE('seikai.mp3');
+    kqPlayFinalBattleSE('kairiandcastorkougeki.mp3');
     $("msg").textContent="✨ せいかい！ "+ch[0]+"のこうげき！";
     $("slash").classList.remove("hide");
     $("damage").classList.remove("hide");
