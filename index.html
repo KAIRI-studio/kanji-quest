@@ -2394,6 +2394,28 @@ function kqBattleStartVolumeUp(){
 window.addEventListener("load", kqBattleStartVolumeUp);
 </script>
 
+
+<script>
+/* Battle start SE amplification */
+function kqBattleStartGainBoost(){
+  const se = document.getElementById("kqSfxBattleStart");
+  if(!se || se.dataset.boosted) return;
+
+  se.dataset.boosted = "true";
+
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const source = ctx.createMediaElementSource(se);
+  const gain = ctx.createGain();
+
+  // 約1.8倍相当。戦闘開始SEのみ増幅
+  gain.gain.value = 1.8;
+
+  source.connect(gain);
+  gain.connect(ctx.destination);
+}
+window.addEventListener("load", kqBattleStartGainBoost);
+</script>
+
 </body></html><style>
 /* v3.9: enemy size increase — make stage enemies visually prominent */
 #game .field .enemy{
