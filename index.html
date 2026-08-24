@@ -1778,8 +1778,8 @@ function ans(v,c,b,token){
   if(!validRun(token) || S.lock)return;
 
   S.lock=true;
-  if(window.kqPlaySfx) window.kqPlaySfx("answer");
-  document.querySelectorAll(".answer").forEach(x=>x.disabled=true);
+  if(window.kqPlaySfx)
+document.querySelectorAll(".answer").forEach(x=>x.disabled=true);
   let ch=C[S.char];
 
   if(v===c){
@@ -1860,6 +1860,7 @@ function ans(v,c,b,token){
     }
 
   }else{
+    kqPlayWrongSound();
     b.classList.add("wrong");
     if(S.char!=="kappa")S.combo=0;
     S.ph=Math.max(0,S.ph-10);
