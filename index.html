@@ -2127,8 +2127,11 @@ if(returnStage){
     cancel:document.getElementById("kqSfxCancel")
   };
   if(!s||!b||Object.values(sfx).some(a=>!a))return;
-  const TARGET=.22;
-  const START=.12;
+  // KANJI QUEST standard volume reference (dB):
+  // BGM -18 dB / cursor -14 dB / decision -8 dB.
+  const dbToGain=db=>Math.pow(10,db/20);
+  const TARGET=dbToGain(-18);
+  const START=dbToGain(-30);
   const FADE_MS=1200;
   let fadeTimer=null;
   let active=null;
@@ -2187,7 +2190,12 @@ if(returnStage){
           source.connect(gain).connect(sfxAudioContext.destination);
           sfxGainNodes.set(selected,gain);
         }
-        gain.gain.value=name==="cancel" ? 1.8 : name==="cursor" ? .55 : 1;
+        const gainDb = name==="cancel"
+        ? null
+        : name==="cursor"
+          ? -14
+          : -8;
+      gain.gain.value = gainDb===null ? 1.8 : dbToGain(gainDb);
         if(sfxAudioContext.state==="suspended") sfxAudioContext.resume().catch(()=>{});
       }
       selected.volume = 1;
