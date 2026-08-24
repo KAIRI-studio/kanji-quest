@@ -2384,49 +2384,45 @@ if(returnStage){
 </style>
 
 <script>
-/* Battle start SE volume adjustment */
-function kqBattleStartVolumeUp(){
-  const se = document.getElementById("kqSfxBattleStart");
-  if(se){
-    se.volume = 1.0;
+/* KANJI QUEST audio preparation: preload all game SE/BGM without changing game logic */
+(function(){
+  const kqAudioIds = [
+    "kqSfxTitleStart",
+    "kqSfxCursor",
+    "kqSfxAnswer",
+    "kqSfxBattleStart",
+    "kqSfxStageSelect",
+    "kqSfxCancel"
+  ];
+
+  function kqAudioPrimeAll(){
+    kqAudioIds.forEach(id=>{
+      const a=document.getElementById(id);
+      if(a){
+        try { a.load(); } catch(e){}
+      }
+    });
   }
-}
-window.addEventListener("load", kqBattleStartVolumeUp);
+
+  window.kqAudioPrimeAll = kqAudioPrimeAll;
+  window.addEventListener("load", kqAudioPrimeAll, {once:true});
+})();
 </script>
 
 
-<script>
-/* Safe battle start SE volume adjustment */
-function kqBattleStartSafeVolume(){
-  const se = document.getElementById("kqSfxBattleStart");
-  if(se){
-    se.volume = 1.0;
-  }
-}
-window.addEventListener("load", kqBattleStartSafeVolume);
-</script>
+<audio id="kqPreloadSeikai" preload="auto"><source src="assets/audio/seikai.mp3" type="audio/mpeg"></audio>
+<audio id="kqPreloadZannen" preload="auto"><source src="assets/audio/zannen.mp3" type="audio/mpeg"></audio>
+<audio id="kqPreloadAttackKairiCastor" preload="auto"><source src="assets/audio/kairiandcastorkougeki.mp3" type="audio/mpeg"></audio>
+<audio id="kqPreloadAttackSota" preload="auto"><source src="assets/audio/sotakougeki.mp3" type="audio/mpeg"></audio>
+<audio id="kqPreloadAttackKappa" preload="auto"><source src="assets/audio/kappakougeki.mp3" type="audio/mpeg"></audio>
 
 
 <script>
-/* Immediate SE helper */
-function kqPlayImmediateSE(id){
-  const se = document.getElementById(id);
-  if(!se) return;
-  se.currentTime = 0;
-  se.play().catch(()=>{});
-}
-</script>
-
-
-<script>
-/* Delay battle BGM start so battle SE can be heard first */
-function kqDelayedBattleBGMStart(startFunction){
-  setTimeout(()=>{
-    if(typeof startFunction === "function"){
-      startFunction();
-    }
-  }, 800);
-}
+/* Battle start timing: reserve a clean 1.0s window for the start SE before BGM. */
+window.kqStartBattleBgmAfterSE = function(startBgm){
+  if(typeof startBgm !== "function") return;
+  setTimeout(startBgm, 1000);
+};
 </script>
 
 </body></html><style>
