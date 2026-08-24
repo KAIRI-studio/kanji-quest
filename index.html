@@ -1247,19 +1247,29 @@ body.title-open #app{background:#071521;box-shadow:none}
 
 
 <script>
-/* KANJI QUEST battle result SE */
-const kqBattleResultSE = {
+/* KANJI QUEST extra battle sound layer */
+const kqExtraBattleSE = {
   correct: new Audio("assets/audio/seikai.mp3"),
-  wrong: new Audio("assets/audio/zannen.mp3")
+  wrong: new Audio("assets/audio/zannen.mp3"),
+  kairi: new Audio("assets/audio/kairiandcastorkougeki.mp3"),
+  sota: new Audio("assets/audio/sotakougeki.mp3"),
+  kappa: new Audio("assets/audio/kappakougeki.mp3")
 };
-Object.values(kqBattleResultSE).forEach(s => s.volume = 0.5);
 
-function kqPlayBattleResultSE(result){
-  const s = result === "correct" ? kqBattleResultSE.correct : kqBattleResultSE.wrong;
-  if(s){
-    s.currentTime = 0;
-    s.play().catch(()=>{});
-  }
+Object.values(kqExtraBattleSE).forEach(s => s.volume = 0.5);
+
+function kqPlayExtraSE(type){
+  const s = kqExtraBattleSE[type];
+  if(!s) return;
+  s.currentTime = 0;
+  s.play().catch(()=>{});
+}
+
+function kqPlayExtraAttack(char){
+  const key = String(char || "").toLowerCase();
+  if(key.includes("sota")) return kqPlayExtraSE("sota");
+  if(key.includes("kappa")) return kqPlayExtraSE("kappa");
+  return kqPlayExtraSE("kairi");
 }
 </script>
 
@@ -1779,12 +1789,12 @@ function ans(v,c,b,token){
 
   S.lock=true;
   if(window.kqPlaySfx)
-document.querySelectorAll(".answer").forEach(x=>x.disabled=true);
+  document.querySelectorAll(".answer").forEach(x=>x.disabled=true);
   let ch=C[S.char];
 
   if(v===c){
     b.classList.add("correct");
-    kqPlayBattleResultSE('correct');
+    kqPlayExtraSE('correct');
     S.correct++;
     S.combo++;
 
@@ -1860,8 +1870,6 @@ document.querySelectorAll(".answer").forEach(x=>x.disabled=true);
     }
 
   }else{
-    kqPlayBattleResultSE('wrong');
-    kqPlayWrongSound();
     b.classList.add("wrong");
     if(S.char!=="kappa")S.combo=0;
     S.ph=Math.max(0,S.ph-10);
@@ -2136,7 +2144,7 @@ if(returnStage){
 </audio>
 <audio id="kqSfxTitleStart" preload="auto" playsinline><source src="assets/audio/hajimeru.mp3" type="audio/mpeg"></audio>
 <audio id="kqSfxCursor" preload="auto" playsinline><source src="assets/audio/ka-soruidoutokyarasentaku.mp3" type="audio/mpeg"></audio>
-<audio id="kqSfxAnswer" preload="auto" playsinline><source src="assets/audio/kaitousentaku_unused.mp3" type="audio/mpeg"></audio>
+<audio id="kqSfxAnswer" preload="auto" playsinline><source src="assets/audio/kaitousentaku.mp3" type="audio/mpeg"></audio>
 <audio id="kqSfxBattleStart" preload="auto" playsinline><source src="assets/audio/sentousuta-to.mp3" type="audio/mpeg"></audio>
 <audio id="kqSfxStageSelect" preload="auto" playsinline><source src="assets/audio/sute-jisentaku.mp3" type="audio/mpeg"></audio>
 <audio id="kqSfxCancel" preload="auto" playsinline><source src="assets/audio/kyanseru.mp3" type="audio/mpeg"></audio>
