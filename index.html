@@ -2469,6 +2469,58 @@ window.kqStartBattleBgmAfterSE = function(startBgm){
 })();
 </script>
 
+
+<script>
+/* Mobile audio stability fix
+   Avoid AudioContext/createMediaElementSource for UI SE.
+   iOS Safari is more reliable with direct play() from user gestures.
+*/
+(function(){
+  const map={
+    titleStart:"kqSfxTitleStart",
+    cursor:"kqSfxCursor",
+    answer:"kqSfxAnswer",
+    battleStart:"kqSfxBattleStart",
+    stageSelect:"kqSfxStageSelect",
+    cancel:"kqSfxCancel"
+  };
+
+  window.kqPlaySfx=function(name){
+    const id=map[name];
+    const a=document.getElementById(id);
+    if(!a)return;
+
+    try{
+      a.pause();
+      a.currentTime=0;
+
+      if(name==="cursor") a.volume=0.20;
+      else if(name==="battleStart") a.volume=1.0;
+      else a.volume=0.40;
+
+      const p=a.play();
+      if(p && p.catch) p.catch(()=>{});
+    }catch(e){}
+  };
+
+  // Warm up only after the first real touch/click.
+  function unlock(){
+    Object.values(map).forEach(id=>{
+      const a=document.getElementById(id);
+      if(a){
+        try{
+          a.load();
+        }catch(e){}
+      }
+    });
+    document.removeEventListener("touchstart",unlock);
+    document.removeEventListener("click",unlock);
+  }
+
+  document.addEventListener("touchstart",unlock,{passive:true});
+  document.addEventListener("click",unlock);
+})();
+</script>
 </body></html><style>
 /* v3.9: enemy size increase — make stage enemies visually prominent */
 #game .field .enemy{
