@@ -1860,6 +1860,7 @@ document.querySelectorAll(".answer").forEach(x=>x.disabled=true);
     }
 
   }else{
+    kqPlayBattleResultSE('wrong');
     kqPlayWrongSound();
     b.classList.add("wrong");
     if(S.char!=="kappa")S.combo=0;
