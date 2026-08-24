@@ -1539,7 +1539,10 @@ function applyStageBackground(){
 }
 
 function start(){
-  if(window.kqPlayBattleBGM) window.kqPlayBattleBGM();
+  // Battle start SE gets priority. Start BGM after a short delay.
+  setTimeout(()=>{
+    if(window.kqPlayBattleBGM) window.kqPlayBattleBGM();
+  },1000);
   $("quitBattle").style.display="block";
 
   const token=newRun();
