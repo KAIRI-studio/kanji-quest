@@ -216,6 +216,29 @@ header span{font-size:20px}
 #select.screen{display:none;}
 #select.screen.active{display:block;}
 
+
+/* v50.8: Reuse the existing title-screen falling-leaf animation
+   on stage selection and character selection as a background layer.
+   No new artwork is introduced. */
+#stageSelect .screen-leaf-layer,
+#select .screen-leaf-layer{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+  z-index:1;
+  filter:blur(.35px);
+}
+#stageSelect .screen-leaf-layer .title-leaf,
+#select .screen-leaf-layer .title-leaf{
+  z-index:1;
+}
+#stageSelect > *:not(.screen-leaf-layer),
+#select > *:not(.screen-leaf-layer){
+  position:relative;
+  z-index:2;
+}
+
 </style>
 <style>
 /* v3.1: forest background + fixed battle positions */
@@ -1221,28 +1244,6 @@ body.title-open #app{background:#071521;box-shadow:none}
   background-color:#071521 !important;
 }
 </style>
-
-/* v50.8: Reuse the existing title-screen falling-leaf animation
-   on stage selection and character selection as a background layer.
-   No new artwork is introduced. */
-#stageSelect .screen-leaf-layer,
-#select .screen-leaf-layer{
-  position:absolute;
-  inset:0;
-  overflow:hidden;
-  pointer-events:none;
-  z-index:1;
-  filter:blur(.35px);
-}
-#stageSelect .screen-leaf-layer .title-leaf,
-#select .screen-leaf-layer .title-leaf{
-  z-index:1;
-}
-#stageSelect > *:not(.screen-leaf-layer),
-#select > *:not(.screen-leaf-layer){
-  position:relative;
-  z-index:2;
-}
 
 </head><body class="title-open"><main id="app"><header style="display:none"><div>HBK GAMING<br><span>KANJI QUEST</span></div><div>スコア <span id="score">00000</span></div><button id="quitBattle" class="battle-back" type="button" style="display:none;">やめる</button></header>
 
