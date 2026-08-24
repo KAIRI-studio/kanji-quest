@@ -2417,6 +2417,18 @@ function kqPlayImmediateSE(id){
 }
 </script>
 
+
+<script>
+/* Delay battle BGM start so battle SE can be heard first */
+function kqDelayedBattleBGMStart(startFunction){
+  setTimeout(()=>{
+    if(typeof startFunction === "function"){
+      startFunction();
+    }
+  }, 800);
+}
+</script>
+
 </body></html><style>
 /* v3.9: enemy size increase — make stage enemies visually prominent */
 #game .field .enemy{
