@@ -2428,6 +2428,40 @@ window.kqStartBattleBgmAfterSE = function(startBgm){
 };
 </script>
 
+
+<script>
+/* Mobile audio unlock */
+(function(){
+  let unlocked = false;
+
+  window.kqMobileAudioUnlock = function(){
+    if(unlocked) return;
+    unlocked = true;
+
+    const sounds = [
+      "assets/audio/hajimeru.mp3",
+      "assets/audio/seikai.mp3",
+      "assets/audio/zannen.mp3",
+      "assets/audio/kairiandcastorkougeki.mp3",
+      "assets/audio/sotakougeki.mp3",
+      "assets/audio/kappakougeki.mp3"
+    ];
+
+    sounds.forEach(src=>{
+      const a = new Audio(src);
+      a.volume = 0;
+      a.play().then(()=>{
+        a.pause();
+        a.currentTime = 0;
+      }).catch(()=>{});
+    });
+  };
+
+  document.addEventListener("touchstart", window.kqMobileAudioUnlock, {once:true});
+  document.addEventListener("click", window.kqMobileAudioUnlock, {once:true});
+})();
+</script>
+
 </body></html><style>
 /* v3.9: enemy size increase — make stage enemies visually prominent */
 #game .field .enemy{
