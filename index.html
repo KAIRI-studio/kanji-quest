@@ -1434,7 +1434,6 @@ const show=x=>{
   const header=document.querySelector("header");
   if(header) header.style.display=(x==="titleScreen")?"none":"flex";
   document.body.classList.toggle("title-open", x==="titleScreen");
-  if(x==="game" && window.kqPlayBattleBGM) window.kqPlayBattleBGM();
   if((x==="stageSelect" || x==="select") && window.kqPlaySelectBGM) window.kqPlaySelectBGM();
   const quit=$("quitBattle");
   if(quit) quit.style.display=(x==="game")?"block":"none";
@@ -2163,6 +2162,7 @@ if(returnStage){
 <audio id="kqSfxStageSelect" preload="auto" playsinline><source src="assets/audio/sute-jisentaku.mp3" type="audio/mpeg"></audio>
 <audio id="kqSfxCancel" preload="auto" playsinline><source src="assets/audio/kyanseru.mp3" type="audio/mpeg"></audio>
 <script>
+/* KANJI QUEST audio manager: one direct-play SFX channel, no AudioContext. */
 (function(){
   const s=document.getElementById("kqSelectBGM");
   const b=document.getElementById("kqBattleBGM");
@@ -2174,23 +2174,29 @@ if(returnStage){
     stageSelect:document.getElementById("kqSfxStageSelect"),
     cancel:document.getElementById("kqSfxCancel")
   };
-  if(!s||!b||Object.values(sfx).some(a=>!a))return;
-  // KANJI QUEST standard volume reference (dB):
-  // BGM -18 dB / cursor -14 dB / decision -8 dB.
+  if(!s||!b||Object.values(sfx).some(a=>!a)) return;
+
   const dbToGain=db=>Math.pow(10,db/20);
-  const TARGET=dbToGain(-18);
-  const START=dbToGain(-30);
+  const volumes={
+    titleStart:dbToGain(-8),
+    cursor:dbToGain(-14),
+    answer:dbToGain(-8),
+    battleStart:1.0,
+    stageSelect:dbToGain(-8),
+    cancel:dbToGain(-8)
+  };
   const FADE_MS=1200;
+  const START=dbToGain(-30);
+  const TARGET=dbToGain(-18);
   let fadeTimer=null;
   let active=null;
   let cursorSfxBlockedUntil=0;
-  let sfxAudioContext=null;
-  const sfxGainNodes=new Map();
+
   function clearFade(){if(fadeTimer){clearInterval(fadeTimer);fadeTimer=null;}}
   function stop(a){try{a.pause();a.currentTime=0;a.volume=0;}catch(e){}}
   function fadeIn(a){
     clearFade();
-    try{a.volume=START; const p=a.play(); if(p&&p.catch)p.catch(()=>{});}catch(e){return null;}
+    try{a.volume=START; const p=a.play(); if(p&&p.catch)p.catch(()=>{});}catch(e){return false;}
     const t0=performance.now();
     fadeTimer=setInterval(()=>{
       const t=Math.min(1,(performance.now()-t0)/FADE_MS);
@@ -2201,81 +2207,33 @@ if(returnStage){
   }
   function playTrack(a){
     const other=a===s?b:s;
-    if(active===a && !a.paused){return true;}
-    clearFade();
-    stop(other);
+    if(active===a && !a.paused) return true;
+    clearFade(); stop(other);
     try{a.pause();a.currentTime=0;a.volume=0;}catch(e){}
-    active=a;
-    return fadeIn(a);
+    active=a; return fadeIn(a);
   }
-  window.kqPlaySelectBGM=function(){return playTrack(s)};
-  window.kqPlayBattleBGM=function(){return playTrack(b)};
-  window.kqStopAllBGM=function(){clearFade();active=null;stop(s);stop(b)};
-  window.kqBlockCursorSfx=function(duration){
-    cursorSfxBlockedUntil=Math.max(cursorSfxBlockedUntil, performance.now()+duration);
-  };
+  window.kqPlaySelectBGM=()=>playTrack(s);
+  window.kqPlayBattleBGM=()=>playTrack(b);
+  window.kqStopAllBGM=()=>{clearFade();active=null;stop(s);stop(b);};
+  window.kqBlockCursorSfx=duration=>{cursorSfxBlockedUntil=Math.max(cursorSfxBlockedUntil,performance.now()+duration);};
+
   window.kqPlaySfx=function(name){
-    if(name==="cursor" && performance.now()<cursorSfxBlockedUntil)return;
-    const selected=sfx[name];
-    if(!selected)return;
-    // SFX use one channel: a fresh UI action replaces the prior effect instead
-    // of creating overlapping or duplicated playback.  BGM is unaffected.
-    Object.values(sfx).forEach(a=>{
-      try{a.pause();a.currentTime=0;}catch(e){}
-    });
+    if(name==="cursor" && performance.now()<cursorSfxBlockedUntil) return;
+    const a=sfx[name];
+    if(!a) return;
+    // One UI-SE channel: only the requested sound plays.
+    Object.values(sfx).forEach(x=>{if(x!==a){try{x.pause();x.currentTime=0;}catch(e){}}});
     try{
-      // Keep one playback channel while giving the cancel sound extra gain.
-      // This avoids the distortion and doubled playback caused by layering it.
-      if(!sfxAudioContext){
-        const AudioContextClass=window.AudioContext||window.webkitAudioContext;
-        if(AudioContextClass) sfxAudioContext=new AudioContextClass();
-      }
-      if(sfxAudioContext){
-        let gain=sfxGainNodes.get(selected);
-        if(!gain){
-          const source=sfxAudioContext.createMediaElementSource(selected);
-          gain=sfxAudioContext.createGain();
-          source.connect(gain).connect(sfxAudioContext.destination);
-          sfxGainNodes.set(selected,gain);
-        }
-        const gainDb = name==="cancel"
-        ? null
-        : name==="cursor"
-          ? -14
-          : -8;
-      gain.gain.value = gainDb===null ? 1.8 : dbToGain(gainDb);
-        if(sfxAudioContext.state==="suspended") sfxAudioContext.resume().catch(()=>{});
-      }
-      selected.volume = 1;
-      const p=selected.play();
+      a.pause();
+      a.currentTime=0;
+      a.volume=volumes[name] ?? dbToGain(-8);
+      const p=a.play();
       if(p&&p.catch)p.catch(()=>{});
     }catch(e){}
   };
-
-  window.addEventListener("load",function(){
-    setTimeout(function(){
-      const title=document.getElementById("titleScreen");
-      const game=document.getElementById("game");
-      const select=document.getElementById("select");
-      const stage=document.getElementById("stageSelect");
-      if(title && title.classList.contains("active")) return;
-      if(game && game.classList.contains("active")){window.kqPlayBattleBGM();return;}
-      if((stage && stage.classList.contains("active")) || (select && select.classList.contains("active"))){window.kqPlaySelectBGM();}
-    },100);
-  });
 })();
 </script>
 
-<script>
-(function(){
-  document.addEventListener("click",function(e){
-    const el=e.target.closest&&e.target.closest("#quitBattle");
-    if(!el)return;
-    if(window.kqStopAllBGM)window.kqStopAllBGM();
-    setTimeout(function(){if(window.kqPlaySelectBGM)window.kqPlaySelectBGM()},0);
-  },true);
-})();
-</script>
 
 <style>
 /* v50.2: premium UI title screen — no new artwork; keeps the same dark/grid world. */
@@ -2388,139 +2346,14 @@ if(returnStage){
 }
 </style>
 
-<script>
-/* KANJI QUEST audio preparation: preload all game SE/BGM without changing game logic */
-(function(){
-  const kqAudioIds = [
-    "kqSfxTitleStart",
-    "kqSfxCursor",
-    "kqSfxAnswer",
-    "kqSfxBattleStart",
-    "kqSfxStageSelect",
-    "kqSfxCancel"
-  ];
-
-  function kqAudioPrimeAll(){
-    kqAudioIds.forEach(id=>{
-      const a=document.getElementById(id);
-      if(a){
-        try { a.load(); } catch(e){}
-      }
-    });
-  }
-
-  window.kqAudioPrimeAll = kqAudioPrimeAll;
-  window.addEventListener("load", kqAudioPrimeAll, {once:true});
-})();
-</script>
 
 
-<audio id="kqPreloadSeikai" preload="auto"><source src="assets/audio/seikai.mp3" type="audio/mpeg"></audio>
-<audio id="kqPreloadZannen" preload="auto"><source src="assets/audio/zannen.mp3" type="audio/mpeg"></audio>
-<audio id="kqPreloadAttackKairiCastor" preload="auto"><source src="assets/audio/kairiandcastorkougeki.mp3" type="audio/mpeg"></audio>
-<audio id="kqPreloadAttackSota" preload="auto"><source src="assets/audio/sotakougeki.mp3" type="audio/mpeg"></audio>
-<audio id="kqPreloadAttackKappa" preload="auto"><source src="assets/audio/kappakougeki.mp3" type="audio/mpeg"></audio>
 
 
-<script>
-/* Battle start timing: reserve a clean 1.0s window for the start SE before BGM. */
-window.kqStartBattleBgmAfterSE = function(startBgm){
-  if(typeof startBgm !== "function") return;
-  setTimeout(startBgm, 1000);
-};
-</script>
 
 
-<script>
-/* Mobile audio unlock */
-(function(){
-  let unlocked = false;
-
-  window.kqMobileAudioUnlock = function(){
-    if(unlocked) return;
-    unlocked = true;
-
-    const sounds = [
-      "assets/audio/hajimeru.mp3",
-      "assets/audio/ka-soruidoutokyarasentaku.mp3",
-      "assets/audio/kaitousentaku.mp3",
-      "assets/audio/sentousuta-to.mp3",
-      "assets/audio/sute-jisentaku.mp3",
-      "assets/audio/kyanseru.mp3",
-      "assets/audio/seikai.mp3",
-      "assets/audio/zannen.mp3",
-      "assets/audio/kairiandcastorkougeki.mp3",
-      "assets/audio/sotakougeki.mp3",
-      "assets/audio/kappakougeki.mp3"
-    ];
-
-    sounds.forEach(src=>{
-      const a = new Audio(src);
-      a.volume = 0;
-      a.play().then(()=>{
-        a.pause();
-        a.currentTime = 0;
-      }).catch(()=>{});
-    });
-  };
-
-  document.addEventListener("touchstart", window.kqMobileAudioUnlock, {once:true});
-  document.addEventListener("click", window.kqMobileAudioUnlock, {once:true});
-})();
-</script>
 
 
-<script>
-/* Mobile audio stability fix
-   Avoid AudioContext/createMediaElementSource for UI SE.
-   iOS Safari is more reliable with direct play() from user gestures.
-*/
-(function(){
-  const map={
-    titleStart:"kqSfxTitleStart",
-    cursor:"kqSfxCursor",
-    answer:"kqSfxAnswer",
-    battleStart:"kqSfxBattleStart",
-    stageSelect:"kqSfxStageSelect",
-    cancel:"kqSfxCancel"
-  };
-
-  window.kqPlaySfx=function(name){
-    const id=map[name];
-    const a=document.getElementById(id);
-    if(!a)return;
-
-    try{
-      a.pause();
-      a.currentTime=0;
-
-      if(name==="cursor") a.volume=0.20;
-      else if(name==="battleStart") a.volume=1.0;
-      else a.volume=0.40;
-
-      const p=a.play();
-      if(p && p.catch) p.catch(()=>{});
-    }catch(e){}
-  };
-
-  // Warm up only after the first real touch/click.
-  function unlock(){
-    Object.values(map).forEach(id=>{
-      const a=document.getElementById(id);
-      if(a){
-        try{
-          a.load();
-        }catch(e){}
-      }
-    });
-    document.removeEventListener("touchstart",unlock);
-    document.removeEventListener("click",unlock);
-  }
-
-  document.addEventListener("touchstart",unlock,{passive:true});
-  document.addEventListener("click",unlock);
-})();
-</script>
 </body></html><style>
 /* v3.9: enemy size increase — make stage enemies visually prominent */
 #game .field .enemy{
