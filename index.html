@@ -1245,6 +1245,24 @@ body.title-open #app{background:#071521;box-shadow:none}
 }
 </style>
 
+
+<script>
+/* KANJI QUEST battle result SE */
+const kqBattleResultSE = {
+  correct: new Audio("assets/audio/seikai.mp3"),
+  wrong: new Audio("assets/audio/zannen.mp3")
+};
+Object.values(kqBattleResultSE).forEach(s => s.volume = 0.5);
+
+function kqPlayBattleResultSE(result){
+  const s = result === "correct" ? kqBattleResultSE.correct : kqBattleResultSE.wrong;
+  if(s){
+    s.currentTime = 0;
+    s.play().catch(()=>{});
+  }
+}
+</script>
+
 </head><body class="title-open"><main id="app"><header style="display:none"><div>HBK GAMING<br><span>KANJI QUEST</span></div><div>スコア <span id="score">00000</span></div><button id="quitBattle" class="battle-back" type="button" style="display:none;">やめる</button></header>
 
 
@@ -1766,6 +1784,7 @@ function ans(v,c,b,token){
 
   if(v===c){
     b.classList.add("correct");
+    kqPlayBattleResultSE('correct');
     S.correct++;
     S.combo++;
 
@@ -2115,7 +2134,7 @@ if(returnStage){
 </audio>
 <audio id="kqSfxTitleStart" preload="auto" playsinline><source src="assets/audio/hajimeru.mp3" type="audio/mpeg"></audio>
 <audio id="kqSfxCursor" preload="auto" playsinline><source src="assets/audio/ka-soruidoutokyarasentaku.mp3" type="audio/mpeg"></audio>
-<audio id="kqSfxAnswer" preload="auto" playsinline><source src="assets/audio/kaitousentaku.mp3" type="audio/mpeg"></audio>
+<audio id="kqSfxAnswer" preload="auto" playsinline><source src="assets/audio/kaitousentaku_unused.mp3" type="audio/mpeg"></audio>
 <audio id="kqSfxBattleStart" preload="auto" playsinline><source src="assets/audio/sentousuta-to.mp3" type="audio/mpeg"></audio>
 <audio id="kqSfxStageSelect" preload="auto" playsinline><source src="assets/audio/sute-jisentaku.mp3" type="audio/mpeg"></audio>
 <audio id="kqSfxCancel" preload="auto" playsinline><source src="assets/audio/kyanseru.mp3" type="audio/mpeg"></audio>
