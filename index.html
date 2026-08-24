@@ -1245,35 +1245,6 @@ body.title-open #app{background:#071521;box-shadow:none}
 }
 </style>
 
-
-<script>
-/* KANJI QUEST character attack sounds */
-const kqCharacterAttackSound = {
-  kairi: new Audio("assets/audio/kairiandcastorkougeki.mp3"),
-  castor: new Audio("assets/audio/kairiandcastorkougeki.mp3"),
-  sota: new Audio("assets/audio/sotakougeki.mp3"),
-  kappa: new Audio("assets/audio/kappakougeki.mp3")
-};
-
-Object.values(kqCharacterAttackSound).forEach(sound => {
-  sound.volume = 0.5;
-});
-
-function kqPlayCharacterAttack(character){
-  let key = String(character || "kairi").toLowerCase();
-
-  if(key.includes("sota")) key = "sota";
-  else if(key.includes("kappa")) key = "kappa";
-  else if(key.includes("castor")) key = "castor";
-  else key = "kairi";
-
-  const sound = kqCharacterAttackSound[key];
-  if(sound){
-    sound.currentTime = 0;
-    sound.play().catch(()=>{});
-  }
-}
-</script>
 </head><body class="title-open"><main id="app"><header style="display:none"><div>HBK GAMING<br><span>KANJI QUEST</span></div><div>スコア <span id="score">00000</span></div><button id="quitBattle" class="battle-back" type="button" style="display:none;">やめる</button></header>
 
 
@@ -1831,8 +1802,7 @@ function ans(v,c,b,token){
       window.kqPlayCharacterAttackSound(S.char);
     }
 
-    kqPlayCharacterAttack(S.char);
-S.eh=Math.max(0,S.eh-dmg);
+    S.eh=Math.max(0,S.eh-dmg);
 
     $("msg").textContent="✨ せいかい！ "+ch[0]+"のこうげき！";
     $("slash").classList.remove("hide");
@@ -2145,6 +2115,7 @@ if(returnStage){
 </audio>
 <audio id="kqSfxTitleStart" preload="auto" playsinline><source src="assets/audio/hajimeru.mp3" type="audio/mpeg"></audio>
 <audio id="kqSfxCursor" preload="auto" playsinline><source src="assets/audio/ka-soruidoutokyarasentaku.mp3" type="audio/mpeg"></audio>
+<audio id="kqSfxAnswer" preload="auto" playsinline><source src="assets/audio/kaitousentaku.mp3" type="audio/mpeg"></audio>
 <audio id="kqSfxBattleStart" preload="auto" playsinline><source src="assets/audio/sentousuta-to.mp3" type="audio/mpeg"></audio>
 <audio id="kqSfxStageSelect" preload="auto" playsinline><source src="assets/audio/sute-jisentaku.mp3" type="audio/mpeg"></audio>
 <audio id="kqSfxCancel" preload="auto" playsinline><source src="assets/audio/kyanseru.mp3" type="audio/mpeg"></audio>
