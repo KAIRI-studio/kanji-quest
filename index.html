@@ -1285,6 +1285,19 @@ function kqPlayFinalBattleSE(file){
 }
 </script>
 
+
+<script>
+/* Battle start SE priority */
+function kqBattleStartSEFirst(){
+  const se = document.getElementById("kqSfxBattleStart");
+  if(se){
+    se.volume = 0.8;
+    se.currentTime = 0;
+    se.play().catch(()=>{});
+  }
+}
+</script>
+
 </head><body class="title-open"><main id="app"><header style="display:none"><div>HBK GAMING<br><span>KANJI QUEST</span></div><div>スコア <span id="score">00000</span></div><button id="quitBattle" class="battle-back" type="button" style="display:none;">やめる</button></header>
 
 
