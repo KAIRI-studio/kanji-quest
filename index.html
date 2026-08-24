@@ -1246,30 +1246,33 @@ body.title-open #app{background:#071521;box-shadow:none}
 </style>
 
 
+
+
+
 <script>
-/* KANJI QUEST extra battle sound layer */
-const kqExtraBattleSE = {
+/* KANJI QUEST battle SE v2 */
+const kqBattleSE = {
   correct: new Audio("assets/audio/seikai.mp3"),
   wrong: new Audio("assets/audio/zannen.mp3"),
-  kairi: new Audio("assets/audio/kairiandcastorkougeki.mp3"),
+  kairiCastor: new Audio("assets/audio/kairiandcastorkougeki.mp3"),
   sota: new Audio("assets/audio/sotakougeki.mp3"),
   kappa: new Audio("assets/audio/kappakougeki.mp3")
 };
 
-Object.values(kqExtraBattleSE).forEach(s => s.volume = 0.5);
+Object.values(kqBattleSE).forEach(s => s.volume = 0.5);
 
-function kqPlayExtraSE(type){
-  const s = kqExtraBattleSE[type];
+function kqPlayBattleSE(type){
+  const s = kqBattleSE[type];
   if(!s) return;
   s.currentTime = 0;
   s.play().catch(()=>{});
 }
 
-function kqPlayExtraAttack(char){
-  const key = String(char || "").toLowerCase();
-  if(key.includes("sota")) return kqPlayExtraSE("sota");
-  if(key.includes("kappa")) return kqPlayExtraSE("kappa");
-  return kqPlayExtraSE("kairi");
+function kqPlayAttackByCharacter(name){
+  name = String(name || "").toLowerCase();
+  if(name.includes("sota")) return kqPlayBattleSE("sota");
+  if(name.includes("kappa")) return kqPlayBattleSE("kappa");
+  return kqPlayBattleSE("kairiCastor");
 }
 </script>
 
@@ -1795,6 +1798,7 @@ function ans(v,c,b,token){
   if(v===c){
     b.classList.add("correct");
     kqPlayExtraSE('correct');
+    kqPlayBattleSE('correct');
     S.correct++;
     S.combo++;
 
@@ -1870,6 +1874,7 @@ function ans(v,c,b,token){
     }
 
   }else{
+    kqPlayBattleSE('wrong');
     b.classList.add("wrong");
     if(S.char!=="kappa")S.combo=0;
     S.ph=Math.max(0,S.ph-10);
