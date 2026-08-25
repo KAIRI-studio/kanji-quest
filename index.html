@@ -1670,22 +1670,23 @@ function showResult(gameOver){
 }
 
 function gameOver(token){
-  // Game over is only valid for the currently active run.
-  // Do not let a stale callback from an older run terminate a new game.
+  // 現在のゲームだけを終了させる。
   if(token!==S.run || S.over || S.resultShown)return;
 
   clearTimer();
   S.elapsed=(performance.now()-S.startAt)/1000;
-
-  // Mark the run as finished before touching the result UI.
   S.over=true;
   S.lock=true;
   S.resultShown=true;
   document.querySelectorAll(".answer").forEach(x=>x.disabled=true);
 
-  // Always use the same result-screen path as a clear.
-  // The fallback explicitly resets both display and active state.
-  showResult(true);
+  // 結果画面への遷移はクリア時と同じshowResult()を使う。
+  // 何らかのUI更新で例外が出ても、画面だけは必ず結果画面へ切り替える。
+  try{
+    showResult(true);
+  }catch(err){
+    console.error("Game-over result screen error:",err);
+  }
 
   const game=document.getElementById("game");
   const result=document.getElementById("result");
@@ -1849,11 +1850,10 @@ function ans(v,c,b,token){
       $("pt").textContent="0/"+S.pmax;
       $("msg").textContent="💀 HPが 0 になった！ ゲームオーバー";
 
-      const gameOverToken=token;
-      S.timer=setTimeout(()=>{
-        S.timer=null;
-        gameOver(gameOverToken);
-      },500);
+      // HPが0になった時点で、その場でゲームオーバーを確定する。
+      // 遅延タイマーを挟まないことで、再プレイ時に古い/別のタイマーに
+      // 結果画面への遷移をキャンセルされる余地をなくす。
+      gameOver(token);
       return;
     }
   }
