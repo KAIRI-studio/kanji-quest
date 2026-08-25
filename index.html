@@ -1473,37 +1473,35 @@ if(returnStage){
   80% { transform: translateY(-3px); }
 }
 
-@keyframes cqRedOverlay {
-  0%, 100% { opacity: 0; }
-  28% { opacity: .72; }
-  50% { opacity: 0; }
-  70% { opacity: .62; }
-  100% { opacity: 0; }
-}
-
-.cq-damage-enemy,
-.cq-damage-player {
-  position: relative;
+@keyframes cqRedFlash {
+  0%, 100% {
+    filter: none;
+  }
+  28%, 46% {
+    filter: brightness(0) saturate(100%)
+            invert(18%) sepia(96%) saturate(6600%)
+            hue-rotate(350deg) brightness(96%) contrast(110%);
+  }
+  58% {
+    filter: none;
+  }
+  72% {
+    filter: brightness(0) saturate(100%)
+            invert(18%) sepia(96%) saturate(6600%)
+            hue-rotate(350deg) brightness(96%) contrast(110%);
+  }
 }
 
 .cq-damage-enemy {
-  animation: cqEnemyDamage .24s ease-out both;
+  animation:
+    cqEnemyDamage .24s ease-out both,
+    cqRedFlash .24s linear both;
 }
 
 .cq-damage-player {
-  animation: cqPlayerDamage .24s ease-out both;
-}
-
-.cq-damage-enemy::after,
-.cq-damage-player::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(220, 0, 0, 0.9);
-  mix-blend-mode: multiply;
-  pointer-events: none;
-  border-radius: inherit;
-  animation: cqRedOverlay .24s linear both;
+  animation:
+    cqPlayerDamage .24s ease-out both,
+    cqRedFlash .24s linear both;
 }
 
 </style>
