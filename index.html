@@ -734,6 +734,8 @@ body.title-open #app{background:#071521;box-shadow:none;}
 <div id="toast" class="toast"></div></main>
 <script>
 
+
+/* ===== Visual Effects ===== */
 function cqDamageFlash(selector, className){
   const el = document.querySelector(selector);
   if(!el) return;
@@ -755,6 +757,8 @@ const Q5=[["圧","あつ","おもい","ちから"],["液","えき","みず","し
 const Q6=[["胃","い","はら","むね"],["域","いき","くに","ばしょ"],["我","われ","じぶん","おれ"],["革","かわ","かみ","ぬの"],["株","かぶ","き","ね"],["机","つくえ","いす","たな"],["胸","むね","はら","せなか"],["筋","すじ","ほね","ちから"],["系","けい","つながり","なかま"],["穴","あな","くぼみ","すきま"],["孝","こう","おや","こども"],["鋼","はがね","てつ","きんぞく"],["冊","さつ","ほん","かみ"],["私","わたし","ぼく","じぶん"],["姿","すがた","かたち","からだ"]];
 let Q=Q1;
 const GRADE_QUESTIONS={1:Q1,2:Q2,3:Q3,4:Q4,5:Q5,6:Q6};
+
+/* ===== Data / State ===== */
 let S={
   char:null,stage:1,q:0,score:0,combo:0,max:0,correct:0,
   eh:20,emax:20,ph:40,pmax:40,lock:false,best:+localStorage.cqBest||0,
@@ -849,6 +853,8 @@ function clearTimer(){
   }
 }
 
+
+/* ===== Game Flow ===== */
 function newRun(){
   S.run++;
   clearTimer();
@@ -929,6 +935,8 @@ function applyStageBackground(){
   field.style.setProperty("background-repeat", "no-repeat", "important");
 }
 
+
+/* ===== Screen / Navigation ===== */
 function start(){
 $("quitBattle").style.display="block";
 
@@ -1041,6 +1049,8 @@ function calcScore(gameOver=false){
   };
 }
 
+
+/* ===== Battle / Result ===== */
 function showResult(gameOver){
   const score=calcScore(gameOver);
   S.score=score.total;
