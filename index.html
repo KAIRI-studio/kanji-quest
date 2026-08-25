@@ -737,18 +737,18 @@ body.title-open #app{background:#071521;box-shadow:none;}
   border:3px solid #607b8a;
   border-radius:14px;
   background:
-    linear-gradient(rgba(5,18,28,.72),rgba(5,18,28,.82)),
+    linear-gradient(rgba(5,18,28,.48),rgba(5,18,28,.62)),
     url("assets/rankinghaikei.png") center / cover no-repeat;
   color:#fff;
   box-shadow:0 8px 0 rgba(0,0,0,.38),0 0 28px rgba(0,0,0,.28);
   text-align:center;
-  backdrop-filter:blur(2px);
+  backdrop-filter:none;
 }
 #rankingScreen .ranking-title{
   margin:0;
   color:#ffd83d;
-  font-size:clamp(23px,5.8vw,36px);
-  line-height:1.05;
+  font-size:clamp(25px,6vw,34px);
+  line-height:1.1;
   font-weight:900;
   letter-spacing:.03em;
   text-shadow:3px 3px 0 #b52b27,5px 5px 0 #071521;
@@ -835,8 +835,8 @@ body.title-open #app{background:#071521;box-shadow:none;}
 .ranking-stage-button{
   display:block;
   width:min(300px,82vw);
-  height:58px;
-  min-height:58px;
+  height:62px;
+  min-height:62px;
   margin:18px auto 0;
   padding:0;
   border:0;
@@ -845,11 +845,30 @@ body.title-open #app{background:#071521;box-shadow:none;}
   color:transparent;
   font:inherit;
   font-size:0;
+  position:relative;
   font-weight:900;
   box-shadow:0 3px 0 #03080c;
   cursor:pointer;
   transition:border-color .12s ease,box-shadow .12s ease,filter .12s ease,transform .08s ease;
 }
+.ranking-stage-button::after{
+  content:"ランキング";
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  padding:3px 18px 4px;
+  border-radius:5px;
+  background:rgba(6,20,30,.68);
+  color:#fff;
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:.08em;
+  white-space:nowrap;
+  text-shadow:2px 2px 0 #071521,0 0 3px #071521;
+  pointer-events:none;
+}
+
 .ranking-stage-button:hover,
 .ranking-stage-button:focus-visible{
   border-color:#ffd83d;
@@ -881,7 +900,8 @@ body.title-open #app{background:#071521;box-shadow:none;}
   #rankingScreen .ranking-back{min-height:42px;font-size:15px;}
   .ranking-stage-button{
     width:min(280px,82vw);
-    min-height:46px;
+    min-height:50px;
+    height:50px;
     margin-top:14px;
   }
 }
@@ -953,8 +973,7 @@ body.title-open #app{background:#071521;box-shadow:none;}
   </div>
 
   <div class="ranking-panel">
-    <h2 class="ranking-title">🏆 MONTHLY RANKING</h2>
-    <div class="ranking-month">8月 月間ランキング</div>
+    <h2 class="ranking-title">8月 ランキング</h2>
     <div class="ranking-list">
       <div class="ranking-row"><div class="ranking-rank">1位</div><div class="ranking-name">---</div><div class="ranking-score">---</div></div>
       <div class="ranking-row"><div class="ranking-rank">2位</div><div class="ranking-name">---</div><div class="ranking-score">---</div></div>
