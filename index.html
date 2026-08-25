@@ -671,21 +671,27 @@ body.title-open #app{background:#071521;box-shadow:none;}
 }
 
 /* ===== Monthly Ranking Screen ===== */
+/* Match the game's 520px app canvas instead of filling the desktop viewport. */
 #rankingScreen{
   position:fixed;
-  inset:0;
+  top:0;
+  bottom:0;
+  left:50%;
+  width:min(100vw,520px);
+  transform:translateX(-50%);
   z-index:100;
   display:none;
   align-items:center;
   justify-content:center;
   box-sizing:border-box;
-  padding:clamp(12px,3vw,28px);
-  overflow:auto;
+  padding:clamp(10px,2.8vw,22px);
+  overflow:hidden;
   background:#071521;
   isolation:isolate;
 }
 #rankingScreen.active{display:flex;}
-/* Use the same fantasy background as stage/character selection. */
+
+/* Same fantasy background treatment used by the other game screens. */
 #rankingScreen::after{
   content:"";
   position:absolute;
@@ -697,7 +703,6 @@ body.title-open #app{background:#071521;box-shadow:none;}
   transform:scale(1.03);
   opacity:.92;
 }
-/* Same subtle dark veil/grid language as the other screens. */
 #rankingScreen::before{
   content:"";
   position:absolute;
@@ -706,20 +711,32 @@ body.title-open #app{background:#071521;box-shadow:none;}
   pointer-events:none;
   background:
     linear-gradient(180deg,rgba(3,12,20,.16),rgba(3,12,20,.34)),
-    repeating-linear-gradient(0deg,transparent 0 7px,rgba(255,255,255,.018) 7px 8px),
-    repeating-linear-gradient(90deg,transparent 0 7px,rgba(255,216,61,.014) 7px 8px);
+    repeating-linear-gradient(0deg,transparent 0 7px,rgba(255,255,255,.025) 7px 8px),
+    repeating-linear-gradient(90deg,transparent 0 7px,rgba(255,216,61,.018) 7px 8px);
 }
+
+/* Reuse the existing falling-leaf layer used by stage/character selection. */
+#rankingScreen .screen-leaf-layer{
+  position:absolute;
+  inset:0;
+  z-index:2;
+  overflow:hidden;
+  pointer-events:none;
+  filter:blur(.35px);
+}
+#rankingScreen .screen-leaf-layer .title-leaf{z-index:1;}
+
 #rankingScreen .ranking-panel{
   position:relative;
-  z-index:2;
-  width:min(92vw,620px);
-  max-height:min(88vh,760px);
+  z-index:3;
+  width:min(100%,500px);
+  max-height:calc(100vh - 28px);
   overflow:auto;
   box-sizing:border-box;
-  padding:clamp(18px,3.5vw,28px) clamp(12px,3.5vw,24px) 20px;
+  padding:clamp(16px,3.2vw,24px) clamp(10px,3.2vw,20px) 16px;
   border:3px solid #607b8a;
   border-radius:14px;
-  background:rgba(7,23,34,.88);
+  background:rgba(7,23,34,.90);
   color:#fff;
   box-shadow:0 8px 0 rgba(0,0,0,.38),0 0 28px rgba(0,0,0,.28);
   text-align:center;
@@ -728,34 +745,34 @@ body.title-open #app{background:#071521;box-shadow:none;}
 #rankingScreen .ranking-title{
   margin:0;
   color:#ffd83d;
-  font-size:clamp(25px,6vw,40px);
+  font-size:clamp(23px,5.8vw,36px);
   line-height:1.05;
   font-weight:900;
   letter-spacing:.03em;
   text-shadow:3px 3px 0 #b52b27,5px 5px 0 #071521;
 }
 #rankingScreen .ranking-month{
-  margin:8px 0 18px;
+  margin:7px 0 14px;
   color:#b9d7e5;
-  font-size:clamp(14px,3.5vw,19px);
+  font-size:clamp(13px,3.4vw,18px);
   font-weight:900;
 }
 #rankingScreen .ranking-list{
   display:flex;
   flex-direction:column;
-  gap:7px;
-  margin:0 auto 18px;
-  width:min(100%,540px);
+  gap:6px;
+  margin:0 auto 14px;
+  width:100%;
 }
 #rankingScreen .ranking-row{
   display:grid;
-  grid-template-columns:58px minmax(0,1fr) 90px;
+  grid-template-columns:52px minmax(0,1fr) 82px;
   align-items:center;
-  min-height:44px;
-  padding:5px 10px;
+  min-height:40px;
+  padding:4px 8px;
   box-sizing:border-box;
   border:2px solid #526a78;
-  border-radius:9px;
+  border-radius:8px;
   background:linear-gradient(180deg,#173446 0%,#102837 100%);
   color:#fff;
   font-weight:900;
@@ -768,7 +785,7 @@ body.title-open #app{background:#071521;box-shadow:none;}
 #rankingScreen .ranking-rank{
   color:#ffd83d;
   text-align:center;
-  font-size:clamp(15px,3.8vw,19px);
+  font-size:clamp(14px,3.6vw,18px);
 }
 #rankingScreen .ranking-name{
   min-width:0;
@@ -776,25 +793,25 @@ body.title-open #app{background:#071521;box-shadow:none;}
   text-align:left;
   text-overflow:ellipsis;
   white-space:nowrap;
-  font-size:clamp(14px,3.5vw,17px);
+  font-size:clamp(13px,3.3vw,16px);
 }
 #rankingScreen .ranking-score{
   color:#ffd83d;
   text-align:right;
-  font-size:clamp(14px,3.5vw,17px);
+  font-size:clamp(13px,3.3vw,16px);
   font-variant-numeric:tabular-nums;
 }
 #rankingScreen .ranking-back{
-  width:min(300px,82vw);
-  min-height:48px;
+  width:min(280px,80%);
+  min-height:44px;
   margin:2px auto 0;
-  padding:10px 26px;
+  padding:8px 22px;
   border:2px solid #8294a0;
   border-radius:8px;
   background:#17232c;
   color:#fff;
   font:inherit;
-  font-size:17px;
+  font-size:16px;
   font-weight:900;
   box-shadow:0 3px 0 #03080c;
   cursor:pointer;
@@ -811,6 +828,8 @@ body.title-open #app{background:#071521;box-shadow:none;}
   transform:translateY(3px);
   box-shadow:0 0 0 #03080c;
 }
+
+/* Ranking button on stage selection. */
 .ranking-stage-button{
   display:block;
   width:min(300px,82vw);
@@ -839,41 +858,29 @@ body.title-open #app{background:#071521;box-shadow:none;}
   transform:translateY(3px);
   box-shadow:0 0 0 #03080c;
 }
-@media(max-width:600px){
-  #rankingScreen{
-    align-items:flex-start;
-    padding:10px;
-  }
+
+@media(max-width:390px){
+  #rankingScreen{padding:8px;}
   #rankingScreen .ranking-panel{
-    width:100%;
-    max-width:520px;
-    max-height:calc(100vh - 20px);
-    margin:auto 0;
-    padding:17px 10px 14px;
+    max-height:calc(100vh - 16px);
+    padding:14px 8px 11px;
     border-width:2px;
     border-radius:11px;
   }
-  #rankingScreen .ranking-list{gap:6px;margin-bottom:14px;}
+  #rankingScreen .ranking-list{gap:5px;margin-bottom:11px;}
   #rankingScreen .ranking-row{
-    grid-template-columns:48px minmax(0,1fr) 78px;
-    min-height:40px;
-    padding:4px 7px;
+    grid-template-columns:45px minmax(0,1fr) 70px;
+    min-height:37px;
+    padding:3px 5px;
   }
+  #rankingScreen .ranking-title{font-size:23px;}
+  #rankingScreen .ranking-month{margin-bottom:10px;}
+  #rankingScreen .ranking-back{min-height:42px;font-size:15px;}
   .ranking-stage-button{
     width:min(280px,82vw);
     min-height:46px;
     margin-top:14px;
   }
-}
-@media(max-width:360px){
-  #rankingScreen .ranking-panel{padding:14px 7px 11px;}
-  #rankingScreen .ranking-row{
-    grid-template-columns:43px minmax(0,1fr) 68px;
-    min-height:38px;
-    padding:3px 5px;
-  }
-  #rankingScreen .ranking-title{font-size:24px;}
-  #rankingScreen .ranking-month{margin-bottom:12px;}
 }
 
 /* Keep the existing first-stage illustration explicit. */
@@ -935,6 +942,13 @@ body.title-open #app{background:#071521;box-shadow:none;}
 
 
 <section id="rankingScreen" aria-label="月間ランキング">
+  <div class="screen-leaf-layer" aria-hidden="true">
+    <span class="title-leaf leaf-1"></span><span class="title-leaf leaf-2"></span>
+    <span class="title-leaf leaf-3"></span><span class="title-leaf leaf-4"></span>
+    <span class="title-leaf leaf-5"></span><span class="title-leaf leaf-6"></span>
+    <span class="title-leaf leaf-7"></span><span class="title-leaf leaf-8"></span>
+  </div>
+
   <div class="ranking-panel">
     <h2 class="ranking-title">🏆 MONTHLY RANKING</h2>
     <div class="ranking-month">8月 月間ランキング</div>
