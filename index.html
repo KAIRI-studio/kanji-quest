@@ -681,19 +681,37 @@ body.title-open #app{background:#071521;box-shadow:none;}
   box-sizing:border-box;
   padding:clamp(12px,3vw,28px);
   overflow:auto;
-  background:#071521 url("assets/title-bg.png") center/cover no-repeat;
+  background:#071521;
+  isolation:isolate;
 }
 #rankingScreen.active{display:flex;}
+/* Use the same fantasy background as stage/character selection. */
+#rankingScreen::after{
+  content:"";
+  position:absolute;
+  z-index:0;
+  inset:-18px;
+  pointer-events:none;
+  background:url("assets/stages/title_fantasy_vertical.png") center center / cover no-repeat;
+  filter:blur(4px);
+  transform:scale(1.03);
+  opacity:.92;
+}
+/* Same subtle dark veil/grid language as the other screens. */
 #rankingScreen::before{
   content:"";
   position:absolute;
+  z-index:1;
   inset:0;
-  background:rgba(3,15,24,.58);
   pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(3,12,20,.16),rgba(3,12,20,.34)),
+    repeating-linear-gradient(0deg,transparent 0 7px,rgba(255,255,255,.018) 7px 8px),
+    repeating-linear-gradient(90deg,transparent 0 7px,rgba(255,216,61,.014) 7px 8px);
 }
 #rankingScreen .ranking-panel{
   position:relative;
-  z-index:1;
+  z-index:2;
   width:min(92vw,620px);
   max-height:min(88vh,760px);
   overflow:auto;
@@ -701,7 +719,7 @@ body.title-open #app{background:#071521;box-shadow:none;}
   padding:clamp(18px,3.5vw,28px) clamp(12px,3.5vw,24px) 20px;
   border:3px solid #607b8a;
   border-radius:14px;
-  background:rgba(7,23,34,.94);
+  background:rgba(7,23,34,.88);
   color:#fff;
   box-shadow:0 8px 0 rgba(0,0,0,.38),0 0 28px rgba(0,0,0,.28);
   text-align:center;
@@ -714,11 +732,11 @@ body.title-open #app{background:#071521;box-shadow:none;}
   line-height:1.05;
   font-weight:900;
   letter-spacing:.03em;
-  text-shadow:2px 2px 0 #b52b27,0 3px 10px rgba(0,0,0,.35);
+  text-shadow:3px 3px 0 #b52b27,5px 5px 0 #071521;
 }
 #rankingScreen .ranking-month{
   margin:8px 0 18px;
-  color:#bfe8ff;
+  color:#b9d7e5;
   font-size:clamp(14px,3.5vw,19px);
   font-weight:900;
 }
@@ -770,37 +788,56 @@ body.title-open #app{background:#071521;box-shadow:none;}
   width:min(300px,82vw);
   min-height:48px;
   margin:2px auto 0;
-  border:2px solid #9fb5c1;
-  border-radius:10px;
-  background:linear-gradient(180deg,#203f50 0%,#132b3a 100%);
+  padding:10px 26px;
+  border:2px solid #8294a0;
+  border-radius:8px;
+  background:#17232c;
   color:#fff;
   font:inherit;
+  font-size:17px;
   font-weight:900;
-  box-shadow:0 4px 0 #07131b,inset 0 1px 0 rgba(255,255,255,.1);
+  box-shadow:0 3px 0 #03080c;
   cursor:pointer;
+  transition:border-color .12s ease,box-shadow .12s ease,filter .12s ease,transform .08s ease;
+}
+#rankingScreen .ranking-back:hover,
+#rankingScreen .ranking-back:focus-visible{
+  border-color:#ffd83d;
+  box-shadow:0 0 0 2px #ff8f2d,0 3px 0 #03080c;
+  filter:brightness(1.06);
+  outline:none;
 }
 #rankingScreen .ranking-back:active{
   transform:translateY(3px);
-  box-shadow:0 1px 0 #07131b,inset 0 1px 0 rgba(255,255,255,.1);
+  box-shadow:0 0 0 #03080c;
 }
 .ranking-stage-button{
   display:block;
   width:min(300px,82vw);
   min-height:50px;
   margin:18px auto 0;
-  border:2px solid #9fb5c1;
-  border-radius:10px;
-  background:linear-gradient(180deg,#203f50 0%,#132b3a 100%);
+  padding:10px 26px;
+  border:2px solid #8294a0;
+  border-radius:8px;
+  background:#17232c;
   color:#fff;
   font:inherit;
+  font-size:17px;
   font-weight:900;
-  letter-spacing:.03em;
-  box-shadow:0 4px 0 #07131b,inset 0 1px 0 rgba(255,255,255,.1);
+  box-shadow:0 3px 0 #03080c;
   cursor:pointer;
+  transition:border-color .12s ease,box-shadow .12s ease,filter .12s ease,transform .08s ease;
+}
+.ranking-stage-button:hover,
+.ranking-stage-button:focus-visible{
+  border-color:#ffd83d;
+  box-shadow:0 0 0 2px #ff8f2d,0 3px 0 #03080c;
+  filter:brightness(1.06);
+  outline:none;
 }
 .ranking-stage-button:active{
   transform:translateY(3px);
-  box-shadow:0 1px 0 #07131b,inset 0 1px 0 rgba(255,255,255,.1);
+  box-shadow:0 0 0 #03080c;
 }
 @media(max-width:600px){
   #rankingScreen{
@@ -829,9 +866,7 @@ body.title-open #app{background:#071521;box-shadow:none;}
   }
 }
 @media(max-width:360px){
-  #rankingScreen .ranking-panel{
-    padding:14px 7px 11px;
-  }
+  #rankingScreen .ranking-panel{padding:14px 7px 11px;}
   #rankingScreen .ranking-row{
     grid-template-columns:43px minmax(0,1fr) 68px;
     min-height:38px;
