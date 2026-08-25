@@ -1458,55 +1458,45 @@ if(returnStage){
 
 /* === Correct / Incorrect damage feedback === */
 @keyframes cqEnemyDamage {
-  0%, 100% {
-    transform: translateY(0);
-    filter: none;
-  }
-  20% {
-    transform: translateY(-5px);
-  }
-  40% {
-    transform: translateY(5px);
-    filter: brightness(2) saturate(1.5);
-  }
-  60% {
-    transform: translateY(-4px);
-    filter: brightness(1) saturate(1.5);
-  }
-  80% {
-    transform: translateY(3px);
-    filter: brightness(1.8) saturate(1.4);
-  }
+  0%, 100% { transform: translateY(0); }
+  20% { transform: translateY(-5px); }
+  40% { transform: translateY(5px); }
+  60% { transform: translateY(-4px); }
+  80% { transform: translateY(3px); }
 }
 
 @keyframes cqPlayerDamage {
-  0%, 100% {
-    transform: translateY(0);
-    filter: none;
-  }
-  20% {
-    transform: translateY(5px);
-  }
-  40% {
-    transform: translateY(-5px);
-    filter: brightness(2) saturate(1.5);
-  }
-  60% {
-    transform: translateY(4px);
-    filter: brightness(1) saturate(1.5);
-  }
-  80% {
-    transform: translateY(-3px);
-    filter: brightness(1.8) saturate(1.4);
-  }
+  0%, 100% { transform: translateY(0); }
+  20% { transform: translateY(5px); }
+  40% { transform: translateY(-5px); }
+  60% { transform: translateY(4px); }
+  80% { transform: translateY(-3px); }
+}
+
+@keyframes cqEnemyRedFlash {
+  0%, 100% { filter: none; }
+  35% { filter: sepia(1) saturate(8) hue-rotate(315deg) brightness(1.15); }
+  55% { filter: none; }
+  75% { filter: sepia(1) saturate(8) hue-rotate(315deg) brightness(1.15); }
+}
+
+@keyframes cqPlayerRedFlash {
+  0%, 100% { filter: none; }
+  35% { filter: sepia(1) saturate(8) hue-rotate(315deg) brightness(1.15); }
+  55% { filter: none; }
+  75% { filter: sepia(1) saturate(8) hue-rotate(315deg) brightness(1.15); }
 }
 
 .cq-damage-enemy {
-  animation: cqEnemyDamage .24s ease-out both;
+  animation:
+    cqEnemyDamage .24s ease-out both,
+    cqEnemyRedFlash .24s linear both;
 }
 
 .cq-damage-player {
-  animation: cqPlayerDamage .24s ease-out both;
+  animation:
+    cqPlayerDamage .24s ease-out both,
+    cqPlayerRedFlash .24s linear both;
 }
 
 </style>
