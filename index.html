@@ -419,7 +419,7 @@ body.title-open #app{background:#071521;box-shadow:none;}
 .title-screen{min-height:100dvh;height:100dvh;width:100%;padding:0;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:none !important;isolation:isolate;}
 
 /* Background image layer */
-.title-screen::after{content:"";position:absolute;inset:-12px;z-index:0;background:url("assets/rankinghaikei.png") center center / cover no-repeat;filter:blur(2.2px);transform:scale(1.025);pointer-events:none;}
+.title-screen::after{content:"";position:absolute;inset:-12px;z-index:0;background:url("assets/stages/title_fantasy_vertical.png") center center / cover no-repeat;filter:blur(2.2px);transform:scale(1.025);pointer-events:none;}
 
 /* Very subtle dark veil/grid for readability and visual unity */
 .title-screen::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:
@@ -736,7 +736,9 @@ body.title-open #app{background:#071521;box-shadow:none;}
   padding:clamp(16px,3.2vw,24px) clamp(10px,3.2vw,20px) 16px;
   border:3px solid #607b8a;
   border-radius:14px;
-  background:rgba(7,23,34,.90);
+  background:
+    linear-gradient(rgba(5,18,28,.72),rgba(5,18,28,.82)),
+    url("assets/rankinghaikei.png") center / cover no-repeat;
   color:#fff;
   box-shadow:0 8px 0 rgba(0,0,0,.38),0 0 28px rgba(0,0,0,.28);
   text-align:center;
@@ -833,15 +835,16 @@ body.title-open #app{background:#071521;box-shadow:none;}
 .ranking-stage-button{
   display:block;
   width:min(300px,82vw);
-  min-height:50px;
+  height:58px;
+  min-height:58px;
   margin:18px auto 0;
-  padding:10px 26px;
-  border:2px solid #8294a0;
+  padding:0;
+  border:0;
   border-radius:8px;
-  background:#17232c url("assets/ranking.png") center / cover no-repeat;
-  color:#fff;
+  background:transparent url("assets/ranking.png") center / contain no-repeat;
+  color:transparent;
   font:inherit;
-  font-size:17px;
+  font-size:0;
   font-weight:900;
   box-shadow:0 3px 0 #03080c;
   cursor:pointer;
@@ -937,7 +940,7 @@ body.title-open #app{background:#071521;box-shadow:none;}
     <button class="stage-card active stage-image-card" data-stage="6" style="background-image:url('assets/stages/6.png')" type="button" onclick="showStage6Characters()"><div class="stage-icon">⚔️</div><div class="stage-name">6ねんせい</div><div class="stage-area">さいしゅうけっせん</div><div class="stage-status">あそべる！</div></button>
   </div>
 
-  <button id="rankingButton" class="stage-back ranking-stage-button" type="button">🏆 ランキング</button>
+  <button id="rankingButton" class="stage-back ranking-stage-button" type="button" aria-label="ランキング"></button>
 </section>
 
 
