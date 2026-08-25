@@ -669,6 +669,45 @@ body.title-open #app{background:#071521;box-shadow:none;}
     cqPlayerDamage .24s ease-out both,
     cqRedFlash .24s linear both;
 }
+
+/* ===== Monthly Ranking Screen ===== */
+#rankingScreen{
+  position:fixed; inset:0; z-index:50; display:none;
+  align-items:center; justify-content:center;
+  padding:24px; box-sizing:border-box;
+  background:var(--bg,#f4f1e8);
+}
+#rankingScreen.show{display:flex;}
+.ranking-panel{
+  width:min(92vw,620px); max-height:88vh; overflow:auto;
+  box-sizing:border-box; padding:24px 20px 20px;
+  border:4px solid #222; border-radius:18px;
+  background:#fffdf5; box-shadow:0 8px 0 rgba(0,0,0,.12);
+  text-align:center;
+}
+.ranking-title{margin:0;font-size:clamp(28px,5vw,42px);font-weight:900;letter-spacing:.04em;}
+.ranking-month{margin:6px 0 18px;font-size:clamp(15px,3vw,20px);font-weight:800;}
+.ranking-list{display:flex;flex-direction:column;gap:7px;margin:0 auto 18px;width:min(100%,520px);}
+.ranking-row{
+  display:grid;grid-template-columns:58px 1fr 100px;align-items:center;
+  min-height:46px;padding:6px 10px;box-sizing:border-box;
+  border:2px solid #222;border-radius:10px;background:#fff;font-weight:800;
+}
+.ranking-rank{text-align:center;font-size:18px;}
+.ranking-name{text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ranking-score{text-align:right;font-variant-numeric:tabular-nums;}
+.ranking-back{
+  width:min(100%,260px);min-height:48px;border:3px solid #222;border-radius:12px;
+  background:#fff;font:inherit;font-weight:900;cursor:pointer;
+}
+.ranking-back:active{transform:translateY(2px);}
+.stage-bottom-actions{display:flex;justify-content:center;gap:12px;margin:16px auto 0;}
+@media(max-width:600px){
+  #rankingScreen{padding:12px;}
+  .ranking-panel{padding:18px 12px 14px;border-width:3px;}
+  .ranking-row{grid-template-columns:48px 1fr 82px;min-height:42px;padding:5px 8px;}
+}
+
 </style>
 </head><body class="title-open"><main id="app"><header style="display:none"><div>HBK GAMING<br><span>KANJI QUEST</span></div><div>スコア <span id="score">00000</span></div><button id="quitBattle" class="battle-back" type="button" style="display:none;">やめる</button></header>
 
@@ -717,12 +756,28 @@ body.title-open #app{background:#071521;box-shadow:none;}
 </section>
 
 <section id="select" class="screen" style="display:none;"><div class="screen-leaf-layer" aria-hidden="true">
-  <span class="title-leaf leaf-1"></span><span class="title-leaf leaf-2"></span>
+  <span class="title-leaf leaf-1">
+
+<div class="stage-bottom-actions">
+  <button id="rankingButton" type="button" class="ranking-back">🏆 ランキング</button>
+</div>
+
+</span><span class="title-leaf leaf-2"></span>
   <span class="title-leaf leaf-3"></span><span class="title-leaf leaf-4"></span>
   <span class="title-leaf leaf-5"></span><span class="title-leaf leaf-6"></span>
   <span class="title-leaf leaf-7"></span><span class="title-leaf leaf-8"></span>
 </div>
 <div class="title">KANJI QUEST</div><div class="sub">〜 かんじでたたかえ！ 〜</div><h1>キャラクターを えらぼう！</h1><div id="grid" class="grid"></div><button id="characterBack" class="secondary back-large" type="button">ステージせんたくへもどる</button><button id="start" class="primary" disabled>キャラクターをえらんでスタート</button></section>
+
+
+<section id="rankingScreen" aria-label="月間ランキング">
+  <div class="ranking-panel">
+    <h2 class="ranking-title">🏆 MONTHLY RANKING</h2>
+    <div class="ranking-month">2026年8月 月間ランキング</div>
+    <div class="ranking-list"><div class="ranking-row"><div class="ranking-rank">1位</div><div class="ranking-name">---</div><div class="ranking-score">---</div></div><div class="ranking-row"><div class="ranking-rank">2位</div><div class="ranking-name">---</div><div class="ranking-score">---</div></div><div class="ranking-row"><div class="ranking-rank">3位</div><div class="ranking-name">---</div><div class="ranking-score">---</div></div><div class="ranking-row"><div class="ranking-rank">4位</div><div class="ranking-name">---</div><div class="ranking-score">---</div></div><div class="ranking-row"><div class="ranking-rank">5位</div><div class="ranking-name">---</div><div class="ranking-score">---</div></div><div class="ranking-row"><div class="ranking-rank">6位</div><div class="ranking-name">---</div><div class="ranking-score">---</div></div><div class="ranking-row"><div class="ranking-rank">7位</div><div class="ranking-name">---</div><div class="ranking-score">---</div></div><div class="ranking-row"><div class="ranking-rank">8位</div><div class="ranking-name">---</div><div class="ranking-score">---</div></div><div class="ranking-row"><div class="ranking-rank">9位</div><div class="ranking-name">---</div><div class="ranking-score">---</div></div><div class="ranking-row"><div class="ranking-rank">10位</div><div class="ranking-name">---</div><div class="ranking-score">---</div></div></div>
+    <button id="rankingBack" class="ranking-back" type="button">戻る</button>
+  </div>
+</section>
 
 <section id="game" class="screen"><div class="battlehead"><span>タイム <b id="time">0.0s</b></span><b id="stageLabel">STAGE 1</b><b><span id="qn">1</span> / 10問</b></div>
 <div class="field"><div class="enemybox"><b id="enemyName">キッズスライム Lv.1</b><div class="hp"><div id="ehp" class="fill red"></div></div><span id="et">20/20</span></div><div id="enemy" class="enemy"><img id="enemyImg" alt=""></div>
@@ -733,6 +788,22 @@ body.title-open #app{background:#071521;box-shadow:none;}
 <section id="result" class="screen"><div class="clear">★ クリア！ ★</div><div class="resultchar"><img id="rs"><div><strong id="rn"></strong><small id="rt"></small></div></div><div class="final">スコア<b id="fs">0</b></div><div class="rg"><div>正解<b id="cc">0</b>/10</div><div>コンボ<b id="mc">0</b></div><div>たおした<b id="ex">0</b>たい</div></div><div id="rec" class="record hide">NEW RECORD!</div><button id="retry" class="primary">もう一度あそぶ</button><button id="change" class="secondary">キャラクターをかえる</button></section>
 <div id="toast" class="toast"></div></main>
 <script>
+/* ===== Monthly Ranking Screen ===== */
+function showRanking(){
+  const select=document.getElementById("select");
+  const ranking=document.getElementById("rankingScreen");
+  if(!ranking)return;
+  if(select)select.style.display="none";
+  ranking.classList.add("show");
+}
+function hideRanking(){
+  const ranking=document.getElementById("rankingScreen");
+  const select=document.getElementById("select");
+  if(ranking)ranking.classList.remove("show");
+  if(select)select.style.display="";
+}
+
+
 
 
 /* ===== Visual Effects ===== */
@@ -1376,6 +1447,11 @@ if(autoChar && C[autoChar]){
   start();
 }
 
+
+const rankingButton=document.getElementById("rankingButton");
+if(rankingButton)rankingButton.addEventListener("click",showRanking);
+const rankingBack=document.getElementById("rankingBack");
+if(rankingBack)rankingBack.addEventListener("click",hideRanking);
 </script>
 
 <script>
