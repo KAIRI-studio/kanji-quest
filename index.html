@@ -1,6 +1,40 @@
 <!doctype html><html lang="ja"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>CASTOR KANJI QUEST</title><style>
+<title>CASTOR KANJI QUEST</title>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+  <meta name="theme-color" content="#051927">
+
+
+
+
+
+
+
+
+
+
+<style id="app-styles-consolidated">
 *{box-sizing:border-box;}body{margin:0;background:#02070c;color:#fff;font-family:monospace;}#app{max-width:520px;min-height:100vh;margin:auto;background:#071521;}body.title-open{background:#fff;}body.title-open #app{background:#fff;box-shadow:none;}body.title-open header{display:none!important;}
 header{height:70px;border-bottom:3px solid #fff;padding:9px 12px;display:flex;justify-content:space-between;align-items:center;font-weight:900;font-size:17px;}
 header span{color:#ffd83d;font-size:17px;}.screen{display:none;padding:14px;}.active{display:block;}.title{text-align:center;font-size:38px;color:#ffd83d;text-shadow:4px 4px #a33;margin:22px 0 4px;}.sub{text-align:center;color:#8fd0ff;margin-bottom:24px;font-size:16px;}
@@ -121,8 +155,8 @@ header span{font-size:20px;}
 #stageSelect > *:not(.screen-leaf-layer),
 #select > *:not(.screen-leaf-layer){position:relative;z-index:2;}
 
-</style>
-<style>
+/* --- consolidated cascade block --- */
+
 /* v3.1: forest background + fixed battle positions */
 .field{background:#000 url("assets/stages/forest_stage.png") center center / cover no-repeat !important;}
 
@@ -137,23 +171,23 @@ header span{font-size:20px;}
 /* Keep the instruction bar at the bottom of the battle field,
    below both fighters and their HP displays. */
 #game .field .msg{left:10px !important;right:10px !important;bottom:9px !important;z-index:5 !important;}
-</style>
 
-<style>
+/* --- consolidated cascade block --- */
+
 /* v3.2: align enemy and player visually at the same battle height */
 @media(max-width:390px){
   #game .field .enemy{left:8% !important;top:215px !important;width:28% !important;height:110px !important;}
   #game .field .enemy img{width:105px !important;height:105px !important;max-width:105px !important;max-height:105px !important;}
 }
-</style>
 
-<style>
+/* --- consolidated cascade block --- */
+
 /* v3.3: give the player's HP display breathing room above the instruction card */
 .field .player{bottom:82px !important;}
 .field .msg{bottom:8px !important;}
-</style>
 
-<style>
+/* --- consolidated cascade block --- */
+
 /* v3.4
    - Combo is displayed above the enemy instead of over the enemy.
    - Home screen gets a stronger retro-game atmosphere without changing
@@ -190,22 +224,22 @@ header span{font-size:20px;}
 #select .card.sel{border-color:#ffd83d;box-shadow:0 0 0 2px #ff8f2d,0 4px 0 #03080c;}
 #select #start{margin-top:16px;background:#ffd83d;color:#071521;border-color:#fff;box-shadow:0 4px 0 #8f5d16;}
 #select #start:disabled{background:#66717a;color:#dbe2e7;box-shadow:0 3px 0 #30383d;}
-</style>
 
-<style>
+/* --- consolidated cascade block --- */
+
 #characterBack.back-large{font-size:18px;font-weight:700;padding:12px 16px;margin-top:10px;}
 .battle-back{position:absolute;top:8px;right:8px;z-index:20;font-size:16px;font-weight:700;padding:7px 12px;border:2px solid #fff;background:#0b1825;color:#fff;border-radius:4px;cursor:pointer;}
-</style>
 
-<style id="fixed7-layout">
+/* --- consolidated cascade block --- */
+
 header{position:relative;justify-content:space-between;}
 header > div:nth-child(2){position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);white-space:nowrap;}
 header > div:nth-child(2){font-size:18px;font-weight:700;}
 header > div:nth-child(2) #score{font-size:30px;font-weight:900;letter-spacing:1px;}
 #quitBattle{position:absolute;right:8px;top:8px;z-index:9999;pointer-events:auto;touch-action:manipulation;font-size:16px;font-weight:700;padding:7px 12px;border:2px solid #fff;background:#0b1825;color:#fff;border-radius:4px;cursor:pointer;}
-</style>
 
-<style id="mobile-battle-fit">
+/* --- consolidated cascade block --- */
+
 /* Smartphone battle layout: fit the complete question into one viewport as much as possible. */
 @media (max-width: 600px){
   #app{width:100%;max-width:520px;}
@@ -242,9 +276,9 @@ header > div:nth-child(2) #score{font-size:30px;font-weight:900;letter-spacing:1
   #game .qpanel .answers{gap:6px !important;}
   #game .qpanel .answer{height:42px !important;border-width:2px !important;font-size:16px !important;}
 }
-</style>
 
-<style id="mobile-viewport-fit">
+/* --- consolidated cascade block --- */
+
 @media (max-width: 600px){
   html,body{width:100%;min-height:100%;overflow-x:hidden;}
   #app{width:100%;max-width:520px;min-height:100svh;box-sizing:border-box;}
@@ -301,17 +335,18 @@ header > div:nth-child(2) #score{font-size:30px;font-weight:900;letter-spacing:1
   #result #retry,
   #result #change{height:42px;margin-top:5px;font-size:16px !important;}
 }
-</style>
 
-<style>
+/* --- consolidated cascade block --- */
+
 /* v4.4: combo text must appear BELOW the enemy, never over it.
    Keep enemy/player positions and all game logic unchanged. */
 #game .field .combo{left:5% !important;top:325px !important;width:36% !important;text-align:center !important;z-index:6 !important;pointer-events:none !important;}
 @media(max-width:390px){
   #game .field .combo{left:5% !important;top:205px !important;width:40% !important;font-size:23px !important;}
 }
-</style>
-<style>
+
+/* --- consolidated cascade block --- */
+
 /* v4.30: title screen unified with the main game UI. The logo intro remains white;
    once it fades, the title uses the same dark/grid visual language as stage/character select. */
 body.title-open{overflow:hidden;background:#071521;}
@@ -353,14 +388,9 @@ body.title-open header{display:none!important;}
   .title-game-en{top:40%;}
   .title-start{top:56%;height:58px;width:72%;}
 }
-</style>
 
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
-  <meta name="theme-color" content="#051927">
+/* --- consolidated cascade block --- */
 
-<style>
 /* v50: All stage-selection cards use the existing stage illustrations.
    No new artwork is required; the same stage images used in battle are reused here. */
 .stage-card.stage-image-card{position:relative;overflow:hidden;background-position:center;background-size:cover;background-repeat:no-repeat;}
@@ -375,8 +405,9 @@ body.title-open header{display:none!important;}
 @media(max-width:390px){
   .stage-card.stage-image-card .stage-name{margin-top:48px;font-size:20px;}
 }
-</style>
-<style id="v50.4-title-composition">
+
+/* --- consolidated cascade block --- */
+
 /* v50.4: Title composition
    Layer 0 = approved fantasy background (slightly blurred)
    Layer 1 = falling leaves (CSS-only, slightly softened)
@@ -460,9 +491,9 @@ body.title-open #app{background:#071521;box-shadow:none;}
   .title-leaf{animation:none;top:22%;}
   .title-logo-art{animation:none;opacity:1;}
 }
-</style>
 
-<style id="v50.6-reuse-title-background">
+/* --- consolidated cascade block --- */
+
 /* v50.6: Reuse the approved title background across the main game screens.
    No new artwork is generated or introduced. Cloud animation removed. */
 #stageSelect, #select, #game{position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(3,12,20,.30),rgba(3,12,20,.46)) !important;background-attachment:scroll !important;}
@@ -481,9 +512,9 @@ body.title-open #app{background:#071521;box-shadow:none;}
 #game .field > *{position:relative;z-index:2;}
 #game .field::before{z-index:0;}
 #game .qpanel{background:rgba(6,18,30,.90) !important;position:relative;z-index:2;}
-</style>
 
-<style id="v50.7.2-battle-position-fix">
+/* --- consolidated cascade block --- */
+
 /* v50.7.2: Keep battle actors/UI absolutely positioned.
    The shared-background layer must never change their positioning context. */
 #game .field > .enemybox{position:absolute !important;}
@@ -495,16 +526,150 @@ body.title-open #app{background:#071521;box-shadow:none;}
 #game .field > .msg{position:absolute !important;}
 #game .field > .enemy img,
 #game .field > .player img{position:relative !important;}
-</style>
 
-<style id="v50.7.3-stage-background-fix">
+/* --- consolidated cascade block --- */
+
 /* v50.7.3: Battle field uses the selected stage artwork.
    The blurred layer follows the current stage; it never covers it with the title background. */
 #game .field{background-color:#071521 !important;}
 #game .field::before{background-image:none !important;opacity:0 !important;}
 #game .field{background-image:var(--battle-bg-image) !important;background-position:center 60% !important;background-size:cover !important;background-repeat:no-repeat !important;background-color:#071521 !important;}
-</style>
 
+/* --- consolidated cascade block --- */
+
+/* v50.2: premium UI title screen — no new artwork; keeps the same dark/grid world. */
+.title-screen{background:
+    radial-gradient(ellipse at 50% 38%, rgba(44,115,145,.22) 0%, rgba(7,21,33,0) 43%),
+    radial-gradient(ellipse at 50% 85%, rgba(255,216,61,.055) 0%, rgba(7,21,33,0) 34%),
+    linear-gradient(180deg,#0b2533 0%,#071a27 46%,#050d15 100%) !important;}
+.title-screen::before{opacity:.32 !important;background:
+    repeating-linear-gradient(0deg,transparent 0 7px,rgba(255,255,255,.028) 7px 8px),
+    repeating-linear-gradient(90deg,transparent 0 7px,rgba(255,216,61,.022) 7px 8px) !important;}
+.title-screen::after{content:"";position:absolute;inset:5.5% 6%;border:1px solid rgba(166,210,230,.16);box-shadow:inset 0 0 0 1px rgba(0,0,0,.18),0 0 35px rgba(0,0,0,.16);pointer-events:none;z-index:1;}
+.title-main{z-index:3 !important;animation:titleMainIn .9s ease 4.25s forwards !important;}
+.title-main::before{content:"CASTOR PROJECT  •  KANJI QUEST";position:absolute;left:50%;top:18%;transform:translateX(-50%);color:rgba(214,235,245,.62);font-family:system-ui,"Noto Sans JP",sans-serif;font-size:clamp(9px,2.5vw,12px);font-weight:700;letter-spacing:3px;white-space:nowrap;text-shadow:0 1px 5px rgba(0,0,0,.6);}
+.title-main::after{content:"";position:absolute;left:50%;top:24%;transform:translateX(-50%);width:min(62%,270px);height:1px;background:linear-gradient(90deg,transparent,rgba(255,216,61,.55),rgba(255,255,255,.75),rgba(255,216,61,.55),transparent);box-shadow:0 0 9px rgba(255,216,61,.12);}
+.title-game{top:34% !important;font-size:clamp(38px,11vw,60px) !important;letter-spacing:4px !important;color:#ffe47a !important;background:linear-gradient(180deg,#fff5b0 0%,#ffd83d 42%,#e7a900 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:
+    0 3px 0 rgba(82,48,13,.95),
+    0 6px 0 rgba(48,28,10,.95),
+    0 0 18px rgba(255,216,61,.14) !important;}
+.title-game-en{top:42% !important;color:#dcecf3 !important;font-size:clamp(12px,3.5vw,18px) !important;letter-spacing:6px !important;text-shadow:0 2px 0 #071521,0 0 10px rgba(0,0,0,.55) !important;}
+.title-start{top:58% !important;width:min(68%,315px) !important;height:60px !important;border:2px solid #f7d45b !important;border-radius:8px !important;background:
+    linear-gradient(180deg,rgba(255,239,145,.98) 0%,rgba(255,214,74,.98) 46%,rgba(218,158,25,.98) 100%) !important;color:#2d2412 !important;font-size:clamp(21px,5.5vw,28px) !important;letter-spacing:2px;box-shadow:
+    0 0 0 1px rgba(73,42,10,.9),
+    0 5px 0 #4a2a12,
+    0 9px 22px rgba(0,0,0,.38),
+    inset 0 1px 0 rgba(255,255,255,.95),
+    inset 0 -5px 10px rgba(143,86,8,.16) !important;}
+.title-start::before,.title-start::after{content:"";position:absolute;top:50%;width:18px;height:18px;transform:translateY(-50%) rotate(45deg);border:1px solid rgba(116,73,11,.45);background:rgba(255,244,165,.22);}
+.title-start::before{left:13px;}.title-start::after{right:13px;}
+.title-start:hover,.title-start:focus-visible{filter:brightness(1.06) !important;box-shadow:0 0 0 1px rgba(73,42,10,.9),0 5px 0 #4a2a12,0 0 28px rgba(255,216,61,.18),inset 0 1px 0 rgba(255,255,255,.95) !important;}
+@media(max-width:600px){
+  .title-screen::after{inset:4% 4.5%;}
+  .title-main::before{top:15%;letter-spacing:2px;}
+  .title-main::after{top:21%;width:58%;}
+  .title-game{top:32% !important;}
+  .title-game-en{top:40% !important;}
+  .title-start{top:56% !important;width:72% !important;}
+}
+
+/* --- consolidated cascade block --- */
+
+/* Final v50.5 overrides: keep clouds behind UI and preserve the blue/gold button. */
+.title-main{z-index:3 !important;}
+.title-logo-art{z-index:4 !important;}
+.title-start{background:linear-gradient(180deg,#3a80d6 0%,#1a5eaf 48%,#0d3e82 100%) !important;border:3px solid #efc34e !important;border-radius:15px !important;color:#fff !important;text-shadow:0 2px 2px rgba(0,0,0,.6) !important;box-shadow:0 0 0 2px rgba(72,36,10,.95),0 6px 0 #3b1d10,0 11px 24px rgba(0,0,0,.42),inset 0 2px 0 rgba(255,255,255,.5),inset 0 -7px 14px rgba(0,0,0,.18) !important;}
+.title-start::before,.title-start::after{border-color:rgba(255,226,112,.8) !important;background:rgba(255,240,160,.12) !important;}
+
+/* --- consolidated cascade block --- */
+
+/* v4.5: all Stage 1 enemies use the same display box/size.
+   Visual differences are handled by the transparent padding inside each PNG,
+   so the enemy does not jump larger/smaller when the monster changes.
+   Position is unchanged from v4.4. */
+#game .field .enemy{left:4% !important;top:125px !important;width:44% !important;height:200px !important;bottom:auto !important;z-index:2 !important;position:absolute !important;display:flex !important;align-items:flex-end !important;justify-content:center !important;}
+#game .field .enemy img{width:175px !important;height:175px !important;max-width:175px !important;max-height:175px !important;object-fit:contain !important;}
+@media(max-width:600px){
+  #game .field .enemy{left:3% !important;top:52px !important;width:45% !important;height:180px !important;bottom:auto !important;}
+  #game .field .enemy img{width:160px !important;height:160px !important;max-width:160px !important;max-height:160px !important;}
+}
+
+/* --- consolidated cascade block --- */
+
+/* v4.6: Stage 1 enemy sprites are larger, and combo is placed clearly below the enemy. */
+#game .field .enemy{left:2% !important;top:105px !important;width:48% !important;height:235px !important;}
+#game .field .enemy img{width:220px !important;height:220px !important;max-width:220px !important;max-height:220px !important;}
+#game .field .combo{left:8% !important;top:325px !important;}
+@media(max-width:600px){
+  #game .field .enemy{left:1% !important;top:38px !important;width:49% !important;height:215px !important;}
+  #game .field .enemy img{width:175px !important;height:175px !important;max-width:175px !important;max-height:175px !important;}
+  #game .field .combo{left:5% !important;top:282px !important;}
+}
+
+/* --- consolidated cascade block --- */
+
+/* v4.9: Smartphone only — reduce Stage 1 enemy sprite size further.
+   Desktop size, enemy position, combo position, enemy order, and game balance remain unchanged. */
+@media(max-width:600px){
+  #game .field .enemy img{width:150px !important;height:150px !important;max-width:150px !important;max-height:150px !important;}
+}
+
+/* --- consolidated cascade block --- */
+
+/* v4.11: Smartphone combo must appear at the enemy's feet,
+   slightly overlapping the feet, and remain above the question prompt. */
+@media(max-width:600px){
+  #game .field .combo{left:5% !important;top:205px !important;width:40% !important;text-align:center !important;z-index:6 !important;pointer-events:none !important;}
+}
+
+/* === Correct / Incorrect damage feedback === */
+@keyframes cqEnemyDamage {
+  0%, 100% { transform: translateY(0); }
+  20% { transform: translateY(-5px); }
+  40% { transform: translateY(5px); }
+  60% { transform: translateY(-4px); }
+  80% { transform: translateY(3px); }
+}
+
+@keyframes cqPlayerDamage {
+  0%, 100% { transform: translateY(0); }
+  20% { transform: translateY(5px); }
+  40% { transform: translateY(-5px); }
+  60% { transform: translateY(4px); }
+  80% { transform: translateY(-3px); }
+}
+
+@keyframes cqRedFlash {
+  0%, 100% {
+    filter: none;
+  }
+  28%, 46% {
+    filter: brightness(0) saturate(100%)
+            invert(18%) sepia(96%) saturate(6600%)
+            hue-rotate(350deg) brightness(96%) contrast(110%);
+  }
+  58% {
+    filter: none;
+  }
+  72% {
+    filter: brightness(0) saturate(100%)
+            invert(18%) sepia(96%) saturate(6600%)
+            hue-rotate(350deg) brightness(96%) contrast(110%);
+  }
+}
+
+.cq-damage-enemy {
+  animation:
+    cqEnemyDamage .24s ease-out both,
+    cqRedFlash .24s linear both;
+}
+
+.cq-damage-player {
+  animation:
+    cqPlayerDamage .24s ease-out both,
+    cqRedFlash .24s linear both;
+}
+</style>
 </head><body class="title-open"><main id="app"><header style="display:none"><div>HBK GAMING<br><span>KANJI QUEST</span></div><div>スコア <span id="score">00000</span></div><button id="quitBattle" class="battle-back" type="button" style="display:none;">やめる</button></header>
 
 <section id="titleScreen" class="title-screen active">
@@ -1353,155 +1518,8 @@ if(returnStage){
 })();
 </script>
 
-<style>
-/* v50.2: premium UI title screen — no new artwork; keeps the same dark/grid world. */
-.title-screen{background:
-    radial-gradient(ellipse at 50% 38%, rgba(44,115,145,.22) 0%, rgba(7,21,33,0) 43%),
-    radial-gradient(ellipse at 50% 85%, rgba(255,216,61,.055) 0%, rgba(7,21,33,0) 34%),
-    linear-gradient(180deg,#0b2533 0%,#071a27 46%,#050d15 100%) !important;}
-.title-screen::before{opacity:.32 !important;background:
-    repeating-linear-gradient(0deg,transparent 0 7px,rgba(255,255,255,.028) 7px 8px),
-    repeating-linear-gradient(90deg,transparent 0 7px,rgba(255,216,61,.022) 7px 8px) !important;}
-.title-screen::after{content:"";position:absolute;inset:5.5% 6%;border:1px solid rgba(166,210,230,.16);box-shadow:inset 0 0 0 1px rgba(0,0,0,.18),0 0 35px rgba(0,0,0,.16);pointer-events:none;z-index:1;}
-.title-main{z-index:3 !important;animation:titleMainIn .9s ease 4.25s forwards !important;}
-.title-main::before{content:"CASTOR PROJECT  •  KANJI QUEST";position:absolute;left:50%;top:18%;transform:translateX(-50%);color:rgba(214,235,245,.62);font-family:system-ui,"Noto Sans JP",sans-serif;font-size:clamp(9px,2.5vw,12px);font-weight:700;letter-spacing:3px;white-space:nowrap;text-shadow:0 1px 5px rgba(0,0,0,.6);}
-.title-main::after{content:"";position:absolute;left:50%;top:24%;transform:translateX(-50%);width:min(62%,270px);height:1px;background:linear-gradient(90deg,transparent,rgba(255,216,61,.55),rgba(255,255,255,.75),rgba(255,216,61,.55),transparent);box-shadow:0 0 9px rgba(255,216,61,.12);}
-.title-game{top:34% !important;font-size:clamp(38px,11vw,60px) !important;letter-spacing:4px !important;color:#ffe47a !important;background:linear-gradient(180deg,#fff5b0 0%,#ffd83d 42%,#e7a900 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:
-    0 3px 0 rgba(82,48,13,.95),
-    0 6px 0 rgba(48,28,10,.95),
-    0 0 18px rgba(255,216,61,.14) !important;}
-.title-game-en{top:42% !important;color:#dcecf3 !important;font-size:clamp(12px,3.5vw,18px) !important;letter-spacing:6px !important;text-shadow:0 2px 0 #071521,0 0 10px rgba(0,0,0,.55) !important;}
-.title-start{top:58% !important;width:min(68%,315px) !important;height:60px !important;border:2px solid #f7d45b !important;border-radius:8px !important;background:
-    linear-gradient(180deg,rgba(255,239,145,.98) 0%,rgba(255,214,74,.98) 46%,rgba(218,158,25,.98) 100%) !important;color:#2d2412 !important;font-size:clamp(21px,5.5vw,28px) !important;letter-spacing:2px;box-shadow:
-    0 0 0 1px rgba(73,42,10,.9),
-    0 5px 0 #4a2a12,
-    0 9px 22px rgba(0,0,0,.38),
-    inset 0 1px 0 rgba(255,255,255,.95),
-    inset 0 -5px 10px rgba(143,86,8,.16) !important;}
-.title-start::before,.title-start::after{content:"";position:absolute;top:50%;width:18px;height:18px;transform:translateY(-50%) rotate(45deg);border:1px solid rgba(116,73,11,.45);background:rgba(255,244,165,.22);}
-.title-start::before{left:13px;}.title-start::after{right:13px;}
-.title-start:hover,.title-start:focus-visible{filter:brightness(1.06) !important;box-shadow:0 0 0 1px rgba(73,42,10,.9),0 5px 0 #4a2a12,0 0 28px rgba(255,216,61,.18),inset 0 1px 0 rgba(255,255,255,.95) !important;}
-@media(max-width:600px){
-  .title-screen::after{inset:4% 4.5%;}
-  .title-main::before{top:15%;letter-spacing:2px;}
-  .title-main::after{top:21%;width:58%;}
-  .title-game{top:32% !important;}
-  .title-game-en{top:40% !important;}
-  .title-start{top:56% !important;width:72% !important;}
-}
-</style>
 
-<style id="v50.5-cloud-button-final">
-/* Final v50.5 overrides: keep clouds behind UI and preserve the blue/gold button. */
-.title-main{z-index:3 !important;}
-.title-logo-art{z-index:4 !important;}
-.title-start{background:linear-gradient(180deg,#3a80d6 0%,#1a5eaf 48%,#0d3e82 100%) !important;border:3px solid #efc34e !important;border-radius:15px !important;color:#fff !important;text-shadow:0 2px 2px rgba(0,0,0,.6) !important;box-shadow:0 0 0 2px rgba(72,36,10,.95),0 6px 0 #3b1d10,0 11px 24px rgba(0,0,0,.42),inset 0 2px 0 rgba(255,255,255,.5),inset 0 -7px 14px rgba(0,0,0,.18) !important;}
-.title-start::before,.title-start::after{border-color:rgba(255,226,112,.8) !important;background:rgba(255,240,160,.12) !important;}
-</style>
 
-</body></html><style>
-/* v3.9: enemy size increase — make stage enemies visually prominent */
-#game .field .enemy{left:4% !important;top:125px !important;width:44% !important;height:200px !important;}
-#game .field .enemy img{width:200px !important;height:200px !important;max-width:200px !important;max-height:200px !important;}
-@media(max-width:600px){
-  #game .field .enemy{left:3% !important;top:52px !important;width:45% !important;height:180px !important;}
-  #game .field .enemy img{width:180px !important;height:180px !important;max-width:180px !important;max-height:180px !important;}
-}
-</style>
 
-<style id="v4.4-combo-below-enemy">
-/* v4.4: combo must sit below the enemy, without changing enemy/player positions or sizes. */
-#game .field .combo{top:238px !important;}
-@media(max-width:600px){
-  #game .field .combo{top:238px !important;}
-}
-</style>
 
-<style id="v4.5-enemy-uniform-size">
-/* v4.5: all Stage 1 enemies use the same display box/size.
-   Visual differences are handled by the transparent padding inside each PNG,
-   so the enemy does not jump larger/smaller when the monster changes.
-   Position is unchanged from v4.4. */
-#game .field .enemy{left:4% !important;top:125px !important;width:44% !important;height:200px !important;bottom:auto !important;z-index:2 !important;position:absolute !important;display:flex !important;align-items:flex-end !important;justify-content:center !important;}
-#game .field .enemy img{width:175px !important;height:175px !important;max-width:175px !important;max-height:175px !important;object-fit:contain !important;}
-@media(max-width:600px){
-  #game .field .enemy{left:3% !important;top:52px !important;width:45% !important;height:180px !important;bottom:auto !important;}
-  #game .field .enemy img{width:160px !important;height:160px !important;max-width:160px !important;max-height:160px !important;}
-}
-</style>
-<style id="v4.6-enemy-larger-combo-below">
-/* v4.6: Stage 1 enemy sprites are larger, and combo is placed clearly below the enemy. */
-#game .field .enemy{left:2% !important;top:105px !important;width:48% !important;height:235px !important;}
-#game .field .enemy img{width:220px !important;height:220px !important;max-width:220px !important;max-height:220px !important;}
-#game .field .combo{left:8% !important;top:325px !important;}
-@media(max-width:600px){
-  #game .field .enemy{left:1% !important;top:38px !important;width:49% !important;height:215px !important;}
-  #game .field .enemy img{width:175px !important;height:175px !important;max-width:175px !important;max-height:175px !important;}
-  #game .field .combo{left:5% !important;top:282px !important;}
-}
-</style>
-
-<style id="v4.9-mobile-enemy-smaller">
-/* v4.9: Smartphone only — reduce Stage 1 enemy sprite size further.
-   Desktop size, enemy position, combo position, enemy order, and game balance remain unchanged. */
-@media(max-width:600px){
-  #game .field .enemy img{width:150px !important;height:150px !important;max-width:150px !important;max-height:150px !important;}
-}
-</style>
-
-<style id="v4.11-mobile-combo-position-fix">
-/* v4.11: Smartphone combo must appear at the enemy's feet,
-   slightly overlapping the feet, and remain above the question prompt. */
-@media(max-width:600px){
-  #game .field .combo{left:5% !important;top:205px !important;width:40% !important;text-align:center !important;z-index:6 !important;pointer-events:none !important;}
-}
-
-/* === Correct / Incorrect damage feedback === */
-@keyframes cqEnemyDamage {
-  0%, 100% { transform: translateY(0); }
-  20% { transform: translateY(-5px); }
-  40% { transform: translateY(5px); }
-  60% { transform: translateY(-4px); }
-  80% { transform: translateY(3px); }
-}
-
-@keyframes cqPlayerDamage {
-  0%, 100% { transform: translateY(0); }
-  20% { transform: translateY(5px); }
-  40% { transform: translateY(-5px); }
-  60% { transform: translateY(4px); }
-  80% { transform: translateY(-3px); }
-}
-
-@keyframes cqRedFlash {
-  0%, 100% {
-    filter: none;
-  }
-  28%, 46% {
-    filter: brightness(0) saturate(100%)
-            invert(18%) sepia(96%) saturate(6600%)
-            hue-rotate(350deg) brightness(96%) contrast(110%);
-  }
-  58% {
-    filter: none;
-  }
-  72% {
-    filter: brightness(0) saturate(100%)
-            invert(18%) sepia(96%) saturate(6600%)
-            hue-rotate(350deg) brightness(96%) contrast(110%);
-  }
-}
-
-.cq-damage-enemy {
-  animation:
-    cqEnemyDamage .24s ease-out both,
-    cqRedFlash .24s linear both;
-}
-
-.cq-damage-player {
-  animation:
-    cqPlayerDamage .24s ease-out both,
-    cqRedFlash .24s linear both;
-}
-
-</style>
+</body></html>
