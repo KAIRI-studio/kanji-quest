@@ -683,8 +683,7 @@ body.title-open #app{background:#071521;box-shadow:none;}
   background:#071521;
 }
 #rankingScreen.active{display:flex;}
-
-.ranking-panel{
+#rankingScreen .ranking-panel{
   width:min(92vw,620px);
   max-height:90vh;
   overflow:auto;
@@ -697,27 +696,26 @@ body.title-open #app{background:#071521;box-shadow:none;}
   box-shadow:0 4px 0 #03080c;
   text-align:center;
 }
-
-.ranking-title{
+#rankingScreen .ranking-title{
   margin:0;
   color:#ffd83d;
   font-size:clamp(25px,6vw,38px);
   font-weight:900;
   text-shadow:2px 2px 0 #b52b27;
 }
-.ranking-month{
+#rankingScreen .ranking-month{
   margin:6px 0 16px;
   color:#a9dfff;
   font-weight:900;
 }
-.ranking-list{
+#rankingScreen .ranking-list{
   display:flex;
   flex-direction:column;
   gap:7px;
   margin:0 auto 18px;
   width:min(100%,520px);
 }
-.ranking-row{
+#rankingScreen .ranking-row{
   display:grid;
   grid-template-columns:58px 1fr 90px;
   align-items:center;
@@ -730,10 +728,10 @@ body.title-open #app{background:#071521;box-shadow:none;}
   color:#fff;
   font-weight:900;
 }
-.ranking-rank{color:#ffd83d;text-align:center;}
-.ranking-name{text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.ranking-score{color:#ffd83d;text-align:right;font-variant-numeric:tabular-nums;}
-.ranking-back{
+#rankingScreen .ranking-rank{text-align:center;color:#ffd83d;}
+#rankingScreen .ranking-name{overflow:hidden;text-align:left;text-overflow:ellipsis;white-space:nowrap;}
+#rankingScreen .ranking-score{text-align:right;color:#ffd83d;font-variant-numeric:tabular-nums;}
+#rankingScreen .ranking-back{
   width:min(260px,80vw);
   margin:0 auto;
 }
@@ -743,8 +741,16 @@ body.title-open #app{background:#071521;box-shadow:none;}
   margin:18px auto 0;
 }
 @media(max-width:390px){
-  .ranking-panel{padding:16px 10px;border-width:2px;}
-  .ranking-row{grid-template-columns:48px 1fr 78px;min-height:42px;padding:5px 7px;}
+  #rankingScreen .ranking-panel{padding:16px 10px;border-width:2px;}
+  #rankingScreen .ranking-row{grid-template-columns:48px 1fr 78px;min-height:42px;padding:5px 7px;}
+}
+
+/* Keep the existing first-stage illustration explicit. */
+#stageSelect .stage-card[data-stage="1"]{
+  background-image:url("assets/stages/1.png");
+  background-position:center;
+  background-size:cover;
+  background-repeat:no-repeat;
 }
 
 </style>
@@ -842,7 +848,6 @@ function showRanking(){
   if(stage)stage.classList.remove("active");
   ranking.classList.add("active");
 }
-
 function hideRanking(){
   const ranking=document.getElementById("rankingScreen");
   const stage=document.getElementById("stageSelect");
@@ -1497,7 +1502,6 @@ if(autoChar && C[autoChar]){
 
 const rankingButton=document.getElementById("rankingButton");
 if(rankingButton)rankingButton.addEventListener("click",showRanking);
-
 const rankingBack=document.getElementById("rankingBack");
 if(rankingBack)rankingBack.addEventListener("click",hideRanking);
 </script>
