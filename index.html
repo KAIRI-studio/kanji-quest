@@ -1670,13 +1670,28 @@ function showResult(gameOver){
 }
 
 function gameOver(token){
-  if(!validRun(token) || S.over)return;
+  if(!validRun(token) || S.over || S.resultShown)return;
+
+  // End the current run exactly once, just like the clear path.
   clearTimer();
   S.elapsed=(performance.now()-S.startAt)/1000;
   S.over=true;
   S.lock=true;
+  S.resultShown=true;
   document.querySelectorAll(".answer").forEach(x=>x.disabled=true);
-  showResult(true);
+
+  // Keep the game-over path as robust as the clear path. If a result UI
+  // update ever throws, explicitly switch to the result screen rather than
+  // leaving the player stuck on the battle screen.
+  try{
+    showResult(true);
+  }catch(err){
+    console.error("Game-over result screen error:",err);
+    const game=document.getElementById("game");
+    const result=document.getElementById("result");
+    if(game){game.classList.remove("active");game.style.display="none";}
+    if(result){result.classList.add("active");result.style.display="block";}
+  }
 }
 
 function finish(token){
