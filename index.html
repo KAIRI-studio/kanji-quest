@@ -1473,50 +1473,37 @@ if(returnStage){
   80% { transform: translateY(-3px); }
 }
 
-@keyframes cqEnemyRedFlash {
-  0%, 100% { filter: none; }
-  32% {
-    filter: brightness(0) saturate(100%)
-            invert(16%) sepia(96%) saturate(6230%)
-            hue-rotate(350deg) brightness(104%) contrast(112%);
-  }
-  52% { filter: none; }
-  72% {
-    filter: brightness(0) saturate(100%)
-            invert(16%) sepia(96%) saturate(6230%)
-            hue-rotate(350deg) brightness(104%) contrast(112%);
-  }
+@keyframes cqRedOverlay {
+  0%, 100% { opacity: 0; }
+  28% { opacity: .72; }
+  50% { opacity: 0; }
+  70% { opacity: .62; }
+  100% { opacity: 0; }
 }
 
-@keyframes cqPlayerRedFlash {
-  0%, 100% { filter: none; }
-  32% {
-    filter: brightness(0) saturate(100%)
-            invert(16%) sepia(96%) saturate(6230%)
-            hue-rotate(350deg) brightness(104%) contrast(112%);
-  }
-  52% { filter: none; }
-  72% {
-    filter: brightness(0) saturate(100%)
-            invert(16%) sepia(96%) saturate(6230%)
-            hue-rotate(350deg) brightness(104%) contrast(112%);
-  }
-}
-  35% { filter: sepia(1) saturate(8) hue-rotate(315deg) brightness(1.15); }
-  55% { filter: none; }
-  75% { filter: sepia(1) saturate(8) hue-rotate(315deg) brightness(1.15); }
+.cq-damage-enemy,
+.cq-damage-player {
+  position: relative;
 }
 
 .cq-damage-enemy {
-  animation:
-    cqEnemyDamage .24s ease-out both,
-    cqEnemyRedFlash .24s linear both;
+  animation: cqEnemyDamage .24s ease-out both;
 }
 
 .cq-damage-player {
-  animation:
-    cqPlayerDamage .24s ease-out both,
-    cqPlayerRedFlash .24s linear both;
+  animation: cqPlayerDamage .24s ease-out both;
+}
+
+.cq-damage-enemy::after,
+.cq-damage-player::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(220, 0, 0, 0.9);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  border-radius: inherit;
+  animation: cqRedOverlay .24s linear both;
 }
 
 </style>
