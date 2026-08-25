@@ -1850,10 +1850,15 @@ function ans(v,c,b,token){
       $("pt").textContent="0/"+S.pmax;
       $("msg").textContent="💀 HPが 0 になった！ ゲームオーバー";
 
-      // HPが0になった時点で、その場でゲームオーバーを確定する。
-      // 遅延タイマーを挟まないことで、再プレイ時に古い/別のタイマーに
-      // 結果画面への遷移をキャンセルされる余地をなくす。
-      gameOver(token);
+      // HP 0 の表示をプレイヤーが確認できるように少し待ってから結果画面へ。
+      // 重要: S.timer は使わない。次回プレイのタイマー管理と競合しないよう、
+      // ゲームオーバー専用のローカルタイマーにする。
+      const gameOverToken=token;
+      setTimeout(()=>{
+        if(gameOverToken===S.run && !S.over){
+          gameOver(gameOverToken);
+        }
+      },800);
       return;
     }
   }
