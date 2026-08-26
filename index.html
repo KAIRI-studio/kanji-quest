@@ -876,6 +876,33 @@ body.title-open #app{background:#071521;box-shadow:none;}
   filter:brightness(.98);
 }
 
+/* ===== Name settings + shared game transitions ===== */
+.stage-sub-actions{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:8px;}
+.name-stage-button{min-width:180px;margin:0 auto;padding:10px 22px;border:2px solid #607b8a;border-radius:9px;background:linear-gradient(180deg,#183647,#0d2635);color:#fff;font:inherit;font-size:16px;font-weight:900;letter-spacing:.06em;box-shadow:0 3px 0 #03080c,inset 0 1px 0 rgba(255,255,255,.12);cursor:pointer;transition:transform .14s ease,border-color .14s ease,box-shadow .14s ease,filter .14s ease;}
+.name-stage-button:hover,.name-stage-button:focus-visible{transform:translateY(-3px);border-color:#ffd83d;box-shadow:0 0 0 2px rgba(255,143,45,.8),0 5px 0 #03080c;filter:brightness(1.07);outline:none;}
+.name-stage-button:active{transform:translateY(2px);box-shadow:0 1px 0 #03080c;}
+#nameScreen{position:fixed;inset:0;margin:auto;width:min(100vw,520px);min-height:100dvh;box-sizing:border-box;display:none;align-items:center;justify-content:center;padding:18px;background:#071521;overflow:hidden;isolation:isolate;}
+#nameScreen.active{display:flex;}
+#nameScreen::after{content:"";position:absolute;z-index:0;inset:-18px;background:url("assets/stages/title_fantasy_vertical.png") center/cover no-repeat;filter:blur(4px);transform:scale(1.03);opacity:.92;}
+#nameScreen::before{content:"";position:absolute;z-index:1;inset:0;background:linear-gradient(180deg,rgba(3,12,20,.2),rgba(3,12,20,.48)),repeating-linear-gradient(0deg,transparent 0 7px,rgba(255,255,255,.025) 7px 8px);}
+.name-panel{position:relative;z-index:2;width:min(100%,440px);box-sizing:border-box;padding:28px 22px 24px;border:3px solid #607b8a;border-radius:14px;background:linear-gradient(180deg,rgba(15,43,59,.96),rgba(7,23,34,.97));box-shadow:0 8px 0 rgba(0,0,0,.38),0 0 28px rgba(0,0,0,.28);text-align:center;}
+.name-title{margin:0 0 10px;color:#ffd83d;font-size:clamp(28px,7vw,36px);text-shadow:3px 3px 0 #b52b27,5px 5px 0 #071521;}
+.name-help{margin:0 0 20px;color:#bfe7ff;font-weight:900;line-height:1.6;}
+.current-name-box{margin:0 0 16px;padding:12px;border:2px solid #526a78;border-radius:9px;background:#091c29;color:#b9d7e5;font-size:14px;font-weight:900;}
+.current-name-box strong{display:block;margin-top:4px;color:#fff;font-size:21px;overflow-wrap:anywhere;}
+.name-label{display:block;margin-bottom:7px;color:#fff;font-weight:900;text-align:left;}
+#playerNameInput{width:100%;box-sizing:border-box;padding:12px 13px;border:3px solid #607b8a;border-radius:9px;background:#f8fcff;color:#071521;font:inherit;font-size:20px;font-weight:900;text-align:center;outline:none;}
+#playerNameInput:focus{border-color:#ffd83d;box-shadow:0 0 0 3px rgba(255,216,61,.25);}
+.name-count{margin:6px 2px 3px;color:#9fc8dc;font-size:13px;text-align:right;}
+.name-error{min-height:22px;margin:0 0 8px;color:#ff9d91;font-size:14px;font-weight:900;}
+.name-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.name-actions button{margin:0;min-height:48px;}
+.screen-transition-shade{position:fixed;inset:0;z-index:9000;background:#02070c;opacity:0;pointer-events:none;}
+.stage-intro-overlay{position:fixed;inset:0;z-index:9001;display:none;align-items:center;justify-content:center;background:#02070c;color:#ffd83d;font-size:clamp(38px,11vw,62px);font-weight:900;letter-spacing:.08em;text-shadow:3px 3px 0 #b52b27,0 0 20px rgba(255,216,61,.35);pointer-events:none;}
+body.is-transitioning{pointer-events:none;}
+@media(max-width:390px){.stage-sub-actions{gap:7px;margin-top:4px}.ranking-stage-button{margin-top:8px}.name-stage-button{padding:8px 18px;font-size:14px}.name-panel{padding:22px 15px 18px}.name-actions{grid-template-columns:1fr}.name-actions button{min-height:43px}}
+@media(prefers-reduced-motion:reduce){.ranking-stage-button,.name-stage-button{transition:none;}}
+
 @media(max-width:390px){
   #rankingScreen{padding:8px;}
   #rankingScreen .ranking-panel{
@@ -949,7 +976,10 @@ body.title-open #app{background:#071521;box-shadow:none;}
     <button class="stage-card active stage-image-card" data-stage="6" style="background-image:url('assets/stages/6.png')" type="button" onclick="showStage6Characters()"><div class="stage-icon">⚔️</div><div class="stage-name">6ねんせい</div><div class="stage-area">さいしゅうけっせん</div><div class="stage-status">あそべる！</div></button>
   </div>
 
-  <button id="rankingButton" class="stage-back ranking-stage-button" type="button" aria-label="ランキング"></button>
+  <div class="stage-sub-actions">
+    <button id="rankingButton" class="stage-back ranking-stage-button" type="button" aria-label="ランキング"></button>
+    <button id="nameButton" class="name-stage-button" type="button">なまえへんこう</button>
+  </div>
 </section>
 
 
@@ -982,6 +1012,22 @@ body.title-open #app{background:#071521;box-shadow:none;}
   </div>
 </section>
 
+<section id="nameScreen" aria-label="なまえへんこう">
+  <div class="name-panel">
+    <h2 class="name-title">なまえへんこう</h2>
+    <p class="name-help">ランキングにつかう<br>なまえをきめよう！</p>
+    <div class="current-name-box">いまの なまえ<strong id="currentPlayerName">まだきめていない</strong></div>
+    <label class="name-label" for="playerNameInput">あたらしい なまえ</label>
+    <input id="playerNameInput" type="text" maxlength="8" autocomplete="nickname" inputmode="text" aria-describedby="nameCount nameError">
+    <div id="nameCount" class="name-count">0 / 8もじ</div>
+    <div id="nameError" class="name-error" role="alert"></div>
+    <div class="name-actions">
+      <button id="nameSave" class="primary" type="button">けってい</button>
+      <button id="nameBack" class="secondary" type="button">もどる</button>
+    </div>
+  </div>
+</section>
+
 <section id="select" class="screen" style="display:none;"><div class="screen-leaf-layer" aria-hidden="true">
   <span class="title-leaf leaf-1"></span><span class="title-leaf leaf-2"></span>
   <span class="title-leaf leaf-3"></span><span class="title-leaf leaf-4"></span>
@@ -998,21 +1044,12 @@ body.title-open #app{background:#071521;box-shadow:none;}
 
 <section id="result" class="screen"><div class="clear">★ クリア！ ★</div><div class="resultchar"><img id="rs"><div><strong id="rn"></strong><small id="rt"></small></div></div><div class="final">スコア<b id="fs">0</b></div><div class="rg"><div>正解<b id="cc">0</b>/10</div><div>コンボ<b id="mc">0</b></div><div>たおした<b id="ex">0</b>たい</div></div><div id="rec" class="record hide">NEW RECORD!</div><button id="retry" class="primary">もう一度あそぶ</button><button id="change" class="secondary">キャラクターをかえる</button></section>
 <div id="toast" class="toast"></div></main>
+<div id="screenTransitionShade" class="screen-transition-shade" aria-hidden="true"></div>
+<div id="stageIntroOverlay" class="stage-intro-overlay" aria-hidden="true"><span>STAGE 1</span></div>
 <script>
 /* ===== Monthly Ranking Screen ===== */
-function showRanking(){
-  const stage=document.getElementById("stageSelect");
-  const ranking=document.getElementById("rankingScreen");
-  if(!ranking)return;
-  if(stage)stage.classList.remove("active");
-  ranking.classList.add("active");
-}
-function hideRanking(){
-  const ranking=document.getElementById("rankingScreen");
-  const stage=document.getElementById("stageSelect");
-  if(ranking)ranking.classList.remove("active");
-  if(stage)stage.classList.add("active");
-}
+function showRanking(){ return window.cqNavigate("rankingScreen"); }
+function hideRanking(){ return window.cqNavigate("stageSelect"); }
 
 
 
@@ -1097,24 +1134,77 @@ function getStageEnemies(){
 }
 
 const $=x=>document.getElementById(x);
-const show=x=>{
-  ["titleScreen","stageSelect","select","game","result"].forEach(y=>{
+const SCREEN_IDS=["titleScreen","stageSelect","rankingScreen","nameScreen","select","game","result"];
+function setScreenImmediate(x){
+  SCREEN_IDS.forEach(y=>{
     const el=$(y);
     if(!el)return;
+    if(y==="rankingScreen")el.classList.remove("ranking-fx-ready");
     el.classList.remove("active");
     el.style.display="none";
   });
   const target=$(x);
   if(target){
     target.classList.add("active");
-    target.style.display="block";
+    target.style.display=(x==="titleScreen"||x==="rankingScreen"||x==="nameScreen")?"flex":"block";
   }
   const header=document.querySelector("header");
   if(header) header.style.display=(x==="titleScreen")?"none":"flex";
   document.body.classList.toggle("title-open", x==="titleScreen");
   const quit=$("quitBattle");
   if(quit) quit.style.display=(x==="game")?"block":"none";
-};
+}
+let cqTransitioning=false;
+async function cqNavigate(x,options={}){
+  if(cqTransitioning)return false;
+  const target=$(x);
+  if(!target)return false;
+  const current=SCREEN_IDS.map(id=>$(id)).find(el=>el&&el.classList.contains("active")&&getComputedStyle(el).display!=="none");
+  if(current===target)return true;
+  cqTransitioning=true;
+  document.body.classList.add("is-transitioning");
+  const shade=$("screenTransitionShade");
+  const reduced=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  try{
+    if(!reduced&&current){
+      await Promise.all([
+        current.animate([{transform:"scale(1)",filter:"brightness(1)"},{transform:"scale(.975)",filter:"brightness(.45)"}],{duration:150,easing:"cubic-bezier(.4,0,1,1)",fill:"forwards"}).finished,
+        shade.animate([{opacity:0},{opacity:1}],{duration:150,easing:"ease-in",fill:"forwards"}).finished
+      ]);
+    }
+    if(options.stageIntro){
+      const intro=$("stageIntroOverlay");
+      intro.querySelector("span").textContent="STAGE "+(Number(S.stage)||1);
+      intro.style.display="flex";
+      setScreenImmediate(x);
+      if(!reduced)await intro.querySelector("span").animate([{opacity:0,transform:"scale(.84)"},{opacity:1,transform:"scale(1)",offset:.3},{opacity:1,transform:"scale(1)",offset:.66},{opacity:0,transform:"scale(1.08)"}],{duration:320,easing:"cubic-bezier(.2,.75,.25,1)",fill:"both"}).finished;
+      intro.style.display="none";
+    }else{
+      setScreenImmediate(x);
+      if(!reduced)await new Promise(resolve=>setTimeout(resolve,110));
+    }
+    if(!reduced){
+      const ui=[...target.children].filter(el=>!el.classList.contains("screen-leaf-layer"));
+      await Promise.all([
+        target.animate([{transform:"scale(.965)",filter:"brightness(.6)"},{transform:"scale(1)",filter:"brightness(1)"}],{duration:210,easing:"cubic-bezier(.2,.8,.2,1)",fill:"both"}).finished,
+        shade.animate([{opacity:1},{opacity:0}],{duration:190,easing:"ease-out",fill:"forwards"}).finished,
+        ...ui.map(el=>el.animate([{opacity:.35,transform:"translateY(5px)"},{opacity:1,transform:"translateY(0)"}],{duration:180,delay:45,easing:"ease-out",fill:"both"}).finished)
+      ]);
+    }else if(shade){shade.style.opacity="0";}
+    if(x==="rankingScreen")target.classList.add("ranking-fx-ready");
+    window.scrollTo(0,0);
+    return true;
+  }finally{
+    if(current){current.getAnimations().forEach(a=>a.cancel());current.style.transform="";current.style.filter="";}
+    target.getAnimations().forEach(a=>a.cancel());
+    [...target.children].forEach(el=>el.getAnimations().forEach(a=>a.cancel()));
+    if(shade){shade.getAnimations().forEach(a=>a.cancel());shade.style.opacity="0";}
+    document.body.classList.remove("is-transitioning");
+    cqTransitioning=false;
+  }
+}
+window.cqNavigate=cqNavigate;
+const show=x=>cqNavigate(x);
 window.show=show;
 
 // Initial title screen: no game HUD/header.
@@ -1219,7 +1309,8 @@ function applyStageBackground(){
 
 
 /* ===== Screen / Navigation ===== */
-function start(){
+async function start(options={stageIntro:true}){
+if(cqTransitioning)return;
 $("quitBattle").style.display="block";
 
   const token=newRun();
@@ -1242,7 +1333,7 @@ $("quitBattle").style.display="block";
   S.enemyIndex=0;
   S.kills=0;
   S.elapsed=0;
-  S.startAt=performance.now();
+  S.startAt=0;
 
   document.querySelector(".clear").textContent="★ クリア！ ★";
   document.querySelector(".clear").style.color="#ffd83d";
@@ -1253,9 +1344,11 @@ $("quitBattle").style.display="block";
   resetBattleUI();
   setscore();
   spawnEnemy(0);
-  show("game");
+  const entered=await cqNavigate("game",{stageIntro:options.stageIntro});
+  if(!entered)return;
   applyStageBackground();
   render(token);
+  S.startAt=performance.now();
   S.timeFrame=requestAnimationFrame(()=>updateTime(token));
 }
 
@@ -1418,17 +1511,7 @@ function gameOver(token){
     showResult(true);
   }catch(err){
     console.error("Game-over result screen error:",err);
-  }
-
-  const game=document.getElementById("game");
-  const result=document.getElementById("result");
-  if(game){
-    game.classList.remove("active");
-    game.style.display="none";
-  }
-  if(result){
-    result.classList.add("active");
-    result.style.display="block";
+    setScreenImmediate("result");
   }
 }
 
@@ -1609,7 +1692,7 @@ function ans(v,c,b,token){
 }
 
 $("start").onclick=()=>{
-  start();
+  start({stageIntro:true});
 };
 
 $("retry").onclick=(e)=>{
@@ -1622,13 +1705,9 @@ $("retry").onclick=(e)=>{
   S.over=false;
   S.lock=false;
   S.resultShown=false;
-  $("result").style.display="none";
-  $("result").classList.remove("active");
-  $("game").style.display="none";
-  $("game").classList.remove("active");
   sessionStorage.setItem("cqAutoStart","");
 
-  start();
+  start({stageIntro:false});
 };
 
 $("change").onclick=()=>{
@@ -1660,6 +1739,40 @@ const rankingButton=document.getElementById("rankingButton");
 if(rankingButton)rankingButton.addEventListener("click",showRanking);
 const rankingBack=document.getElementById("rankingBack");
 if(rankingBack)rankingBack.addEventListener("click",hideRanking);
+
+/* Name persistence is isolated behind this adapter so Firestore can replace it later. */
+const playerNameStore={
+  load(){return localStorage.getItem("cqPlayerName")||"";},
+  async save(name){localStorage.setItem("cqPlayerName",name);return name;}
+};
+function nameLength(value){return Array.from(value).length;}
+function refreshNameScreen(){
+  const saved=playerNameStore.load();
+  $("currentPlayerName").textContent=saved||"まだきめていない";
+  $("playerNameInput").value=saved;
+  $("nameCount").textContent=nameLength(saved)+" / 8もじ";
+  $("nameError").textContent="";
+}
+$("nameButton").addEventListener("click",()=>{
+  refreshNameScreen();
+  cqNavigate("nameScreen").then(ok=>{if(ok)$("playerNameInput").focus();});
+});
+$("nameBack").addEventListener("click",()=>cqNavigate("stageSelect"));
+$("playerNameInput").addEventListener("input",e=>{
+  let chars=Array.from(e.target.value);
+  if(chars.length>8){chars=chars.slice(0,8);e.target.value=chars.join("");}
+  $("nameCount").textContent=chars.length+" / 8もじ";
+  $("nameError").textContent="";
+});
+$("nameSave").addEventListener("click",async()=>{
+  const name=$("playerNameInput").value.trim();
+  if(!name){$("nameError").textContent="なまえを いれてね！";$("playerNameInput").focus();return;}
+  if(nameLength(name)>8){$("nameError").textContent="なまえは 8もじまでだよ！";return;}
+  await playerNameStore.save(name);
+  $("currentPlayerName").textContent=name;
+  toast("なまえを ほぞんしたよ！");
+  await cqNavigate("stageSelect");
+});
 </script>
 
 <script>
@@ -1692,12 +1805,7 @@ if(returnStage){
   const back = document.getElementById("characterBack");
   if(!back) return;
   back.addEventListener("click", function(){
-    const select = document.getElementById("select");
-    const stage = document.getElementById("stageSelect");
-    if(select) { select.classList.remove("active"); select.style.display="none"; }
-     if(stage) {
-    stage.classList.add("active"); stage.style.display="block"; }
-    window.scrollTo(0,0);
+    cqNavigate("stageSelect");
   });
 })();
 </script>
@@ -1729,18 +1837,7 @@ if(returnStage){
     setscore();
     quit.style.display="none";
 
-    document.getElementById("game").style.display="none";
-    document.getElementById("game").classList.remove("active");
-    document.getElementById("select").style.display="none";
-    document.getElementById("select").classList.remove("active");
-    document.getElementById("result").style.display="none";
-    document.getElementById("result").classList.remove("active");
-
-    const stage=document.getElementById("stageSelect");
-    stage.style.display="block";
-    stage.classList.add("active");
-
-    window.scrollTo(0,0);
+    cqNavigate("stageSelect");
   };
 })();
 </script>
@@ -1773,12 +1870,6 @@ if(returnStage){
       e.preventDefault();
       e.stopPropagation();
       if(!titleReady || btn.disabled) return;
-      const title = document.getElementById("titleScreen");
-      if(title){
-        title.classList.remove("active");
-        title.style.display = "none";
-      }
-
       if(typeof window.show === "function"){
         window.show("stageSelect");
       } else {
@@ -1906,7 +1997,9 @@ if(returnStage){
     function frame(now){
       raf=requestAnimationFrame(frame);
 
-      const isActive=rankingScreen.classList.contains("active");
+      // Start the existing gold burst only after the shared screen transition
+      // has completely finished, so none of its opening flash is hidden.
+      const isActive=rankingScreen.classList.contains("ranking-fx-ready");
       if(!isActive){
         wasActive=false;
         last=now;
