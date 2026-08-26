@@ -1139,6 +1139,7 @@ function setScreenImmediate(x){
   SCREEN_IDS.forEach(y=>{
     const el=$(y);
     if(!el)return;
+    if(y==="rankingScreen")el.classList.remove("ranking-fx-ready");
     el.classList.remove("active");
     el.style.display="none";
   });
@@ -1190,6 +1191,7 @@ async function cqNavigate(x,options={}){
         ...ui.map(el=>el.animate([{opacity:.35,transform:"translateY(5px)"},{opacity:1,transform:"translateY(0)"}],{duration:180,delay:45,easing:"ease-out",fill:"both"}).finished)
       ]);
     }else if(shade){shade.style.opacity="0";}
+    if(x==="rankingScreen")target.classList.add("ranking-fx-ready");
     window.scrollTo(0,0);
     return true;
   }finally{
@@ -1995,7 +1997,9 @@ if(returnStage){
     function frame(now){
       raf=requestAnimationFrame(frame);
 
-      const isActive=rankingScreen.classList.contains("active");
+      // Start the existing gold burst only after the shared screen transition
+      // has completely finished, so none of its opening flash is hidden.
+      const isActive=rankingScreen.classList.contains("ranking-fx-ready");
       if(!isActive){
         wasActive=false;
         last=now;
