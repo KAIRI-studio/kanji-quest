@@ -700,7 +700,7 @@ body.title-open #app{background:#071521;box-shadow:none;}
 }
 
 
-/* Canvas demo: radiant gold light around the whole "8月ランキング" title. */
+/* Canvas demo v2: thin radial light rays around the ranking title only. */
 #rankingScreen .ranking-title-wrap{
   position:relative;
   display:inline-block;
@@ -715,12 +715,14 @@ body.title-open #app{background:#071521;box-shadow:none;}
 #rankingScreen #rankingGlowCanvas{
   position:absolute;
   z-index:1;
-  inset:-34px -44px;
-  width:calc(100% + 88px);
-  height:calc(100% + 68px);
+  left:50%;
+  top:50%;
+  width:100%;
+  height:100%;
+  transform:translate(-50%,-50%);
   pointer-events:none;
+  overflow:visible;
 }
-
 /* ===== Monthly Ranking Screen ===== */
 /* Match the game's 520px app canvas instead of filling the desktop viewport. */
 #rankingScreen{
