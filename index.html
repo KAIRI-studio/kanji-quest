@@ -23,6 +23,12 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+  <link rel="preload" as="image" type="image/webp" href="assets/stages/1.webp">
+  <link rel="preload" as="image" type="image/webp" href="assets/stages/2.webp">
+  <link rel="preload" as="image" type="image/webp" href="assets/stages/3.webp">
+  <link rel="preload" as="image" type="image/webp" href="assets/stages/4.webp">
+  <link rel="preload" as="image" type="image/webp" href="assets/stages/5.webp">
+  <link rel="preload" as="image" type="image/webp" href="assets/stages/6.webp">
   <meta name="theme-color" content="#051927">
 
 
@@ -939,7 +945,7 @@ body.is-transitioning{pointer-events:none;}
 
 /* Keep the existing first-stage illustration explicit. */
 #stageSelect .stage-card[data-stage="1"]{
-  background-image:url("assets/stages/1.png");
+  background-image:url("assets/stages/1.webp");
   background-position:center;
   background-size:cover;
   background-repeat:no-repeat;
@@ -1115,15 +1121,15 @@ body.is-transitioning{pointer-events:none;}
   <div class="stage-title">ステージをえらぼう！</div>
   <div class="stage-sub">どのぼうけんに いく？</div>
   <div class="stage-grid">
-    <button class="stage-card active stage-image-card" data-stage="1" style="background-image:url('assets/stages/1.png')" type="button" onclick="showStage1Characters()">
+    <button class="stage-card active stage-image-card" data-stage="1" style="background-image:url('assets/stages/1.webp')" type="button" onclick="showStage1Characters()">
       <div class="stage-name">1ねんせい</div>
       <div class="stage-area">もりのステージ</div><div class="stage-status">あそべる！</div>
     </button>
-    <button class="stage-card active stage-image-card" data-stage="2" style="background-image:url('assets/stages/2.png')" type="button" onclick="showStage2Characters()"><div class="stage-icon">💧</div><div class="stage-name">2ねんせい</div><div class="stage-area">みずのどうくつ</div><div class="stage-status">あそべる！</div></button>
-    <button class="stage-card active stage-image-card" data-stage="3" style="background-image:url('assets/stages/3.png')" type="button" onclick="showStage3Characters()"><div class="stage-icon">🏛️</div><div class="stage-name">3ねんせい</div><div class="stage-area">いにしえのいせき</div><div class="stage-status">あそべる！</div></button>
-    <button class="stage-card active stage-image-card" data-stage="4" style="background-image:url('assets/stages/4.png')" type="button" onclick="showStage4Characters()"><div class="stage-icon">✨</div><div class="stage-name">4ねんせい</div><div class="stage-area">まほうのもり</div><div class="stage-status">あそべる！</div></button>
-    <button class="stage-card active stage-image-card" data-stage="5" style="background-image:url('assets/stages/5.png')" type="button" onclick="showStage5Characters()"><div class="stage-icon">🏰</div><div class="stage-name">5ねんせい</div><div class="stage-area">くらやみじょう</div><div class="stage-status">あそべる！</div></button>
-    <button class="stage-card active stage-image-card" data-stage="6" style="background-image:url('assets/stages/6.png')" type="button" onclick="showStage6Characters()"><div class="stage-icon">⚔️</div><div class="stage-name">6ねんせい</div><div class="stage-area">さいしゅうけっせん</div><div class="stage-status">あそべる！</div></button>
+    <button class="stage-card active stage-image-card" data-stage="2" style="background-image:url('assets/stages/2.webp')" type="button" onclick="showStage2Characters()"><div class="stage-icon">💧</div><div class="stage-name">2ねんせい</div><div class="stage-area">みずのどうくつ</div><div class="stage-status">あそべる！</div></button>
+    <button class="stage-card active stage-image-card" data-stage="3" style="background-image:url('assets/stages/3.webp')" type="button" onclick="showStage3Characters()"><div class="stage-icon">🏛️</div><div class="stage-name">3ねんせい</div><div class="stage-area">いにしえのいせき</div><div class="stage-status">あそべる！</div></button>
+    <button class="stage-card active stage-image-card" data-stage="4" style="background-image:url('assets/stages/4.webp')" type="button" onclick="showStage4Characters()"><div class="stage-icon">✨</div><div class="stage-name">4ねんせい</div><div class="stage-area">まほうのもり</div><div class="stage-status">あそべる！</div></button>
+    <button class="stage-card active stage-image-card" data-stage="5" style="background-image:url('assets/stages/5.webp')" type="button" onclick="showStage5Characters()"><div class="stage-icon">🏰</div><div class="stage-name">5ねんせい</div><div class="stage-area">くらやみじょう</div><div class="stage-status">あそべる！</div></button>
+    <button class="stage-card active stage-image-card" data-stage="6" style="background-image:url('assets/stages/6.webp')" type="button" onclick="showStage6Characters()"><div class="stage-icon">⚔️</div><div class="stage-name">6ねんせい</div><div class="stage-area">さいしゅうけっせん</div><div class="stage-status">あそべる！</div></button>
   </div>
 
   <div class="stage-sub-actions">
@@ -1461,7 +1467,7 @@ function applyStageBackground(){
   const field=document.querySelector("#game .field");
   if(!field)return;
   const stage=Math.min(6,Math.max(1,Number(S.stage)||1));
-  const bg = `url("assets/stages/${stage}.png")`;
+  const bg = `url("assets/stages/${stage}.webp")`;
   field.style.setProperty("background-image", bg, "important");
   field.style.setProperty("--battle-bg-image", bg);
   field.style.setProperty("background-position", "center 60%", "important");
@@ -1506,10 +1512,12 @@ $("quitBattle").style.display="block";
   resetBattleUI();
   setscore();
   spawnEnemy(0);
-  const entered=await cqNavigate("game",{stageIntro:options.stageIntro});
-  if(!entered)return;
+  // Finish preparing the hidden battle screen before the shutter opens.
+  // This prevents any pixels from the previous run from flashing on entry.
   applyStageBackground();
   render(token);
+  const entered=await cqNavigate("game",{stageIntro:options.stageIntro});
+  if(!entered)return;
   S.startAt=performance.now();
   S.timeFrame=requestAnimationFrame(()=>updateTime(token));
 }
