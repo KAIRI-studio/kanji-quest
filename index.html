@@ -42,7 +42,7 @@ h1{text-align:center;font-size:24px;}.grid{display:grid;grid-template-columns:1f
 button.primary,button.secondary{width:100%;height:55px;margin-top:14px;border:3px solid #fff;font-weight:bold;font-family:inherit;cursor:pointer;}.primary{background:#fff;color:#071521;}.primary:disabled{opacity:.4;}.secondary{background:#102233;color:#fff;}
 .battlehead{display:flex;justify-content:space-between;font-size:16px;margin-bottom:10px;color:#fff;font-weight:900;}.field{height:470px;border:3px solid #fff;position:relative;overflow:hidden;background:#000;}.field:after{content:none;}
 .enemybox{position:absolute;left:10px;top:10px;width:49%;z-index:3;background:#050505;border:3px solid #f04444;padding:8px 9px;font-size:13px;}.hp{height:9px;border:2px solid #fff;background:#111;}.fill{height:100%;transition:.25s;}.red{background:#f44;}.green{background:#39df6c;}.enemy{left:8%;top:95px;width:36%;z-index:2;position:relative;height:100%;display:flex;align-items:flex-end;justify-content:center;}.enemy img{width:100%;height:100%;max-width:160px;max-height:160px;object-fit:contain;image-rendering:auto;filter:drop-shadow(3px 4px 0 rgba(0,0,0,.65));}.player{position:absolute;right:5%;bottom:62px;width:48%;text-align:center;z-index:3;}.player img{width:175px;height:175px;object-fit:contain;}.pname{font-size:17px;font-weight:900;text-shadow:2px 2px #000;margin-top:2px;}.player .hp{width:88%;margin:6px auto;}.msg{position:absolute;left:10px;right:10px;bottom:9px;background:#050505;border:3px solid #fff;padding:10px;text-align:center;font-size:17px;font-weight:900;z-index:5;min-height:47px;display:flex;align-items:center;justify-content:center;}.combo{position:absolute;left:15px;top:52%;font-size:31px;color:#ffd83d;font-weight:900;z-index:6;text-shadow:3px 3px #000;}.damage{position:absolute;left:32%;top:47%;font-size:42px;color:#ff321f;font-weight:900;z-index:8;animation:up .55s;}.slash{position:absolute;left:45%;top:42%;font-size:100px;color:#fff;z-index:8;animation:hit .4s;}.hide{display:none!important;}@keyframes up{from{transform:translateY(10px);opacity:0;}30%{opacity:1;}to{transform:translateY(-30px);opacity:0;}}@keyframes hit{from{transform:scale(.4) rotate(-20deg);opacity:0;}40%{opacity:1;}to{transform:scale(1.3);opacity:0;}}
-.qpanel{margin-top:10px;border:3px solid #fff;background:#06121e;padding:11px;}.qt{text-align:center;font-size:13px;font-weight:900;}.kanji{text-align:center;font-size:72px;font-weight:bold;margin:5px 0 10px;}.answers{display:grid;gap:8px;}.answer{height:52px;border:3px solid #2592ff;background:#0d55a8;color:#fff;font: bold 18px monospace;cursor:pointer;}.answer.correct{background:#fff;color:#071521;}.answer.wrong{background:#a31d29;}
+.qpanel{margin-top:10px;border:3px solid #fff;background:#06121e;padding:11px;}.kanji{text-align:center;font-size:72px;font-weight:bold;margin:5px 0 10px;}.answers{display:grid;gap:8px;}.answer{height:52px;border:3px solid #2592ff;background:#0d55a8;color:#fff;font: bold 18px monospace;cursor:pointer;}.answer.correct{background:#fff;color:#071521;}.answer.wrong{background:#a31d29;}
 .clear{text-align:center;color:#ffd83d;font-size:34px;font-weight:bold;margin:55px 0 20px;}.resultchar{display:flex;justify-content:center;align-items:center;gap:10px;border:3px solid #fff;}.resultchar img{width:90px;height:90px;object-fit:contain;transform:none;}.resultchar strong,.resultchar small{display:block;}.final{text-align:center;border:3px solid #fff;margin-top:10px;padding:10px;}.final b{display:block;color:#ffd83d;font-size:40px;}.rg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px;}.rg div{border:2px solid #718392;text-align:center;padding:9px;font-size:9px;}.rg b{display:block;font-size:18px;margin-top:5px;}.record{text-align:center;color:#ffd83d;font-size:21px;font-weight:bold;margin:13px;}.toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);opacity:0;background:#050a10;border:2px solid #fff;padding:8px 13px;font-weight:bold;transition:.2s;}.toast.on{opacity:1;transform:translate(-50%,0);}
 
 .score-breakdown{margin:10px 0 12px;border:2px solid #73879a;background:#0b1b2a;padding:8px 12px;font-size:14px;font-weight:900;}
@@ -56,7 +56,7 @@ button.primary,button.secondary{width:100%;height:55px;margin-top:14px;border:3p
 .time-rank{font-size:11px;color:#ffd83d;border:1px solid #ffd83d;padding:1px 4px;margin-left:3px;}
 #resultTime b{color:#ffd83d;}
 
-/* v2.8: low-grade elementary readability */
+/* Readable type sizes for younger players */
 body{font-size:17px;}
 header{font-size:20px;}
 header span{font-size:20px;}
@@ -70,13 +70,11 @@ header span{font-size:20px;}
 .combo{font-size:36px;}
 .scorebox{font-size:21px;}
 .qpanel{padding:14px;}
-.qt{font-size:17px;}
 .answer{font-size:24px !important;min-height:58px;}
 #kanji{font-size:64px !important;}
 .card .name{font-size:22px;}
 .card .type{font-size:18px;}
 .card .stars{font-size:16px;}
-.card .ability{font-size:17px;}
 #start,#retry,#change{font-size:20px !important;}
 .score-breakdown{font-size:17px;padding:10px 13px;}
 .score-breakdown .breakdown-title{font-size:16px;}
@@ -86,70 +84,26 @@ header span{font-size:20px;}
 .score-breakdown .breakdown-total b{font-size:23px;}
 #resultTime{font-size:19px !important;}
 
-/* v2.8: separate battle card and question card */
+/* Battle and question cards */
 #game{gap:12px;}
-#game .battle,
 #game .qpanel{margin:0;}
-#game .battle{padding-bottom:10px;}
 #game .qpanel{margin-top:0;padding:16px 12px 14px;border:2px solid #dce5ec;background:#081522;}
 #game .qpanel .answers{margin-top:12px;}
 #game .qpanel .answer{margin-bottom:8px;}
 #game .qpanel .answer:last-child{margin-bottom:0;}
-/* The explanation line is gone, so the answer instruction gets its own
-   comfortable area and never collides with the player's HP. */
-
-/* v2.8: instruction belongs to the question card, never the battle field */
-#game{gap:12px;}
 #game .field{margin-bottom:0;}
 #game .qpanel{margin-top:0;padding:12px 12px 14px;border:3px solid #fff;background:#06121e;}
-#game .qpanel .msg{position:static;left:auto;right:auto;bottom:auto;margin:0 0 10px;min-height:48px;padding:9px 10px;box-sizing:border-box;border:3px solid #fff;background:#050505;font-size:21px;line-height:1.2;text-align:center;}
 #game .qpanel .kanji{margin:4px 0 12px;}
 #game .qpanel .answers{margin-top:0;}
 
-/* v2.8: instruction card belongs to the battle screen */
+/* Instruction card stays inside the battle field */
 #game .field{position:relative;padding-bottom:10px;}
 #game .field .msg{position:absolute;left:10px;right:10px;bottom:9px;margin:0;min-height:48px;padding:9px 10px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;border:3px solid #fff;background:#050505;font-size:21px;line-height:1.2;text-align:center;z-index:5;}
 #game .qpanel{padding:14px 12px 14px;}
 #game .qpanel .kanji{margin:4px 0 12px;}
 #game .qpanel .answers{margin-top:0;}
 
-/* v2.8 enemy roster */
-@media(max-width:390px){
-  #rankingScreen{padding:8px;}
-  #rankingScreen .ranking-panel{
-    max-height:calc(100vh - 16px);
-    padding:22px 10px 16px;
-    border-width:2px;
-    border-radius:11px;
-  }
-  #rankingScreen .ranking-title{
-    margin-bottom:16px;
-    font-size:24px;
-  }
-  #rankingScreen .ranking-list{
-    gap:7px;
-    margin-bottom:17px;
-  }
-  #rankingScreen .ranking-row{
-    grid-template-columns:45px minmax(0,1fr) 70px;
-    min-height:40px;
-    padding:4px 6px;
-  }
-  #rankingScreen .ranking-back{
-    min-height:44px;
-    font-size:15px;
-  }
-  .ranking-stage-button{
-    width:min(300px,84vw);
-    height:56px;
-    margin-top:14px;
-  }
-}
-  .player{right:3%;width:50%;bottom:62px;}
-  .player img{width:160px;height:160px;}
-}
-
-/* v2.8: battle positioning — enemy above combo area */
+/* Battle layering */
 .field .enemy{z-index:2;}
 .field .combo{z-index:4;}
 
@@ -814,9 +768,6 @@ body.title-open #app{background:#071521;box-shadow:none;}
   letter-spacing:.03em;
   text-shadow:3px 3px 0 #b52b27,5px 5px 0 #071521;
 }
-#rankingScreen .ranking-month{
-  display:none;
-}
 #rankingScreen .ranking-list{
   display:flex;
   flex-direction:column;
@@ -940,7 +891,6 @@ body.title-open #app{background:#071521;box-shadow:none;}
     padding:3px 5px;
   }
   #rankingScreen .ranking-title{font-size:23px;}
-  #rankingScreen .ranking-month{margin-bottom:10px;}
   #rankingScreen .ranking-back{min-height:42px;font-size:15px;}
   .ranking-stage-button{width:min(280px,82vw);aspect-ratio:3 / 1;height:auto;margin-top:14px;}
 }
@@ -1391,9 +1341,6 @@ function showResult(gameOver){
   setscore();
 
   $("fs").textContent=S.score.toLocaleString();
-  $("cc").textContent=S.correct;
-  $("mc").textContent=S.max;
-  $("ex").textContent=S.correct*10+S.max*5+S.kills*20;
   $("rs").src=C[S.char][2];
   $("rn").textContent=C[S.char][0];
   $("rt").textContent=C[S.char][1];
@@ -1716,31 +1663,19 @@ if(rankingBack)rankingBack.addEventListener("click",hideRanking);
 </script>
 
 <script>
-function selectGradeStage(stage, fromStageButton=false){
+function selectGradeStage(stage){
   if(!GRADE_QUESTIONS[stage]) return;
-  if(fromStageButton){
-  }
   S.stage=stage;
   Q=GRADE_QUESTIONS[stage];
   show("select");
   window.scrollTo(0,0);
 }
-function showStage1Characters(){ selectGradeStage(1, true); }
-function showStage2Characters(){ selectGradeStage(2, true); }
-function showStage3Characters(){ selectGradeStage(3, true); }
-function showStage4Characters(){ selectGradeStage(4, true); }
-function showStage5Characters(){ selectGradeStage(5, true); }
-function showStage6Characters(){ selectGradeStage(6, true); }
-document.querySelectorAll("#stageSelect .stage-card").forEach(card=>{
-  // A click first moves focus to the card.  Block that focus event's cursor
-  // sound so a stage decision has only its dedicated confirmation sound.
-  card.addEventListener("pointerdown",()=>{
-  }, true);
-  card.addEventListener("pointerenter",()=>{
-  });
-  card.addEventListener("focus",()=>{
-  });
-});
+function showStage1Characters(){ selectGradeStage(1); }
+function showStage2Characters(){ selectGradeStage(2); }
+function showStage3Characters(){ selectGradeStage(3); }
+function showStage4Characters(){ selectGradeStage(4); }
+function showStage5Characters(){ selectGradeStage(5); }
+function showStage6Characters(){ selectGradeStage(6); }
 
 const returnStage=sessionStorage.getItem("cqReturnStage");
 sessionStorage.removeItem("cqReturnStage");
