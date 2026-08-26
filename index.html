@@ -700,76 +700,25 @@ body.title-open #app{background:#071521;box-shadow:none;}
 }
 
 
-/* ===== Ranking word: continuous radiant gold glow ===== */
-#rankingScreen .ranking-title .ranking-word{
+/* Canvas demo: radiant gold light around the whole "8月ランキング" title. */
+#rankingScreen .ranking-title-wrap{
   position:relative;
   display:inline-block;
-  color:#ffd43b;
-  text-shadow:
-    0 0 1px #fff4a8,
-    0 0 3px #ffd84a,
-    0 0 7px rgba(255,190,35,.95),
-    0 0 13px rgba(255,150,0,.72),
-    0 0 22px rgba(255,190,35,.42);
-  animation:rankingWordGlow 2.2s ease-in-out infinite;
-  will-change:filter,text-shadow;
+  width:100%;
+  margin:0 auto 22px;
 }
-
-#rankingScreen .ranking-title .ranking-word::after{
-  content:"ランキング";
+#rankingScreen .ranking-title-wrap .ranking-title{
+  position:relative;
+  z-index:2;
+  margin:0;
+}
+#rankingScreen #rankingGlowCanvas{
   position:absolute;
-  inset:0;
+  z-index:1;
+  inset:-34px -44px;
+  width:calc(100% + 88px);
+  height:calc(100% + 68px);
   pointer-events:none;
-  color:#ffd83d;
-  opacity:.62;
-  filter:blur(5px);
-  transform:scale(1.02);
-  text-shadow:
-    0 0 7px rgba(255,205,60,.95),
-    0 0 16px rgba(255,166,0,.9),
-    0 0 28px rgba(255,190,40,.72);
-  animation:rankingWordAura 2.2s ease-in-out infinite;
-}
-
-@keyframes rankingWordGlow{
-  0%,100%{
-    filter:brightness(1);
-    text-shadow:
-      0 0 1px #fff4a8,
-      0 0 3px #ffd84a,
-      0 0 7px rgba(255,190,35,.95),
-      0 0 13px rgba(255,150,0,.72),
-      0 0 22px rgba(255,190,35,.42);
-  }
-  50%{
-    filter:brightness(1.16);
-    text-shadow:
-      0 0 2px #fffbd0,
-      0 0 5px #ffe873,
-      0 0 11px rgba(255,204,55,1),
-      0 0 20px rgba(255,164,0,.92),
-      0 0 34px rgba(255,196,45,.62);
-  }
-}
-
-@keyframes rankingWordAura{
-  0%,100%{
-    opacity:.42;
-    filter:blur(5px);
-    transform:scale(1.01);
-  }
-  50%{
-    opacity:.82;
-    filter:blur(7px);
-    transform:scale(1.035);
-  }
-}
-
-@media (prefers-reduced-motion:reduce){
-  #rankingScreen .ranking-title .ranking-word,
-  #rankingScreen .ranking-title .ranking-word::after{
-    animation:none;
-  }
 }
 
 /* ===== Monthly Ranking Screen ===== */
@@ -1053,7 +1002,10 @@ body.title-open #app{background:#071521;box-shadow:none;}
   </div>
 
   <div class="ranking-panel">
-    <h2 class="ranking-title">8月 <span class="ranking-word">ランキング</span></h2>
+    <div class="ranking-title-wrap">
+  <canvas id="rankingGlowCanvas" aria-hidden="true"></canvas>
+  <h2 class="ranking-title">8月 ランキング</h2>
+</div>
     <div class="ranking-list">
       <div class="ranking-row"><div class="ranking-rank">1位</div><div class="ranking-name">---</div><div class="ranking-score">---</div></div>
       <div class="ranking-row"><div class="ranking-rank">2位</div><div class="ranking-name">---</div><div class="ranking-score">---</div></div>
@@ -1906,5 +1858,134 @@ if(returnStage){
 
 
 
+
+
+<script>
+(function(){
+  function initRankingCanvas(){
+    const canvas = document.getElementById("rankingGlowCanvas");
+    const wrap = document.querySelector("#rankingScreen .ranking-title-wrap");
+    if(!canvas || !wrap) return;
+
+    const ctx = canvas.getContext("2d");
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let w = 0, h = 0, cx = 0, cy = 0;
+    const rays = [];
+    const sparks = [];
+    const TAU = Math.PI * 2;
+
+    function resize(){
+      const r = canvas.getBoundingClientRect();
+      w = Math.max(1, r.width);
+      h = Math.max(1, r.height);
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+      cx = w / 2;
+      cy = h / 2;
+    }
+
+    function resetRay(ray, initial){
+      ray.angle = Math.random() * TAU;
+      ray.start = 18 + Math.random() * 16;
+      ray.length = 22 + Math.random() * 42;
+      ray.speed = 0.42 + Math.random() * 0.62;
+      ray.width = 0.7 + Math.random() * 1.5;
+      ray.life = initial ? Math.random() * 100 : 0;
+      ray.max = 52 + Math.random() * 50;
+    }
+
+    function resetSpark(s, initial){
+      s.angle = Math.random() * TAU;
+      s.dist = 14 + Math.random() * 38;
+      s.speed = 0.22 + Math.random() * 0.55;
+      s.size = 0.7 + Math.random() * 1.5;
+      s.life = initial ? Math.random() * 90 : 0;
+      s.max = 30 + Math.random() * 55;
+    }
+
+    for(let i=0;i<18;i++){
+      const r = {};
+      resetRay(r,true);
+      rays.push(r);
+    }
+    for(let i=0;i<18;i++){
+      const s = {};
+      resetSpark(s,true);
+      sparks.push(s);
+    }
+
+    let last = performance.now();
+    function frame(now){
+      const dt = Math.min(32, now-last);
+      last = now;
+      ctx.clearRect(0,0,w,h);
+
+      ctx.save();
+      ctx.translate(cx,cy);
+
+      // Soft central aura.
+      const aura = ctx.createRadialGradient(0,0,4,0,0,58);
+      aura.addColorStop(0,"rgba(255,224,92,.18)");
+      aura.addColorStop(.38,"rgba(255,192,36,.09)");
+      aura.addColorStop(1,"rgba(255,160,0,0)");
+      ctx.fillStyle = aura;
+      ctx.beginPath();
+      ctx.arc(0,0,62,0,TAU);
+      ctx.fill();
+
+      rays.forEach(ray=>{
+        ray.life += ray.speed * dt;
+        if(ray.life > ray.max) resetRay(ray,false);
+        const p = ray.life / ray.max;
+        const fade = p < .16 ? p/.16 : (p > .72 ? (1-p)/.28 : 1);
+        const a = ray.angle;
+        const x1 = Math.cos(a) * ray.start;
+        const y1 = Math.sin(a) * ray.start;
+        const x2 = Math.cos(a) * (ray.start + ray.length * Math.min(1,p*1.25));
+        const y2 = Math.sin(a) * (ray.start + ray.length * Math.min(1,p*1.25));
+
+        ctx.beginPath();
+        ctx.moveTo(x1,y1);
+        ctx.lineTo(x2,y2);
+        ctx.lineWidth = ray.width;
+        ctx.strokeStyle = "rgba(255,214,72," + (0.72*fade) + ")";
+        ctx.shadowBlur = 7;
+        ctx.shadowColor = "rgba(255,178,20," + (0.8*fade) + ")";
+        ctx.stroke();
+      });
+
+      sparks.forEach(s=>{
+        s.life += s.speed * dt;
+        if(s.life > s.max) resetSpark(s,false);
+        const p = s.life / s.max;
+        const fade = p < .2 ? p/.2 : (p > .65 ? (1-p)/.35 : 1);
+        const rr = s.dist + p*20;
+        const x = Math.cos(s.angle)*rr;
+        const y = Math.sin(s.angle)*rr;
+        ctx.fillStyle = "rgba(255,235,145," + (0.9*fade) + ")";
+        ctx.shadowBlur = 6;
+        ctx.shadowColor = "rgba(255,190,40," + fade + ")";
+        ctx.beginPath();
+        ctx.arc(x,y,s.size,0,TAU);
+        ctx.fill();
+      });
+
+      ctx.restore();
+      requestAnimationFrame(frame);
+    }
+
+    resize();
+    window.addEventListener("resize", resize);
+    requestAnimationFrame(frame);
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded",initRankingCanvas);
+  }else{
+    initRankingCanvas();
+  }
+})();
+</script>
 
 </body></html>
