@@ -699,6 +699,59 @@ body.title-open #app{background:#071521;box-shadow:none;}
     cqRedFlash .24s linear both;
 }
 
+
+/* Gold shimmer for the monthly ranking title. */
+#rankingScreen .ranking-title{
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+}
+#rankingScreen .ranking-title::after{
+  content:"";
+  position:absolute;
+  z-index:2;
+  top:-35%;
+  left:-35%;
+  width:24%;
+  height:170%;
+  pointer-events:none;
+  transform:skewX(-18deg) translateX(-160%);
+  background:linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,215,70,.05) 20%,
+    rgba(255,238,150,.72) 48%,
+    rgba(255,255,220,.95) 52%,
+    rgba(255,196,40,.28) 68%,
+    transparent 100%
+  );
+  filter:blur(1px);
+  animation:rankingTitleShimmer 4.2s ease-in-out infinite;
+}
+@keyframes rankingTitleShimmer{
+  0%,55%{
+    transform:skewX(-18deg) translateX(-160%);
+    opacity:0;
+  }
+  62%{
+    opacity:1;
+  }
+  78%{
+    transform:skewX(-18deg) translateX(720%);
+    opacity:.9;
+  }
+  86%,100%{
+    transform:skewX(-18deg) translateX(720%);
+    opacity:0;
+  }
+}
+@media (prefers-reduced-motion:reduce){
+  #rankingScreen .ranking-title::after{
+    animation:none;
+    opacity:0;
+  }
+}
+
 /* ===== Monthly Ranking Screen ===== */
 /* Match the game's 520px app canvas instead of filling the desktop viewport. */
 #rankingScreen{
