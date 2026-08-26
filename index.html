@@ -945,6 +945,141 @@ body.is-transitioning{pointer-events:none;}
   background-repeat:no-repeat;
 }
 
+/* v5.0: Battle UI shares the title/ranking blue-and-gold design language.
+   Visual-only: battle sizing, positioning, answers, HP values and game logic stay unchanged. */
+#game{
+  --battle-gold:#efc34e;
+  --battle-gold-light:#ffe58a;
+  --battle-gold-dark:#7a4813;
+  --battle-blue-top:#1d5272;
+  --battle-blue-bottom:#0a2639;
+  --battle-ink:#04131f;
+}
+
+/* Enemy status and both HP gauges */
+#game .field .enemybox{
+  border:2px solid var(--battle-gold) !important;
+  border-radius:9px;
+  background:linear-gradient(180deg,rgba(21,57,76,.96),rgba(5,23,35,.97)) !important;
+  color:#fff;
+  box-shadow:
+    0 0 0 1px rgba(75,39,10,.92),
+    0 4px 0 rgba(3,8,12,.72),
+    inset 0 1px 0 rgba(255,255,255,.18),
+    inset 0 -8px 14px rgba(0,0,0,.14);
+  text-shadow:0 2px 2px rgba(0,0,0,.72);
+}
+#game .field .enemybox b{
+  display:block;
+  margin-bottom:5px;
+  color:#fff3bf;
+}
+#game .field .hp{
+  position:relative;
+  overflow:hidden;
+  border:1px solid var(--battle-gold-light) !important;
+  border-radius:999px;
+  background:#06121b !important;
+  box-shadow:
+    0 0 0 1px rgba(75,39,10,.75),
+    inset 0 2px 4px rgba(0,0,0,.72),
+    0 0 8px rgba(255,216,61,.10);
+}
+#game .field .hp::after{
+  content:"";
+  position:absolute;
+  inset:1px 3px auto;
+  height:30%;
+  border-radius:999px;
+  background:rgba(255,255,255,.38);
+  pointer-events:none;
+}
+#game .field .fill{border-radius:999px;}
+#game .field .fill.red{background:linear-gradient(180deg,#ff8b64 0%,#e33d32 48%,#9f171d 100%);box-shadow:0 0 8px rgba(255,72,55,.45);}
+#game .field .fill.green{background:linear-gradient(180deg,#8bffc1 0%,#32d979 48%,#11924d 100%);box-shadow:0 0 8px rgba(50,217,121,.42);}
+#game .field .player .hp{height:9px;}
+#game .field .player>span{color:#fff3bf;text-shadow:0 2px 2px #000;}
+
+/* Instruction and question cards */
+#game .field .msg{
+  border:2px solid var(--battle-gold) !important;
+  border-radius:9px;
+  background:linear-gradient(180deg,rgba(24,65,88,.97),rgba(7,28,42,.98)) !important;
+  color:#fff;
+  letter-spacing:.05em;
+  text-shadow:0 2px 2px rgba(0,0,0,.72);
+  box-shadow:
+    0 0 0 1px rgba(75,39,10,.9),
+    0 4px 0 rgba(3,8,12,.72),
+    inset 0 1px 0 rgba(255,255,255,.15);
+}
+#game .qpanel{
+  border:2px solid var(--battle-gold) !important;
+  border-radius:12px;
+  background:linear-gradient(180deg,rgba(18,51,70,.97),rgba(5,22,34,.98)) !important;
+  box-shadow:
+    0 0 0 1px rgba(75,39,10,.9),
+    0 5px 0 rgba(3,8,12,.78),
+    inset 0 1px 0 rgba(255,255,255,.14),
+    inset 0 -14px 24px rgba(0,0,0,.12);
+}
+#game .qpanel .kanji{
+  color:#fff;
+  text-shadow:0 3px 0 #071521,0 0 14px rgba(255,216,61,.12);
+}
+
+/* Answer buttons reuse the title button's blue face and gold rim. */
+#game .qpanel .answer{
+  position:relative;
+  overflow:hidden;
+  border:2px solid var(--battle-gold) !important;
+  border-radius:10px;
+  background:linear-gradient(180deg,#3a80d6 0%,#1a5eaf 48%,#0d3e82 100%);
+  color:#fff;
+  letter-spacing:.04em;
+  text-shadow:0 2px 2px rgba(0,0,0,.62);
+  box-shadow:
+    0 0 0 1px rgba(72,36,10,.92),
+    0 4px 0 #3b1d10,
+    inset 0 2px 0 rgba(255,255,255,.42),
+    inset 0 -6px 12px rgba(0,0,0,.16);
+  transition:filter .12s ease,transform .08s ease,box-shadow .08s ease;
+}
+#game .qpanel .answer:hover:not(:disabled),
+#game .qpanel .answer:focus-visible:not(:disabled){
+  filter:brightness(1.1);
+  box-shadow:
+    0 0 0 1px rgba(72,36,10,.92),
+    0 4px 0 #3b1d10,
+    0 0 15px rgba(255,216,61,.24),
+    inset 0 2px 0 rgba(255,255,255,.5);
+  outline:none;
+}
+#game .qpanel .answer:active:not(:disabled){
+  transform:translateY(3px);
+  box-shadow:0 0 0 1px rgba(72,36,10,.92),0 1px 0 #3b1d10,inset 0 2px 0 rgba(255,255,255,.35);
+}
+#game .qpanel .answer.correct{
+  border-color:#fff2a8 !important;
+  background:linear-gradient(180deg,#78e9a9 0%,#25b968 52%,#117440 100%);
+  color:#fff;
+  box-shadow:0 0 0 1px #185f39,0 4px 0 #073a23,0 0 18px rgba(80,255,158,.35),inset 0 2px 0 rgba(255,255,255,.5);
+}
+#game .qpanel .answer.wrong{
+  border-color:#ffc0ac !important;
+  background:linear-gradient(180deg,#f06c61 0%,#b92e36 52%,#741923 100%);
+  color:#fff;
+  box-shadow:0 0 0 1px #5a171c,0 4px 0 #360b10,0 0 16px rgba(255,70,70,.28),inset 0 2px 0 rgba(255,255,255,.35);
+}
+
+@media(max-width:600px){
+  #game .field .enemybox{border-radius:7px;}
+  #game .field .enemybox b{margin-bottom:3px;}
+  #game .field .msg{border-radius:7px;box-shadow:0 0 0 1px rgba(75,39,10,.9),0 3px 0 rgba(3,8,12,.72),inset 0 1px 0 rgba(255,255,255,.15);}
+  #game .qpanel{border-radius:9px;box-shadow:0 0 0 1px rgba(75,39,10,.9),0 4px 0 rgba(3,8,12,.78),inset 0 1px 0 rgba(255,255,255,.14);}
+  #game .qpanel .answer{border-radius:8px;box-shadow:0 0 0 1px rgba(72,36,10,.92),0 3px 0 #3b1d10,inset 0 1px 0 rgba(255,255,255,.42),inset 0 -5px 9px rgba(0,0,0,.15);}
+}
+
 </style>
 </head><body class="title-open"><main id="app"><header style="display:none"><div class="player-id"><span class="player-icon" aria-hidden="true"></span><span id="headerPlayerName">なまえなし</span></div><div>スコア <span id="score">00000</span></div><button id="quitBattle" class="battle-back" type="button" style="display:none;">やめる</button></header>
 
