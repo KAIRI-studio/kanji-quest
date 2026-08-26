@@ -1888,6 +1888,8 @@ if(returnStage){
     let last=performance.now();
     let burstTimer=0;
     let raf=0;
+    let wasActive=false;
+    let flash=0;
 
     function resize(){
       const r=canvas.getBoundingClientRect();
@@ -1943,6 +1945,7 @@ if(returnStage){
       }
       for(let i=0;i<20;i++) addSpark(Math.random()*130,true);
       pulses.push({age:0,life:620});
+      flash=1;
     }
 
     function seed(){
@@ -1968,9 +1971,24 @@ if(returnStage){
     function frame(now){
       raf=requestAnimationFrame(frame);
 
-      if(!rankingScreen.classList.contains("active")){
+      const isActive=rankingScreen.classList.contains("active");
+      if(!isActive){
+        wasActive=false;
         last=now;
         return;
+      }
+
+      // The screen starts at display:none, so its first measured size is 0x0.
+      // Measure again as soon as the ranking screen becomes visible.
+      const bounds=canvas.getBoundingClientRect();
+      if(!wasActive || Math.abs(bounds.width-W)>.5 || Math.abs(bounds.height-H)>.5){
+        resize();
+      }
+      if(!wasActive){
+        seed();
+        burstTimer=0;
+        burst();
+        wasActive=true;
       }
 
       const dt=Math.min(34,now-last);
@@ -2099,6 +2117,31 @@ if(returnStage){
 
       ctx.restore();
 
+      // A short, crisp "pika" flash made only from light strokes.
+      // It deliberately avoids a filled yellow overlay, keeping the title legible.
+      if(flash>0.001){
+        const strength=flash*flash;
+        ctx.save();
+        ctx.translate(cx,cy);
+        ctx.globalCompositeOperation="lighter";
+        for(let i=0;i<12;i++){
+          const a=(i/12)*TAU;
+          const inner=34;
+          const outer=72+strength*92;
+          ctx.beginPath();
+          ctx.moveTo(Math.cos(a)*inner,Math.sin(a)*inner*.43);
+          ctx.lineTo(Math.cos(a)*outer,Math.sin(a)*outer*.43);
+          ctx.lineWidth=.7+strength*1.4;
+          ctx.strokeStyle=`rgba(255,244,188,${strength*.72})`;
+          ctx.shadowBlur=8;
+          ctx.shadowColor=`rgba(255,190,35,${strength*.9})`;
+          ctx.stroke();
+        }
+        drawStar(0,0,2.6+strength*3.4,strength*.9,Math.PI/4);
+        ctx.restore();
+        flash*=Math.pow(.012,dt/1000);
+      }
+
       burstTimer+=dt;
       if(burstTimer>4300){
         burstTimer=0;
@@ -2110,7 +2153,6 @@ if(returnStage){
     seed();
 
     if(!reducedMotion){
-      setTimeout(()=>burst(),700);
       window.addEventListener("resize",resize,{passive:true});
       raf=requestAnimationFrame(frame);
     }
