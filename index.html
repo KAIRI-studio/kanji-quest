@@ -758,7 +758,7 @@ body.title-open #app{background:#071521;box-shadow:none;}
   max-height:calc(100dvh - 98px);
   overflow:auto;
   box-sizing:border-box;
-  padding:30px 22px 22px;
+  padding:72px 22px 22px;
   border:3px solid #607b8a;
   border-radius:14px;
   background:
@@ -907,8 +907,10 @@ body.title-open #app{background:#071521;box-shadow:none;}
 .name-error{min-height:22px;margin:0 0 8px;color:#ff9d91;font-size:14px;font-weight:900;}
 .name-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .name-actions button{margin:0;min-height:48px;}
-.screen-transition-shade{position:fixed;inset:0;z-index:9000;display:grid;place-items:center;background:rgba(2,7,12,.96);opacity:0;pointer-events:none;}
-.screen-transition-shade::after{content:"";width:34%;height:1px;background:rgba(255,216,61,.38);box-shadow:0 0 10px rgba(255,216,61,.12);}
+.screen-transition-shade{position:fixed;inset:0;z-index:9000;visibility:hidden;pointer-events:none;overflow:hidden;}
+.screen-transition-panel{position:absolute;left:0;right:0;height:51%;background:#02070c;will-change:transform;}
+.screen-transition-panel.top{top:0;transform:translateY(-101%);}
+.screen-transition-panel.bottom{bottom:0;transform:translateY(101%);}
 .stage-intro-overlay{position:fixed;inset:0;z-index:9001;display:none;align-items:center;justify-content:center;background:#02070c;color:#ffd83d;font-size:clamp(38px,11vw,62px);font-weight:900;letter-spacing:.08em;text-shadow:3px 3px 0 #b52b27,0 0 20px rgba(255,216,61,.35);pointer-events:none;}
 body.is-transitioning{pointer-events:none;}
 @media(max-width:390px){.stage-sub-actions{gap:7px;margin-top:4px}.ranking-stage-button{margin-top:8px}.name-stage-button{padding:8px 18px;font-size:14px}.name-panel{padding:22px 15px 18px}.name-actions{grid-template-columns:1fr}.name-actions button{min-height:43px}}
@@ -920,7 +922,7 @@ body.is-transitioning{pointer-events:none;}
   #rankingScreen{padding:8px;}
   #rankingScreen .ranking-panel{
     max-height:calc(100vh - 16px);
-    padding:14px 8px 11px;
+    padding:54px 8px 11px;
     border-width:2px;
     border-radius:11px;
   }
@@ -1057,7 +1059,7 @@ body.is-transitioning{pointer-events:none;}
 
 <section id="result" class="screen"><div class="clear">★ クリア！ ★</div><div class="resultchar"><img id="rs"><div><strong id="rn"></strong><small id="rt"></small></div></div><div class="final">スコア<b id="fs">0</b></div><div class="rg"><div>正解<b id="cc">0</b>/10</div><div>コンボ<b id="mc">0</b></div><div>たおした<b id="ex">0</b>たい</div></div><div id="rec" class="record hide">NEW RECORD!</div><button id="retry" class="primary">もう一度あそぶ</button><button id="change" class="secondary">キャラクターをかえる</button></section>
 <div id="toast" class="toast"></div></main>
-<div id="screenTransitionShade" class="screen-transition-shade" aria-hidden="true"></div>
+<div id="screenTransitionShade" class="screen-transition-shade" aria-hidden="true"><span class="screen-transition-panel top"></span><span class="screen-transition-panel bottom"></span></div>
 <div id="stageIntroOverlay" class="stage-intro-overlay" aria-hidden="true"><span>ステージ 1</span></div>
 <script>
 /* ===== Monthly Ranking Screen ===== */
@@ -1177,10 +1179,16 @@ async function cqNavigate(x,options={}){
   cqTransitioning=true;
   document.body.classList.add("is-transitioning");
   const shade=$("screenTransitionShade");
+  const topPanel=shade.querySelector(".screen-transition-panel.top");
+  const bottomPanel=shade.querySelector(".screen-transition-panel.bottom");
   const reduced=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   try{
-    if(!reduced&&current){
-      await shade.animate([{opacity:0},{opacity:1}],{duration:220,easing:"ease-in",fill:"forwards"}).finished;
+    if(!reduced){
+      shade.style.visibility="visible";
+      await Promise.all([
+        topPanel.animate([{transform:"translateY(-101%)"},{transform:"translateY(0)"}],{duration:230,easing:"cubic-bezier(.65,0,.35,1)",fill:"forwards"}).finished,
+        bottomPanel.animate([{transform:"translateY(101%)"},{transform:"translateY(0)"}],{duration:230,easing:"cubic-bezier(.65,0,.35,1)",fill:"forwards"}).finished
+      ]);
     }
     if(options.stageIntro){
       const intro=$("stageIntroOverlay");
@@ -1201,18 +1209,23 @@ async function cqNavigate(x,options={}){
       intro.style.display="none";
     }else{
       setScreenImmediate(x);
-      if(!reduced)await new Promise(resolve=>setTimeout(resolve,100));
+      if(!reduced)await new Promise(resolve=>setTimeout(resolve,90));
     }
     if(!reduced){
-      await shade.animate([{opacity:1},{opacity:0}],{duration:260,easing:"ease-out",fill:"forwards"}).finished;
-    }else if(shade){shade.style.opacity="0";}
+      await Promise.all([
+        topPanel.animate([{transform:"translateY(0)"},{transform:"translateY(-101%)"}],{duration:250,easing:"cubic-bezier(.65,0,.35,1)",fill:"forwards"}).finished,
+        bottomPanel.animate([{transform:"translateY(0)"},{transform:"translateY(101%)"}],{duration:250,easing:"cubic-bezier(.65,0,.35,1)",fill:"forwards"}).finished
+      ]);
+      shade.style.visibility="hidden";
+    }
     if(x==="rankingScreen")target.classList.add("ranking-fx-ready");
     window.scrollTo(0,0);
     return true;
   }finally{
     if(current){current.getAnimations().forEach(a=>a.cancel());}
     target.getAnimations().forEach(a=>a.cancel());
-    if(shade){shade.getAnimations().forEach(a=>a.cancel());shade.style.opacity="0";}
+    [topPanel,bottomPanel].forEach(panel=>{panel.getAnimations().forEach(a=>a.cancel());panel.style.transform="";});
+    shade.style.visibility="hidden";
     document.body.classList.remove("is-transitioning");
     cqTransitioning=false;
   }
