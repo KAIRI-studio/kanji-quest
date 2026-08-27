@@ -2355,6 +2355,26 @@ function showStage6Characters(){ selectGradeStage(6); }
 
 <script>
 (function(){
+  function warmStageCardImages(){
+    if(window.cqStageCardWarmups)return;
+    window.cqStageCardWarmups=Array.from({length:6},(_,index)=>{
+      const image=new Image();
+      image.decoding="async";
+      image.fetchPriority="low";
+      image.src=`assets/stages/${index+1}-card.webp`;
+      return image;
+    });
+  }
+
+  function scheduleStageCardWarmup(){
+    const start=()=>warmStageCardImages();
+    if("requestIdleCallback" in window){
+      window.requestIdleCallback(start,{timeout:900});
+    }else{
+      setTimeout(start,350);
+    }
+  }
+
   function initTitleButton(){
     const btn = document.getElementById("titleStart");
     if(!btn || btn.dataset.kqBound) return;
@@ -2376,6 +2396,14 @@ function showStage6Characters(){ selectGradeStage(6); }
       }, {once:true});
     }
     setTimeout(unlockTitleStart, 3200);
+
+    // Title artwork remains the first network priority. Once it has loaded,
+    // quietly warm the six small card thumbnails during the 3-second intro.
+    if(document.readyState==="complete"){
+      scheduleStageCardWarmup();
+    }else{
+      window.addEventListener("load",scheduleStageCardWarmup,{once:true});
+    }
 
     btn.addEventListener("click", function(e){
       e.preventDefault();
