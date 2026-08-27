@@ -4,12 +4,8 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
-  <link rel="preload" as="image" type="image/webp" href="assets/stages/1.webp">
-  <link rel="preload" as="image" type="image/webp" href="assets/stages/2.webp">
-  <link rel="preload" as="image" type="image/webp" href="assets/stages/3.webp">
-  <link rel="preload" as="image" type="image/webp" href="assets/stages/4.webp">
-  <link rel="preload" as="image" type="image/webp" href="assets/stages/5.webp">
-  <link rel="preload" as="image" type="image/webp" href="assets/stages/6.webp">
+  <link rel="preload" as="image" type="image/webp" href="assets/stages/title_fantasy_vertical.webp" fetchpriority="high">
+  <link rel="preload" as="image" type="image/webp" href="assets/stages/title_logo.webp" fetchpriority="high">
   <meta name="theme-color" content="#051927">
 <style id="app-styles-consolidated">
 *{box-sizing:border-box;}body{margin:0;background:#02070c;color:#fff;font-family:monospace;}#app{max-width:520px;min-height:100vh;margin:auto;background:#071521;}body.title-open{background:#fff;}body.title-open #app{background:#fff;box-shadow:none;}body.title-open header{display:none!important;}
@@ -306,7 +302,7 @@ body.title-open #app{background:#071521;box-shadow:none;}
 .title-screen{min-height:100dvh;height:100dvh;width:100%;padding:0;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:none !important;isolation:isolate;}
 
 /* Background image layer */
-.title-screen::after{content:"";position:absolute;inset:-12px;z-index:0;background:url("assets/stages/title_fantasy_vertical.png") center center / cover no-repeat;filter:blur(2.2px);transform:scale(1.025);pointer-events:none;}
+.title-screen::after{content:"";position:absolute;inset:-12px;z-index:0;background:url("assets/stages/title_fantasy_vertical.webp") center center / cover no-repeat;filter:blur(2.2px);transform:scale(1.025);pointer-events:none;}
 
 /* Very subtle dark veil/grid for readability and visual unity */
 .title-screen::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:
@@ -385,7 +381,7 @@ body.title-open #app{background:#071521;box-shadow:none;}
    No new artwork is generated or introduced. Cloud animation removed. */
 #stageSelect, #select, #game{position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(3,12,20,.30),rgba(3,12,20,.46)) !important;background-attachment:scroll !important;}
 /* Shared fantasy background: blurred independently so the UI stays crisp. */
-#stageSelect::after, #select::after, #game::after{content:"";position:absolute;z-index:0;inset:-18px;pointer-events:none;background:url("assets/stages/title_fantasy_vertical.png") center center / cover no-repeat;filter:blur(4px);transform:scale(1.03);opacity:.92;}
+#stageSelect::after, #select::after, #game::after{content:"";position:absolute;z-index:0;inset:-18px;pointer-events:none;background:url("assets/stages/title_fantasy_vertical.webp") center center / cover no-repeat;filter:blur(4px);transform:scale(1.03);opacity:.92;}
 #stageSelect::before, #select::before{background:
     linear-gradient(180deg,rgba(3,12,20,.16),rgba(3,12,20,.34)),
     repeating-linear-gradient(0deg,transparent 0 7px,rgba(255,255,255,.025) 7px 8px),
@@ -393,7 +389,7 @@ body.title-open #app{background:#071521;box-shadow:none;}
 /* The battle field itself is the main visual background of the battle screen,
    so reuse the same approved fantasy background there as well. */
 #game .field{position:relative;background:linear-gradient(180deg,rgba(3,12,20,.12),rgba(3,12,20,.30)) !important;}
-#game .field::before{content:"";position:absolute;z-index:0;inset:-14px;pointer-events:none;background:url("assets/stages/title_fantasy_vertical.png") center center / cover no-repeat;filter:blur(4px);transform:scale(1.03);opacity:.96;}
+#game .field::before{content:"";position:absolute;z-index:0;inset:-14px;pointer-events:none;background:url("assets/stages/title_fantasy_vertical.webp") center center / cover no-repeat;filter:blur(4px);transform:scale(1.03);opacity:.96;}
 /* Keep all screen UI above the blurred background layers. */
 #stageSelect > *, #select > *, #game > *{position:relative;z-index:1;}
 #game .field > *{position:relative;z-index:2;}
@@ -625,7 +621,7 @@ body.title-open #app{background:#071521;box-shadow:none;}
   z-index:0;
   inset:-18px;
   pointer-events:none;
-  background:url("assets/stages/title_fantasy_vertical.png") center center / cover no-repeat;
+  background:url("assets/stages/title_fantasy_vertical.webp") center center / cover no-repeat;
   filter:blur(4px);
   transform:scale(1.03);
   opacity:.92;
@@ -665,7 +661,7 @@ body.title-open #app{background:#071521;box-shadow:none;}
   border-radius:14px;
   background:
     linear-gradient(rgba(5,18,28,.30),rgba(5,18,28,.42)),
-    url("assets/rankinghaikei.png") center / cover no-repeat;
+    url("assets/rankinghaikei.webp") center / cover no-repeat;
   color:#fff;
   box-shadow:0 8px 0 rgba(0,0,0,.38),0 0 28px rgba(0,0,0,.28);
   text-align:center;
@@ -768,7 +764,7 @@ body.title-open #app{background:#071521;box-shadow:none;}
   overflow:hidden;
   border:0;
   border-radius:0;
-  background:url("assets/ranking.png") center / contain no-repeat;
+  background:url("assets/ranking.webp") center / contain no-repeat;
   color:transparent;
   font:inherit;
   font-size:0;
@@ -795,7 +791,7 @@ body.title-open #app{background:#071521;box-shadow:none;}
 .name-stage-button:active{transform:translateY(2px);box-shadow:0 1px 0 #03080c;}
 #nameScreen{position:fixed;top:70px;bottom:0;left:50%;transform:translateX(-50%);width:min(100vw,520px);min-height:0;box-sizing:border-box;display:none;align-items:center;justify-content:center;padding:18px;background:#071521;overflow:hidden;isolation:isolate;}
 #nameScreen.active{display:flex;}
-#nameScreen::after{content:"";position:absolute;z-index:0;inset:-18px;background:url("assets/stages/title_fantasy_vertical.png") center/cover no-repeat;filter:blur(4px);transform:scale(1.03);opacity:.92;}
+#nameScreen::after{content:"";position:absolute;z-index:0;inset:-18px;background:url("assets/stages/title_fantasy_vertical.webp") center/cover no-repeat;filter:blur(4px);transform:scale(1.03);opacity:.92;}
 #nameScreen::before{content:"";position:absolute;z-index:1;inset:0;background:linear-gradient(180deg,rgba(3,12,20,.2),rgba(3,12,20,.48)),repeating-linear-gradient(0deg,transparent 0 7px,rgba(255,255,255,.025) 7px 8px);}
 .name-panel{position:relative;z-index:2;width:min(100%,440px);box-sizing:border-box;padding:28px 22px 24px;border:3px solid #607b8a;border-radius:14px;background:linear-gradient(180deg,rgba(15,43,59,.96),rgba(7,23,34,.97));box-shadow:0 8px 0 rgba(0,0,0,.38),0 0 28px rgba(0,0,0,.28);text-align:center;}
 .name-title{margin:0 0 10px;color:#ffd83d;font-size:clamp(28px,7vw,36px);text-shadow:3px 3px 0 #b52b27,5px 5px 0 #071521;}
@@ -1130,7 +1126,7 @@ body.is-transitioning{pointer-events:none;}
 /* Result screen */
 #result{
   position:relative;
-  background:linear-gradient(180deg,rgba(3,12,20,.22),rgba(3,12,20,.6)),url("assets/stages/title_fantasy_vertical.png") center/cover no-repeat !important;
+  background:linear-gradient(180deg,rgba(3,12,20,.22),rgba(3,12,20,.6)),url("assets/stages/title_fantasy_vertical.webp") center/cover no-repeat !important;
 }
 #result .clear{margin:22px 0 12px;color:#ffd83d;text-shadow:3px 3px 0 #b52b27,5px 5px 0 #071521;}
 #result .resultchar,
@@ -1174,14 +1170,43 @@ body.is-transitioning{pointer-events:none;}
   #result .score-breakdown{margin:5px 0;padding:4px 7px;border-radius:7px;}
 }
 
+/* Persistent sound control: large enough for touch, but clear of battle controls. */
+#audioToggle{
+  position:fixed;
+  top:12px;
+  right:max(12px,calc((100vw - 520px)/2 + 12px));
+  z-index:10050;
+  width:44px;
+  height:44px;
+  margin:0;
+  padding:0;
+  display:grid;
+  place-items:center;
+  border:2px solid #efc34e;
+  border-radius:10px;
+  background:linear-gradient(180deg,#2f73c9,#0d3e82);
+  color:#fff;
+  box-shadow:0 0 0 1px #4a260c,0 4px 0 #30180b,inset 0 1px 0 rgba(255,255,255,.42);
+  font:900 21px/1 system-ui,"Noto Sans JP",sans-serif;
+  cursor:pointer;
+  touch-action:manipulation;
+}
+#audioToggle:hover,#audioToggle:focus-visible{filter:brightness(1.1);outline:2px solid #fff;outline-offset:2px;}
+#audioToggle:active{transform:translateY(2px);box-shadow:0 0 0 1px #4a260c,0 2px 0 #30180b;}
+#audioToggle[aria-pressed="true"]{background:linear-gradient(180deg,#465668,#253444);color:#d5dde5;}
+body.cq-battle-active #audioToggle{right:max(84px,calc((100vw - 520px)/2 + 84px));}
+@media(max-width:600px){
+  #audioToggle{top:6px;width:42px;height:42px;font-size:20px;}
+}
+
 </style>
-</head><body class="title-open"><main id="app"><header style="display:none"><div class="player-id"><span class="player-icon" aria-hidden="true"></span><span id="headerPlayerName">なまえなし</span></div><div>スコア <span id="score">00000</span></div><button id="quitBattle" class="battle-back" type="button" style="display:none;">やめる</button></header>
+</head><body class="title-open"><main id="app"><button id="audioToggle" type="button" aria-label="音をミュート" aria-pressed="false" title="音をミュート"><span aria-hidden="true">🔊</span></button><header style="display:none"><div class="player-id"><span class="player-icon" aria-hidden="true"></span><span id="headerPlayerName">なまえなし</span></div><div>スコア <span id="score">00000</span></div><button id="quitBattle" class="battle-back" type="button" style="display:none;">やめる</button></header>
 
 <section id="titleScreen" class="title-screen active">
   <div class="title-logo-intro" aria-hidden="true">
     <div class="title-logo-row">
-      <img src="assets/logos/hbk_gaming.png" alt="">
-      <img src="assets/logos/kairi_studio_transparent.png" alt="">
+      <img src="assets/logos/hbk_gaming.webp" alt="" decoding="async" fetchpriority="high">
+      <img src="assets/logos/kairi_studio_transparent.png" alt="" decoding="async" fetchpriority="high">
     </div>
   </div>
 
@@ -1196,7 +1221,7 @@ body.is-transitioning{pointer-events:none;}
     <button id="titleStart" class="title-start" type="button" disabled>はじめる</button>
   </div>
 
-  <img class="title-logo-art" src="assets/stages/title_logo.png" alt="漢字クエスト KANJI QUEST">
+  <img class="title-logo-art" src="assets/stages/title_logo.webp" alt="漢字クエスト KANJI QUEST" decoding="async" fetchpriority="high">
 </section>
 
 <section id="stageSelect" class="screen" style="display:none;">
@@ -1209,15 +1234,15 @@ body.is-transitioning{pointer-events:none;}
   <div class="stage-title">ステージをえらぼう！</div>
   <div class="stage-sub">どのぼうけんに いく？</div>
   <div class="stage-grid">
-    <button class="stage-card active stage-image-card" data-stage="1" style="background-image:url('assets/stages/1.webp')" type="button" onclick="showStage1Characters()">
+    <button class="stage-card active stage-image-card" data-stage="1" style="background-image:url('assets/stages/1-card.webp')" type="button" onclick="showStage1Characters()">
       <div class="stage-name">1ねんせい</div>
       <div class="stage-area">もりのステージ</div><div class="stage-status">あそべる！</div>
     </button>
-    <button class="stage-card active stage-image-card" data-stage="2" style="background-image:url('assets/stages/2.webp')" type="button" onclick="showStage2Characters()"><div class="stage-icon">💧</div><div class="stage-name">2ねんせい</div><div class="stage-area">みずのどうくつ</div><div class="stage-status">あそべる！</div></button>
-    <button class="stage-card active stage-image-card" data-stage="3" style="background-image:url('assets/stages/3.webp')" type="button" onclick="showStage3Characters()"><div class="stage-icon">🏛️</div><div class="stage-name">3ねんせい</div><div class="stage-area">いにしえのいせき</div><div class="stage-status">あそべる！</div></button>
-    <button class="stage-card active stage-image-card" data-stage="4" style="background-image:url('assets/stages/4.webp')" type="button" onclick="showStage4Characters()"><div class="stage-icon">✨</div><div class="stage-name">4ねんせい</div><div class="stage-area">まほうのもり</div><div class="stage-status">あそべる！</div></button>
-    <button class="stage-card active stage-image-card" data-stage="5" style="background-image:url('assets/stages/5.webp')" type="button" onclick="showStage5Characters()"><div class="stage-icon">🏰</div><div class="stage-name">5ねんせい</div><div class="stage-area">くらやみじょう</div><div class="stage-status">あそべる！</div></button>
-    <button class="stage-card active stage-image-card" data-stage="6" style="background-image:url('assets/stages/6.webp')" type="button" onclick="showStage6Characters()"><div class="stage-icon">⚔️</div><div class="stage-name">6ねんせい</div><div class="stage-area">さいしゅうけっせん</div><div class="stage-status">あそべる！</div></button>
+    <button class="stage-card active stage-image-card" data-stage="2" style="background-image:url('assets/stages/2-card.webp')" type="button" onclick="showStage2Characters()"><div class="stage-icon">💧</div><div class="stage-name">2ねんせい</div><div class="stage-area">みずのどうくつ</div><div class="stage-status">あそべる！</div></button>
+    <button class="stage-card active stage-image-card" data-stage="3" style="background-image:url('assets/stages/3-card.webp')" type="button" onclick="showStage3Characters()"><div class="stage-icon">🏛️</div><div class="stage-name">3ねんせい</div><div class="stage-area">いにしえのいせき</div><div class="stage-status">あそべる！</div></button>
+    <button class="stage-card active stage-image-card" data-stage="4" style="background-image:url('assets/stages/4-card.webp')" type="button" onclick="showStage4Characters()"><div class="stage-icon">✨</div><div class="stage-name">4ねんせい</div><div class="stage-area">まほうのもり</div><div class="stage-status">あそべる！</div></button>
+    <button class="stage-card active stage-image-card" data-stage="5" style="background-image:url('assets/stages/5-card.webp')" type="button" onclick="showStage5Characters()"><div class="stage-icon">🏰</div><div class="stage-name">5ねんせい</div><div class="stage-area">くらやみじょう</div><div class="stage-status">あそべる！</div></button>
+    <button class="stage-card active stage-image-card" data-stage="6" style="background-image:url('assets/stages/6-card.webp')" type="button" onclick="showStage6Characters()"><div class="stage-icon">⚔️</div><div class="stage-name">6ねんせい</div><div class="stage-area">さいしゅうけっせん</div><div class="stage-status">あそべる！</div></button>
   </div>
 
   <div class="stage-sub-actions">
@@ -1282,7 +1307,7 @@ body.is-transitioning{pointer-events:none;}
 
 <section id="game" class="screen"><div class="battlehead"><span>タイム <b id="time">0.0s</b></span><b id="stageLabel">STAGE 1</b><b><span id="qn">1</span> / 10問</b></div>
 <div class="field"><div class="enemybox"><b id="enemyName">キッズスライム Lv.1</b><div class="hp"><div id="ehp" class="fill red"></div></div><span id="et">20/20</span></div><div id="enemy" class="enemy"><img id="enemyImg" alt=""></div>
-<div class="player"><img id="ps" src="assets/castor.png"><div class="player-status"><div id="pn" class="pname">CASTOR Lv.1</div><div class="hp"><div id="php" class="fill green"></div></div><span id="pt">40/40</span></div></div>
+<div class="player"><img id="ps" src="assets/castor.webp" decoding="async"><div class="player-status"><div id="pn" class="pname">CASTOR Lv.1</div><div class="hp"><div id="php" class="fill green"></div></div><span id="pt">40/40</span></div></div>
 <div id="combo" class="combo hide">コンボ ×<span>2</span>!</div><div id="slash" class="slash hide">✦</div><div id="damage" class="damage hide">-12</div><div id="msg" class="msg">よみかたを えらぼう！</div></div>
 <div class="qpanel"><div id="kanji" class="kanji">森</div><div id="answers" class="answers"></div></div></section>
 
@@ -1311,7 +1336,7 @@ function cqDamageFlash(selector, className){
 }
 
 
-const C={castor:["CASTOR","バランス型","assets/castor.png",3,3,3,"基本性能が安定"],kairi:["KAIRI","こうげき特化型","assets/kairi.png",5,1,3,"正解時のこうげき力UP"],sota:["SOTA","コンボ特化型","assets/sota.png",4,2,5,"コンボ倍率が高い"],kappa:["KAPPA","安定型","assets/kappa.png",2,4,2,"1回ミスしてもコンボが途切れない"]};
+const C={castor:["CASTOR","バランス型","assets/castor.webp",3,3,3,"基本性能が安定"],kairi:["KAIRI","こうげき特化型","assets/kairi.webp",5,1,3,"正解時のこうげき力UP"],sota:["SOTA","コンボ特化型","assets/sota.webp",4,2,5,"コンボ倍率が高い"],kappa:["KAPPA","安定型","assets/kappa.webp",2,4,2,"1回ミスしてもコンボが途切れない"]};
 const Q1=[["山","やま","かわ","そら"],["川","かわ","やま","うみ"],["森","もり","はやし","くさ"],["空","そら","あめ","ほし"],["雨","あめ","ゆき","くも"],["花","はな","くさ","き"],["草","くさ","はな","もり"],["木","き","いし","はやし"],["林","はやし","もり","き"],["石","いし","つち","たま"],["土","つち","いし","みず"],["水","みず","ひ","あめ"],["火","ひ","みず","つち"],["月","つき","ひ","ほし"],["犬","いぬ","ねこ","とり"],["虫","むし","とり","さかな"],["鳥","とり","むし","いぬ"],["貝","かい","さかな","とり"],["人","ひと","こ","おとこ"],["男","おとこ","おんな","ひと"],["女","おんな","おとこ","こ"],["子","こ","ひと","おんな"],["目","め","みみ","くち"],["耳","みみ","め","て"],["口","くち","め","あし"],["手","て","あし","みみ"],["足","あし","て","くち"],["車","くるま","ふね","みち"],["本","ほん","えんぴつ","つくえ"],["玉","たま","いし","つき"]];
 const Q2=[["池","いけ","かわ","うみ"],["海","うみ","いけ","かわ"],["岩","いわ","いし","やま"],["谷","たに","やま","いわ"],["園","その","にわ","もり"],["原","はら","たに","やま"],["野","の","はら","やま"],["星","ほし","つき","そら"],["雲","くも","あめ","そら"],["雪","ゆき","あめ","くも"],["風","かぜ","ゆき","あめ"],["春","はる","なつ","あき"],["夏","なつ","はる","あき"],["秋","あき","はる","なつ"],["冬","ふゆ","はる","なつ"],["朝","あさ","よる","ひる"],["昼","ひる","あさ","よる"],["夜","よる","あさ","ひる"],["週","しゅう","つき","とき"],["父","ちち","はは","あに"],["母","はは","ちち","あに"],["兄","あに","あね","ちち"],["姉","あね","あに","ちち"],["弟","おとうと","あに","あね"],["妹","いもうと","あに","あね"],["友","とも","ちち","あに"],["店","みせ","いえ","へや"],["門","もん","いえ","みせ"],["船","ふね","くるま","でんしゃ"],["魚","さかな","とり","むし"],["牛","うし","うま","ぶた"],["馬","うま","うし","ぶた"],["羽","はね","つばさ","とり"],["米","こめ","むぎ","まめ"],["茶","ちゃ","みず","ゆ"],["色","いろ","かたち","ひかり"]];
 const Q3=[["駅","えき","みせ","みち"],["横","よこ","たて","うえ"],["岸","きし","しま","はま"],["橋","はし","みち","かわ"],["客","きゃく","みせ","ひと"],["君","きみ","とも","ひと"],["係","かかり","しごと","ひと"],["血","ち","ほね","にく"],["皿","さら","はし","ちゃわん"],["指","ゆび","て","あし"],["歯","は","め","くち"],["酒","さけ","みず","ちゃ"],["神","かみ","ほとけ","ひと"],["炭","すみ","ひ","いし"],["豆","まめ","こめ","むぎ"],["島","しま","かわ","やま"],["湯","ゆ","みず","あめ"],["箱","はこ","かご","ふくろ"],["畑","はたけ","た","の"],["鼻","はな","くち","め"],["氷","こおり","ゆき","あめ"],["羊","ひつじ","うし","うま"]];
@@ -1330,24 +1355,24 @@ let S={
 };
 
 const ENEMIES=[
-  {name:"あおスライム",hp:50,img:"assets/enemies/enemy_01.png",bonus:150},
-  {name:"マッシュファイター",hp:50,img:"assets/enemies/enemy_02.png",bonus:170},
-  {name:"リーフフェアリー",hp:50,img:"assets/enemies/enemy_03.png",bonus:190},
-  {name:"アースボア",hp:50,img:"assets/enemies/enemy_04.png",bonus:200},
-  {name:"ゴブリン",hp:50,img:"assets/enemies/enemy_05.png",bonus:220},
-  {name:"スカルナイト",hp:50,img:"assets/enemies/enemy_06.png",bonus:240},
-  {name:"フロストウルフ",hp:50,img:"assets/enemies/enemy_07.png",bonus:260},
-  {name:"グリーンスネーク",hp:50,img:"assets/enemies/enemy_08.png",bonus:280},
-  {name:"ダークメイジ",hp:50,img:"assets/enemies/enemy_09.png",bonus:300},
-  {name:"ゴースト",hp:50,img:"assets/enemies/enemy_10.png",bonus:320},
-  {name:"ウッドオーク",hp:50,img:"assets/enemies/enemy_11.png",bonus:340},
-  {name:"グリフォン",hp:50,img:"assets/enemies/enemy_12.png",bonus:360},
-  {name:"レッドドラゴン",hp:50,img:"assets/enemies/enemy_13.png",bonus:380},
-  {name:"ロックゴーレム",hp:50,img:"assets/enemies/enemy_14.png",bonus:400},
-  {name:"クリスタルドラゴン",hp:50,img:"assets/enemies/enemy_15.png",bonus:430},
-  {name:"フォレストゴーレム",hp:50,img:"assets/enemies/enemy_16.png",bonus:460},
-  {name:"マグマビースト",hp:50,img:"assets/enemies/enemy_17.png",bonus:480},
-  {name:"アイスドラゴン",hp:50,img:"assets/enemies/enemy_18.png",bonus:500},
+  {name:"あおスライム",hp:50,img:"assets/enemies/enemy_01.webp",bonus:150},
+  {name:"マッシュファイター",hp:50,img:"assets/enemies/enemy_02.webp",bonus:170},
+  {name:"リーフフェアリー",hp:50,img:"assets/enemies/enemy_03.webp",bonus:190},
+  {name:"アースボア",hp:50,img:"assets/enemies/enemy_04.webp",bonus:200},
+  {name:"ゴブリン",hp:50,img:"assets/enemies/enemy_05.webp",bonus:220},
+  {name:"スカルナイト",hp:50,img:"assets/enemies/enemy_06.webp",bonus:240},
+  {name:"フロストウルフ",hp:50,img:"assets/enemies/enemy_07.webp",bonus:260},
+  {name:"グリーンスネーク",hp:50,img:"assets/enemies/enemy_08.webp",bonus:280},
+  {name:"ダークメイジ",hp:50,img:"assets/enemies/enemy_09.webp",bonus:300},
+  {name:"ゴースト",hp:50,img:"assets/enemies/enemy_10.webp",bonus:320},
+  {name:"ウッドオーク",hp:50,img:"assets/enemies/enemy_11.webp",bonus:340},
+  {name:"グリフォン",hp:50,img:"assets/enemies/enemy_12.webp",bonus:360},
+  {name:"レッドドラゴン",hp:50,img:"assets/enemies/enemy_13.webp",bonus:380},
+  {name:"ロックゴーレム",hp:50,img:"assets/enemies/enemy_14.webp",bonus:400},
+  {name:"クリスタルドラゴン",hp:50,img:"assets/enemies/enemy_15.webp",bonus:430},
+  {name:"フォレストゴーレム",hp:50,img:"assets/enemies/enemy_16.webp",bonus:460},
+  {name:"マグマビースト",hp:50,img:"assets/enemies/enemy_17.webp",bonus:480},
+  {name:"アイスドラゴン",hp:50,img:"assets/enemies/enemy_18.webp",bonus:500},
 ];
 
 // IMPORTANT GAME RULE:
@@ -1368,7 +1393,7 @@ const STAGE_ENEMIES=Object.fromEntries(
     stage,
     ids.map(id=>({
       ...ENEMIES[id-1],
-      img:`assets/enemies/enemy_${String(id).padStart(2,"0")}.png`
+      img:`assets/enemies/enemy_${String(id).padStart(2,"0")}.webp`
     }))
   ])
 );
@@ -1384,6 +1409,8 @@ const $=x=>document.getElementById(x);
    requested delay. This also keeps delayed playback reliable on iPhone. */
 const cqAudio=(()=>{
   const base="assets/audio/";
+  const connection=navigator.connection||navigator.mozConnection||navigator.webkitConnection;
+  const constrainedNetwork=!!(connection&&(connection.saveData||/(^|-)2g$/.test(connection.effectiveType||"")));
   const files={
     menu:"Steel_Against_the_Storm.mp3",
     battle:"Before_the_Final_Strike.mp3",
@@ -1403,7 +1430,9 @@ const cqAudio=(()=>{
   Object.entries(files).forEach(([name,file])=>{
     if(name==="menu"||name==="battle")return;
     const audio=new Audio(base+file);
-    audio.preload="auto";
+    // On constrained connections, only the first tap sound competes with the
+    // title artwork. The remaining sounds are primed near their first use.
+    audio.preload=(!constrainedNetwork||name==="titleStart")?"auto":"none";
     sfx[name]=audio;
   });
   const bgm={
@@ -1413,7 +1442,7 @@ const cqAudio=(()=>{
   Object.values(bgm).forEach(audio=>{
     // Loop manually so the end can fade instead of cutting back to the start.
     audio.loop=false;
-    audio.preload="auto";
+    audio.preload=constrainedNetwork?"none":"auto";
     audio.volume=0;
   });
 
@@ -1424,12 +1453,16 @@ const cqAudio=(()=>{
   let delayTimer=0;
   let activeBgmName=null;
   let loopFading=false;
+  let muted=false;
+  try{muted=localStorage.getItem("cqMuted")==="1";}catch(_){muted=false;}
 
   function safePlay(audio){
+    if(muted)return;
     const result=audio.play();
     if(result&&typeof result.catch==="function")result.catch(()=>{});
   }
   function playSfx(name,volume=SFX_VOLUME){
+    if(muted)return;
     const audio=sfx[name];
     if(!audio)return;
     audio.pause();
@@ -1473,6 +1506,7 @@ const cqAudio=(()=>{
     target.pause();
     target.currentTime=0;
     target.volume=0;
+    if(muted)return;
     // Start inaudibly during the trusted user gesture; the fade begins later.
     safePlay(target);
     delayTimer=setTimeout(()=>{
@@ -1490,6 +1524,40 @@ const cqAudio=(()=>{
       active.pause();
       active.currentTime=0;
     });
+  }
+  function setMuted(next){
+    const resumeName=activeBgmName;
+    muted=!!next;
+    try{localStorage.setItem("cqMuted",muted?"1":"0");}catch(_){}
+    cancelBgmAutomation();
+    Object.values(bgm).forEach(audio=>{
+      audio.pause();
+      audio.currentTime=0;
+      audio.volume=0;
+    });
+    Object.values(sfx).forEach(audio=>{
+      audio.pause();
+      audio.currentTime=0;
+    });
+    activeBgmName=resumeName;
+    if(!muted&&resumeName)startBgm(resumeName,0,500);
+    return muted;
+  }
+  function primeBattle(){
+    if(muted)return;
+    const names=constrainedNetwork
+      ? ["battleStart","correct","wrong"]
+      : ["battleStart","correct","wrong","defeat","clear","gameOverResult"];
+    names.forEach(name=>{
+      const audio=sfx[name];
+      if(!audio)return;
+      audio.preload="auto";
+      audio.load();
+    });
+    if(!constrainedNetwork){
+      bgm.battle.preload="auto";
+      bgm.battle.load();
+    }
   }
 
   // Fade the final 1.8 seconds, restart silently, then gently fade back in.
@@ -1515,8 +1583,36 @@ const cqAudio=(()=>{
       },120);
     });
   });
-  return {playSfx,stopSfx,startMenu:(delay=650)=>startBgm("menu",delay),startBattle:(delay=500)=>startBgm("battle",delay),stopBgm};
+  return {
+    playSfx,
+    stopSfx,
+    startMenu:(delay=650)=>startBgm("menu",delay),
+    startBattle:(delay=500)=>startBgm("battle",delay),
+    stopBgm,
+    setMuted,
+    isMuted:()=>muted,
+    primeBattle,
+    constrainedNetwork
+  };
 })();
+
+const audioToggle=$("audioToggle");
+function syncAudioToggle(){
+  if(!audioToggle)return;
+  const muted=cqAudio.isMuted();
+  audioToggle.setAttribute("aria-pressed",String(muted));
+  audioToggle.setAttribute("aria-label",muted?"音をオン":"音をミュート");
+  audioToggle.title=muted?"音をオン":"音をミュート";
+  audioToggle.querySelector("span").textContent=muted?"🔇":"🔊";
+}
+if(audioToggle){
+  syncAudioToggle();
+  audioToggle.addEventListener("click",()=>{
+    const muted=cqAudio.setMuted(!cqAudio.isMuted());
+    syncAudioToggle();
+    if(!muted)cqAudio.playSfx("select",.55);
+  });
+}
 
 const SCREEN_IDS=["titleScreen","stageSelect","rankingScreen","nameScreen","select","game","result"];
 function setScreenImmediate(x){
@@ -1537,6 +1633,7 @@ function setScreenImmediate(x){
   document.body.classList.toggle("title-open", x==="titleScreen");
   const quit=$("quitBattle");
   if(quit) quit.style.display=(x==="game")?"block":"none";
+  document.body.classList.toggle("cq-battle-active",x==="game");
 }
 let cqTransitioning=false;
 async function cqNavigate(x,options={}){
@@ -1661,7 +1758,7 @@ function cards(){
     b.className="card";
     b.dataset.id=id;
     b.innerHTML=
-      `<img src="${c[2]}"><div class="name">${c[0]}</div>`+
+      `<img src="${c[2]}" loading="lazy" decoding="async" alt="${c[0]}"><div class="name">${c[0]}</div>`+
       `<div class="type">${c[1]}</div>`+
       `<div class="stars">こうげき ${"★".repeat(c[3])}<br>`+
       `HP ${"★".repeat(c[4])}　スコア ${"★".repeat(c[5])}</div>`+
@@ -2191,6 +2288,12 @@ updateHeaderPlayerName();
 function selectGradeStage(stage){
   if(!GRADE_QUESTIONS[stage]) return;
   cqAudio.playSfx("cursor",.68);
+  // Load only the chosen full-resolution field and upcoming battle sounds.
+  // Stage cards use small thumbnails, so the title screen stays lightweight.
+  const fieldPreload=new Image();
+  fieldPreload.decoding="async";
+  fieldPreload.src=`assets/stages/${stage}.webp`;
+  cqAudio.primeBattle();
   S.stage=stage;
   Q=GRADE_QUESTIONS[stage];
   show("select");
