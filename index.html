@@ -1514,6 +1514,109 @@ function getStageEnemies(){
 }
 
 const $=x=>document.getElementById(x);
+
+/* ===== Audio =====
+   BGM begins silently inside the user's click, then becomes audible after the
+   requested delay. This also keeps delayed playback reliable on iPhone. */
+const cqAudio=(()=>{
+  const base="assets/audio/";
+  const files={
+    menu:"Steel_Against_the_Storm.mp3",
+    battle:"Before_the_Final_Strike.mp3",
+    correct:"seikai.mp3",
+    wrong:"zannen.mp3",
+    select:"sute-jisentaku.mp3",
+    decide:"sute-jisentaku.mp3",
+    defeat:"gekiha.mp3",
+    clear:"kuria.mp3",
+    cancel:"kyanseru.mp3",
+    titleStart:"hajimeru.mp3",
+    cursor:"ka-soruidoutokyarasentaku.mp3",
+    battleStart:"sentousuta-to.mp3"
+  };
+  const sfx={};
+  Object.entries(files).forEach(([name,file])=>{
+    if(name==="menu"||name==="battle")return;
+    const audio=new Audio(base+file);
+    audio.preload="auto";
+    sfx[name]=audio;
+  });
+  const bgm={
+    menu:new Audio(base+files.menu),
+    battle:new Audio(base+files.battle)
+  };
+  Object.values(bgm).forEach(audio=>{
+    audio.loop=true;
+    audio.preload="auto";
+    audio.volume=0;
+  });
+
+  const BGM_VOLUME=.22;
+  const SFX_VOLUME=.78;
+  let bgmToken=0;
+  let fadeFrame=0;
+  let delayTimer=0;
+
+  function safePlay(audio){
+    const result=audio.play();
+    if(result&&typeof result.catch==="function")result.catch(()=>{});
+  }
+  function playSfx(name,volume=SFX_VOLUME){
+    const audio=sfx[name];
+    if(!audio)return;
+    audio.pause();
+    audio.currentTime=0;
+    audio.volume=Math.max(0,Math.min(1,volume));
+    safePlay(audio);
+  }
+  function cancelBgmAutomation(){
+    bgmToken++;
+    clearTimeout(delayTimer);
+    cancelAnimationFrame(fadeFrame);
+  }
+  function fadeVolume(audio,to,duration,token,onDone){
+    const from=audio.volume;
+    const started=performance.now();
+    const tick=now=>{
+      if(token!==bgmToken)return;
+      const p=Math.min(1,(now-started)/Math.max(1,duration));
+      audio.volume=from+(to-from)*p;
+      if(p<1)fadeFrame=requestAnimationFrame(tick);
+      else if(onDone)onDone();
+    };
+    fadeFrame=requestAnimationFrame(tick);
+  }
+  function startBgm(name,delay=650,fade=1300){
+    cancelBgmAutomation();
+    const token=bgmToken;
+    const target=bgm[name];
+    const other=name==="menu"?bgm.battle:bgm.menu;
+    other.pause();
+    other.currentTime=0;
+    other.volume=0;
+    target.pause();
+    target.currentTime=0;
+    target.volume=0;
+    // Start inaudibly during the trusted user gesture; the fade begins later.
+    safePlay(target);
+    delayTimer=setTimeout(()=>{
+      if(token!==bgmToken)return;
+      fadeVolume(target,BGM_VOLUME,fade,token);
+    },delay);
+  }
+  function stopBgm(fade=260){
+    cancelBgmAutomation();
+    const token=bgmToken;
+    const active=Object.values(bgm).find(audio=>!audio.paused);
+    if(!active)return;
+    fadeVolume(active,0,fade,token,()=>{
+      active.pause();
+      active.currentTime=0;
+    });
+  }
+  return {playSfx,startMenu:(delay=650)=>startBgm("menu",delay),startBattle:(delay=500)=>startBgm("battle",delay),stopBgm};
+})();
+
 const SCREEN_IDS=["titleScreen","stageSelect","rankingScreen","nameScreen","select","game","result"];
 function setScreenImmediate(x){
   SCREEN_IDS.forEach(y=>{
@@ -1663,6 +1766,7 @@ function cards(){
       `HP ${"★".repeat(c[4])}　スコア ${"★".repeat(c[5])}</div>`+
       `<div class="とくいわざ">${c[6]}</div>`;
     b.onclick=()=>{
+      cqAudio.playSfx("cursor",.68);
       S.char=id;
       document.querySelectorAll(".card").forEach(x=>x.classList.remove("sel"));
       b.classList.add("sel");
@@ -1705,6 +1809,9 @@ async function start(options={stageIntro:true}){
 if(cqTransitioning)return;
 $("quitBattle").style.display="block";
 
+  // Begin silently during the click, then fade in after the battle intro.
+  cqAudio.startBattle(options.stageIntro?2300:900);
+
   const token=newRun();
 
   S.over=false;
@@ -1742,6 +1849,7 @@ $("quitBattle").style.display="block";
   render(token);
   const entered=await cqNavigate("game",{stageIntro:options.stageIntro});
   if(!entered)return;
+  cqAudio.playSfx("battleStart",.82);
   S.startAt=performance.now();
   S.timeFrame=requestAnimationFrame(()=>updateTime(token));
 }
@@ -1821,6 +1929,8 @@ function calcScore(gameOver=false){
 
 /* ===== Battle / Result ===== */
 function showResult(gameOver){
+  cqAudio.stopBgm(260);
+  if(!gameOver)cqAudio.playSfx("clear",.84);
   const score=calcScore(gameOver);
   S.score=score.total;
 
@@ -1962,6 +2072,7 @@ function ans(v,c,b,token){
 
   if(v===c){
     b.classList.add("correct");
+    cqAudio.playSfx("correct",.76);
     S.correct++;
     S.combo++;
 
@@ -2014,6 +2125,7 @@ function ans(v,c,b,token){
       const enemies=getStageEnemies();
       const e=enemies[S.enemyIndex%enemies.length];
       S.kills++;
+      cqAudio.playSfx("defeat",.86);
 
       // Enemy defeat: +220 immediately, at the moment of the kill.
       S.score += 220;
@@ -2033,6 +2145,7 @@ function ans(v,c,b,token){
 
   }else{
     b.classList.add("wrong");
+    cqAudio.playSfx("wrong",.78);
     if(S.char!=="kappa")S.combo=0;
     cqDamageFlash("#enemyImg", "cq-enemy-lunge");
     cqDamageFlash(".player", "cq-damage-player");
@@ -2073,12 +2186,14 @@ function ans(v,c,b,token){
 }
 
 $("start").onclick=()=>{
+  cqAudio.playSfx("decide",.74);
   start({stageIntro:true});
 };
 
 $("retry").onclick=(e)=>{
   e.preventDefault();
   e.stopImmediatePropagation();
+  cqAudio.playSfx("decide",.74);
 
   // The result screen is already the end of the previous run.
   // Do not increment the run here: start() owns the single newRun() call.
@@ -2092,11 +2207,12 @@ $("retry").onclick=(e)=>{
 };
 
 $("change").onclick=()=>{
+  cqAudio.playSfx("cancel",.76);
   // いったんページを再読み込みして戦闘の実行状態を完全に初期化する。
   // 現在の学年だけ保存し、再読み込み後は同じ学年のキャラクター選択へ戻す。
   sessionStorage.removeItem("cqAutoStart");
   sessionStorage.setItem("cqReturnStage", String(S.stage || 1));
-  window.location.reload();
+  setTimeout(()=>window.location.reload(),260);
 };
 
 cards();
@@ -2117,9 +2233,9 @@ if(autoChar && C[autoChar]){
 
 
 const rankingButton=document.getElementById("rankingButton");
-if(rankingButton)rankingButton.addEventListener("click",showRanking);
+if(rankingButton)rankingButton.addEventListener("click",()=>{cqAudio.playSfx("select",.68);showRanking();});
 const rankingBack=document.getElementById("rankingBack");
-if(rankingBack)rankingBack.addEventListener("click",hideRanking);
+if(rankingBack)rankingBack.addEventListener("click",()=>{cqAudio.playSfx("cancel",.76);hideRanking();});
 
 /* Name persistence is isolated behind this adapter so Firestore can replace it later. */
 const playerNameStore={
@@ -2139,10 +2255,11 @@ function refreshNameScreen(){
   $("nameError").textContent="";
 }
 $("nameButton").addEventListener("click",()=>{
+  cqAudio.playSfx("select",.68);
   refreshNameScreen();
   cqNavigate("nameScreen").then(ok=>{if(ok)$("playerNameInput").focus();});
 });
-$("nameBack").addEventListener("click",()=>cqNavigate("stageSelect"));
+$("nameBack").addEventListener("click",()=>{cqAudio.playSfx("cancel",.76);cqNavigate("stageSelect");});
 $("playerNameInput").addEventListener("input",e=>{
   let chars=Array.from(e.target.value);
   if(chars.length>8){chars=chars.slice(0,8);e.target.value=chars.join("");}
@@ -2153,6 +2270,7 @@ $("nameSave").addEventListener("click",async()=>{
   const name=$("playerNameInput").value.trim();
   if(!name){$("nameError").textContent="なまえを いれてね！";$("playerNameInput").focus();return;}
   if(nameLength(name)>8){$("nameError").textContent="なまえは 8もじまでだよ！";return;}
+  cqAudio.playSfx("decide",.74);
   await playerNameStore.save(name);
   updateHeaderPlayerName(name);
   $("currentPlayerName").textContent=name;
@@ -2165,6 +2283,7 @@ updateHeaderPlayerName();
 <script>
 function selectGradeStage(stage){
   if(!GRADE_QUESTIONS[stage]) return;
+  cqAudio.playSfx("cursor",.68);
   S.stage=stage;
   Q=GRADE_QUESTIONS[stage];
   show("select");
@@ -2192,6 +2311,7 @@ if(returnStage){
   const back = document.getElementById("characterBack");
   if(!back) return;
   back.addEventListener("click", function(){
+    cqAudio.playSfx("cancel",.76);
     cqNavigate("stageSelect");
   });
 })();
@@ -2205,6 +2325,8 @@ if(returnStage){
   quit.onclick = function(e){
     e.preventDefault();
     e.stopPropagation();
+    cqAudio.playSfx("cancel",.76);
+    cqAudio.startMenu(650);
     // Cancel all pending game callbacks and invalidate the current run.
     newRun();
 
@@ -2257,6 +2379,8 @@ if(returnStage){
       e.preventDefault();
       e.stopPropagation();
       if(!titleReady || btn.disabled) return;
+      cqAudio.playSfx("titleStart",.84);
+      cqAudio.startMenu(800);
       if(typeof window.show === "function"){
         window.show("stageSelect");
       } else {
