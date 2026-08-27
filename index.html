@@ -1903,7 +1903,7 @@ function spawnEnemy(index){
   S.eh=e.hp;
 
   $("enemyName").textContent=e.name;
-  $("enemyImg").classList.remove("cq-enemy-defeated","cq-enemy-lunge");
+  $("enemyImg").classList.remove("cq-enemy-defeated","cq-enemy-lunge","hide");
   $("enemyImg").src=e.img;
   $("enemyImg").alt=e.name;
   $("enemy").style.filter="none";
@@ -2172,6 +2172,13 @@ function ans(v,c,b,token){
       $("enemyImg").classList.remove("cq-enemy-lunge");
       void $("enemyImg").offsetWidth;
       $("enemyImg").classList.add("cq-enemy-defeated");
+      const defeatedSprite=$("enemyImg");
+      const defeatedToken=token;
+      setTimeout(()=>{
+        if(defeatedToken===S.run&&S.eh===0&&defeatedSprite.classList.contains("cq-enemy-defeated")){
+          defeatedSprite.classList.add("hide");
+        }
+      },460);
 
       // Enemy defeat: +220 immediately, at the moment of the kill.
       S.score += 220;
