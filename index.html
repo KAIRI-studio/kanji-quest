@@ -358,7 +358,7 @@ body.title-open header{display:none!important;}
 .title-screen::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;opacity:.28;background:
     repeating-linear-gradient(0deg,transparent 0 7px,rgba(255,255,255,.035) 7px 8px),
     repeating-linear-gradient(90deg,transparent 0 7px,rgba(255,216,61,.025) 7px 8px);}
-.title-logo-intro{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:4;pointer-events:none;background:#fff;animation:titleIntroOut 4.6s ease forwards;}
+.title-logo-intro{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:4;pointer-events:none;background:#fff;animation:titleIntroOut 3s ease forwards;}
 .title-logo-row{display:flex;align-items:center;justify-content:center;gap:18px;width:min(92%,470px);animation:titleLogoFloat 4s ease-in-out forwards;}
 .title-logo-row img{width:40%;height:auto;max-height:150px;object-fit:contain;filter:drop-shadow(0 8px 18px rgba(0,0,0,.45));}
 .title-logo-row img:last-child{width:43%;filter:drop-shadow(0 8px 18px rgba(0,0,0,.3));}
@@ -427,8 +427,8 @@ body.title-open #app{background:#071521;box-shadow:none;}
     repeating-linear-gradient(90deg,transparent 0 7px,rgba(255,216,61,.014) 7px 8px);}
 
 /* Logo intro remains exactly as the existing white logo screen */
-.title-logo-intro{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:10;pointer-events:none;background:#fff;animation:titleIntroOut 4.6s ease forwards;}
-.title-logo-row{display:flex;align-items:center;justify-content:center;gap:18px;width:min(92%,470px);animation:titleLogoFloat 4s ease-in-out forwards;}
+.title-logo-intro{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:10;pointer-events:none;background:#fff;animation:titleIntroOut 3s ease forwards;}
+.title-logo-row{display:flex;align-items:center;justify-content:center;gap:18px;width:min(92%,470px);animation:titleLogoFloat 2.7s ease-in-out forwards;}
 .title-logo-row img{width:40%;height:auto;max-height:150px;object-fit:contain;filter:drop-shadow(0 8px 18px rgba(0,0,0,.45));}
 .title-logo-row img:last-child{width:43%;filter:drop-shadow(0 8px 18px rgba(0,0,0,.3));}
 
@@ -1086,6 +1086,195 @@ body.is-transitioning{pointer-events:none;}
   #game .qpanel .answer{border-radius:8px;box-shadow:0 0 0 1px rgba(72,36,10,.92),0 3px 0 #3b1d10,inset 0 1px 0 rgba(255,255,255,.42),inset 0 -5px 9px rgba(0,0,0,.15);}
 }
 
+/* v5.1: Finish the blue-and-gold visual language across secondary screens. */
+:root{
+  --ui-gold:#efc34e;
+  --ui-gold-light:#ffe58a;
+  --ui-brown:#4b270d;
+  --ui-blue-top:#2f73c9;
+  --ui-blue-mid:#1654a3;
+  --ui-blue-bottom:#0d3d80;
+  --ui-panel-top:#173e56;
+  --ui-panel-bottom:#071d2c;
+}
+
+/* Character selection cards and actions */
+#select .card{
+  position:relative;
+  overflow:hidden;
+  border:2px solid #b88a35;
+  border-radius:10px;
+  background:linear-gradient(180deg,rgba(25,67,91,.97),rgba(7,27,41,.98));
+  box-shadow:0 0 0 1px rgba(65,34,10,.88),0 4px 0 #031018,inset 0 1px 0 rgba(255,255,255,.14);
+  transition:transform .12s ease,filter .12s ease,border-color .12s ease,box-shadow .12s ease;
+}
+#select .card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(135deg,rgba(255,255,255,.09),transparent 35%,rgba(255,216,61,.035));
+}
+#select .card > *{position:relative;z-index:1;}
+#select .card:hover,#select .card:focus-visible{filter:brightness(1.07);outline:none;}
+#select .card.sel{
+  border-color:var(--ui-gold-light);
+  transform:translateY(-2px);
+  box-shadow:0 0 0 2px #a85a16,0 5px 0 #3b1d10,0 0 18px rgba(255,216,61,.26),inset 0 1px 0 rgba(255,255,255,.2);
+}
+#select .card .name{color:#fff3bf;text-shadow:0 2px 2px #000;}
+#select .card .type{color:#bfe7ff;}
+#select .card .stars{color:#ffd83d;text-shadow:0 1px 1px #000;}
+#select .card .とくいわざ{border-top-color:rgba(239,195,78,.44);color:#e5f4fc;}
+#select #characterBack,
+#select #start,
+.name-actions button,
+#result #retry,
+#result #change{
+  border:2px solid var(--ui-gold) !important;
+  border-radius:10px;
+  font-weight:900;
+  letter-spacing:.03em;
+  text-shadow:0 2px 2px rgba(0,0,0,.58);
+  transition:transform .08s ease,filter .12s ease,box-shadow .08s ease;
+}
+#select #start,
+.name-actions #nameSave,
+#result #retry{
+  background:linear-gradient(180deg,var(--ui-blue-top),var(--ui-blue-mid) 48%,var(--ui-blue-bottom)) !important;
+  color:#fff !important;
+  box-shadow:0 0 0 1px rgba(72,36,10,.92),0 4px 0 #3b1d10,inset 0 2px 0 rgba(255,255,255,.42),inset 0 -6px 12px rgba(0,0,0,.16) !important;
+}
+#select #characterBack,
+.name-actions #nameBack,
+#result #change{
+  background:linear-gradient(180deg,#1b4055,#0a2537) !important;
+  color:#fff !important;
+  box-shadow:0 0 0 1px rgba(72,36,10,.75),0 4px 0 #031018,inset 0 1px 0 rgba(255,255,255,.16) !important;
+}
+#select #start:disabled{
+  border-color:#61727d !important;
+  background:linear-gradient(180deg,#53636d,#303d46) !important;
+  color:#c7d1d7 !important;
+  text-shadow:none;
+  box-shadow:0 3px 0 #172028 !important;
+}
+#select #start:not(:disabled):hover,
+#select #characterBack:hover,
+.name-actions button:hover,
+#result #retry:hover,
+#result #change:hover{filter:brightness(1.1);}
+#select #start:not(:disabled):active,
+#select #characterBack:active,
+.name-actions button:active,
+#result #retry:active,
+#result #change:active{transform:translateY(3px);box-shadow:0 1px 0 #2d170b !important;}
+
+/* Stage name button */
+.name-stage-button{
+  min-width:190px;
+  border-color:var(--ui-gold) !important;
+  border-radius:11px;
+  background:linear-gradient(180deg,#245a79,#0e3046) !important;
+  color:#fff;
+  text-shadow:0 2px 2px rgba(0,0,0,.62);
+  box-shadow:0 0 0 1px rgba(72,36,10,.8),0 4px 0 #031018,inset 0 1px 0 rgba(255,255,255,.18);
+}
+
+/* Name settings panel */
+.name-panel{
+  border-color:var(--ui-gold) !important;
+  background:linear-gradient(180deg,rgba(23,62,86,.98),rgba(7,29,44,.98));
+  box-shadow:0 0 0 1px rgba(72,36,10,.9),0 8px 0 rgba(3,8,12,.65),0 0 30px rgba(255,216,61,.1),inset 0 1px 0 rgba(255,255,255,.14);
+}
+.current-name-box{
+  border-color:#b88a35;
+  background:linear-gradient(180deg,#102f43,#081e2d);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+}
+#playerNameInput{
+  border:2px solid var(--ui-gold) !important;
+  background:linear-gradient(180deg,#102f43,#081c2a);
+  color:#fff;
+  caret-color:#ffd83d;
+  text-shadow:0 1px 1px rgba(0,0,0,.5);
+  box-shadow:0 0 0 1px rgba(72,36,10,.82),inset 0 2px 5px rgba(0,0,0,.35);
+}
+#playerNameInput:focus{border-color:var(--ui-gold-light) !important;box-shadow:0 0 0 3px rgba(255,216,61,.22),inset 0 2px 5px rgba(0,0,0,.3);}
+
+/* Player HP status now matches the enemy's framed status panel. */
+#game .field .player-status{
+  width:94%;
+  margin:-2px auto 0;
+  padding:5px 7px 6px;
+  border:2px solid var(--battle-gold);
+  border-radius:9px;
+  background:linear-gradient(180deg,rgba(21,57,76,.96),rgba(5,23,35,.97));
+  box-shadow:0 0 0 1px rgba(75,39,10,.9),0 4px 0 rgba(3,8,12,.68),inset 0 1px 0 rgba(255,255,255,.15);
+}
+#game .field .player-status .pname{margin:0 0 3px;color:#fff3bf;}
+#game .field .player-status .hp{width:100% !important;margin:0 auto 3px !important;}
+#game .field .player-status > span{display:block;color:#fff3bf;text-shadow:0 2px 2px #000;}
+
+/* Quit action */
+#quitBattle{
+  border:2px solid var(--ui-gold) !important;
+  border-radius:9px;
+  background:linear-gradient(180deg,#245a79,#0d2d42) !important;
+  color:#fff;
+  text-shadow:0 2px 2px rgba(0,0,0,.62);
+  box-shadow:0 0 0 1px rgba(72,36,10,.85),0 3px 0 #031018,inset 0 1px 0 rgba(255,255,255,.18);
+}
+#quitBattle:hover,#quitBattle:focus-visible{filter:brightness(1.1);outline:none;}
+#quitBattle:active{transform:translateY(2px);box-shadow:0 1px 0 #031018;}
+
+/* Result screen */
+#result{
+  position:relative;
+  background:linear-gradient(180deg,rgba(3,12,20,.22),rgba(3,12,20,.6)),url("assets/stages/title_fantasy_vertical.png") center/cover no-repeat !important;
+}
+#result .clear{margin:22px 0 12px;color:#ffd83d;text-shadow:3px 3px 0 #b52b27,5px 5px 0 #071521;}
+#result .resultchar,
+#result .result-hero-card,
+#result .rg div,
+#result .score-breakdown{
+  border:2px solid var(--ui-gold) !important;
+  border-radius:10px;
+  background:linear-gradient(180deg,rgba(23,62,86,.97),rgba(7,29,44,.98));
+  box-shadow:0 0 0 1px rgba(72,36,10,.82),0 4px 0 rgba(3,8,12,.62),inset 0 1px 0 rgba(255,255,255,.14);
+}
+#result .resultchar{min-height:82px;padding:4px 10px;}
+#result .resultchar strong{color:#fff3bf;font-size:20px;}
+#result .resultchar small{color:#bfe7ff;}
+#result .result-hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px;}
+#result .result-hero-card{text-align:center;padding:8px 5px;color:#bfe7ff;font-size:14px;font-weight:900;}
+#result .result-hero-card b{display:block;margin-top:2px;color:#ffd83d;font-size:38px;line-height:1.05;text-shadow:0 2px 2px #000;}
+#result .result-hero-card small{font-size:.45em;color:#fff3bf;}
+#result .rg{gap:6px;margin-top:8px;}
+#result .rg div{padding:7px 3px;color:#bfe7ff;font-size:10px;font-weight:900;}
+#result .rg b{color:#fff3bf;font-size:17px;}
+#result .score-breakdown{margin:8px 0;padding:7px 10px;}
+#result .score-breakdown .breakdown-total{border-top-color:var(--ui-gold);}
+#result .record{text-shadow:0 2px 2px #000;}
+
+@media(max-width:600px){
+  #select .card{border-radius:7px;}
+  #select .card.sel{transform:none;box-shadow:0 0 0 1px #a85a16,0 3px 0 #3b1d10,0 0 12px rgba(255,216,61,.22);}
+  #select .card .とくいわざ{font-size:9px;line-height:1.05;margin-top:2px;padding-top:3px;}
+  #game .field .player-status{width:92%;padding:3px 5px 4px;border-radius:7px;border-width:2px;}
+  #game .field .player-status .pname{font-size:12px !important;line-height:1;margin-bottom:2px;}
+  #game .field .player-status > span{font-size:11px;line-height:1;}
+  #result .clear{margin:4px 0 6px;}
+  #result .resultchar{min-height:56px;padding:2px 7px;}
+  #result .result-hero-stats{gap:5px;margin-top:5px;}
+  #result .result-hero-card{padding:4px 3px;font-size:11px;border-radius:7px;}
+  #result .result-hero-card b{font-size:30px;}
+  #result .rg{gap:4px;margin-top:5px;}
+  #result .rg div{padding:4px 2px;font-size:9px;border-radius:6px;}
+  #result .rg b{font-size:14px;margin-top:1px;}
+  #result .score-breakdown{margin:5px 0;padding:4px 7px;border-radius:7px;}
+}
+
 </style>
 </head><body class="title-open"><main id="app"><header style="display:none"><div class="player-id"><span class="player-icon" aria-hidden="true"></span><span id="headerPlayerName">なまえなし</span></div><div>スコア <span id="score">00000</span></div><button id="quitBattle" class="battle-back" type="button" style="display:none;">やめる</button></header>
 
@@ -1194,11 +1383,11 @@ body.is-transitioning{pointer-events:none;}
 
 <section id="game" class="screen"><div class="battlehead"><span>タイム <b id="time">0.0s</b></span><b id="stageLabel">STAGE 1</b><b><span id="qn">1</span> / 10問</b></div>
 <div class="field"><div class="enemybox"><b id="enemyName">キッズスライム Lv.1</b><div class="hp"><div id="ehp" class="fill red"></div></div><span id="et">20/20</span></div><div id="enemy" class="enemy"><img id="enemyImg" alt=""></div>
-<div class="player"><img id="ps" src="assets/castor.png"><div id="pn" class="pname">CASTOR Lv.1</div><div class="hp"><div id="php" class="fill green"></div></div><span id="pt">40/40</span></div>
+<div class="player"><img id="ps" src="assets/castor.png"><div class="player-status"><div id="pn" class="pname">CASTOR Lv.1</div><div class="hp"><div id="php" class="fill green"></div></div><span id="pt">40/40</span></div></div>
 <div id="combo" class="combo hide">コンボ ×<span>2</span>!</div><div id="slash" class="slash hide">✦</div><div id="damage" class="damage hide">-12</div><div id="msg" class="msg">よみかたを えらぼう！</div></div>
 <div class="qpanel"><div id="kanji" class="kanji">森</div><div id="answers" class="answers"></div></div></section>
 
-<section id="result" class="screen"><div class="clear">★ クリア！ ★</div><div class="resultchar"><img id="rs"><div><strong id="rn"></strong><small id="rt"></small></div></div><div class="final">スコア<b id="fs">0</b></div><div class="rg"><div>正解<b id="cc">0</b>/10</div><div>コンボ<b id="mc">0</b></div><div>たおした<b id="ex">0</b>たい</div></div><div id="rec" class="record hide">NEW RECORD!</div><button id="retry" class="primary">もう一度あそぶ</button><button id="change" class="secondary">キャラクターをかえる</button></section>
+<section id="result" class="screen"><div class="clear">★ クリア！ ★</div><div class="resultchar"><img id="rs"><div><strong id="rn"></strong><small id="rt"></small></div></div><div class="result-hero-stats"><div class="result-hero-card">スコア<b id="fs">0</b></div><div class="result-hero-card">せいかい<b><span id="correctBig">0</span><small>/10</small></b></div></div><div class="rg"><div>たおした<b id="ex">0</b>たい</div><div>さいだいコンボ<b id="mc">0</b></div><div>タイム<b id="resultTimeValue">0.0秒</b></div></div><div id="rec" class="record hide">NEW RECORD!</div><button id="retry" class="primary">もう一度あそぶ</button><button id="change" class="secondary">キャラクターをかえる</button></section>
 <div id="toast" class="toast"></div></main>
 <div id="screenTransitionShade" class="screen-transition-shade" aria-hidden="true"><span class="screen-transition-panel top"></span><span class="screen-transition-panel bottom"></span></div>
 <div id="stageIntroOverlay" class="stage-intro-overlay" aria-hidden="true"><span>ステージ 1</span></div>
@@ -1607,13 +1796,10 @@ function showResult(gameOver){
   $("rs").src=C[S.char][2];
   $("rn").textContent=C[S.char][0];
   $("rt").textContent=C[S.char][1];
-
-  const boxes=document.querySelectorAll(".rg div");
-  if(boxes.length>=3){
-    boxes[0].innerHTML="正解<b>"+S.correct+"</b>/10";
-    boxes[1].innerHTML="撃破<b>"+S.kills+"</b>体";
-    boxes[2].innerHTML="コンボ<b>"+S.max+"</b>";
-  }
+  $("correctBig").textContent=S.correct;
+  $("ex").textContent=S.kills;
+  $("mc").textContent=S.max;
+  $("resultTimeValue").textContent=S.elapsed.toFixed(1)+"秒";
 
   // Score breakdown: show exactly how the final score was made.
   let breakdown=document.getElementById("scoreBreakdown");
@@ -1621,9 +1807,9 @@ function showResult(gameOver){
     breakdown=document.createElement("div");
     breakdown.id="scoreBreakdown";
     breakdown.className="score-breakdown";
-    const scoreBox=$("fs").closest("div");
-    if(scoreBox && scoreBox.parentNode){
-      scoreBox.parentNode.insertBefore(breakdown, scoreBox.nextSibling);
+    const heroStats=document.querySelector(".result-hero-stats");
+    if(heroStats && heroStats.parentNode){
+      heroStats.parentNode.insertBefore(breakdown, heroStats.nextSibling);
     }
   }
 
@@ -1634,18 +1820,6 @@ function showResult(gameOver){
     '<div class="breakdown-row"><span>🔥 コンボ '+S.max+'</span><b>+'+score.comboPts.toLocaleString()+'</b></div>'+
     '<div class="breakdown-row"><span>⏱️ タイム '+S.elapsed.toFixed(1)+'秒</span><b>+'+score.timeBonus.toLocaleString()+'</b></div>'+
     '<div class="breakdown-total"><span>TOTAL</span><b>'+score.total.toLocaleString()+'</b></div>';
-  let timeBox=document.getElementById("resultTime");
-  if(!timeBox){
-    const rg=document.querySelector(".rg");
-    if(rg){
-      timeBox=document.createElement("div");
-      timeBox.id="resultTime";
-      timeBox.style.cssText="font-size:16px;font-weight:900;margin:10px 0;text-align:center";
-      rg.parentNode.insertBefore(timeBox,rg.nextSibling);
-    }
-  }
-  if(timeBox)timeBox.innerHTML="タイム  "+S.elapsed.toFixed(1)+"秒";
-
   if(gameOver){
     $("rec").classList.add("hide");
     document.querySelector(".clear").textContent="ゲームオーバー";
@@ -2040,7 +2214,7 @@ if(returnStage){
         if(e.animationName === "titleIntroOut") unlockTitleStart();
       }, {once:true});
     }
-    setTimeout(unlockTitleStart, 5200);
+    setTimeout(unlockTitleStart, 3200);
 
     btn.addEventListener("click", function(e){
       e.preventDefault();
