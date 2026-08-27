@@ -1541,6 +1541,7 @@ const cqAudio=(()=>{
     decide:"sute-jisentaku.mp3",
     defeat:"gekiha.mp3",
     clear:"kuria.mp3",
+    gameOverResult:"ganbarimasyou.mp3",
     cancel:"kyanseru.mp3",
     titleStart:"hajimeru.mp3",
     cursor:"ka-soruidoutokyarasentaku.mp3",
@@ -1583,6 +1584,12 @@ const cqAudio=(()=>{
     audio.currentTime=0;
     audio.volume=Math.max(0,Math.min(1,volume));
     safePlay(audio);
+  }
+  function stopSfx(name){
+    const audio=sfx[name];
+    if(!audio)return;
+    audio.pause();
+    audio.currentTime=0;
   }
   function cancelBgmAutomation(){
     bgmToken++;
@@ -1656,7 +1663,7 @@ const cqAudio=(()=>{
       },120);
     });
   });
-  return {playSfx,startMenu:(delay=650)=>startBgm("menu",delay),startBattle:(delay=500)=>startBgm("battle",delay),stopBgm};
+  return {playSfx,stopSfx,startMenu:(delay=650)=>startBgm("menu",delay),startBattle:(delay=500)=>startBgm("battle",delay),stopBgm};
 })();
 
 const SCREEN_IDS=["titleScreen","stageSelect","rankingScreen","nameScreen","select","game","result"];
@@ -1971,8 +1978,14 @@ function calcScore(gameOver=false){
 
 /* ===== Battle / Result ===== */
 function showResult(gameOver){
-  cqAudio.stopBgm(260);
-  if(!gameOver)cqAudio.playSfx("clear",.84);
+  // The result screen returns to the menu theme in both outcomes.
+  cqAudio.startMenu(300);
+  if(gameOver){
+    cqAudio.stopSfx("wrong");
+    cqAudio.playSfx("gameOverResult",.82);
+  }else{
+    cqAudio.playSfx("clear",.84);
+  }
   const score=calcScore(gameOver);
   S.score=score.total;
 
