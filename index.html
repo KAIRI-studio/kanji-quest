@@ -638,6 +638,14 @@ body.title-open #app{background:#071521;box-shadow:none;}
   80% { transform: translateY(-3px); }
 }
 
+/* A short forward step on a correct answer. The player stands on the right,
+   so moving left reads as advancing toward the enemy. */
+@keyframes cqPlayerLunge {
+  0%, 100% { transform: translateX(0) scale(1); }
+  42% { transform: translateX(-18px) scale(1.025); }
+  68% { transform: translateX(-14px) scale(1.015); }
+}
+
 @keyframes cqRedFlash {
   0%, 100% {
     filter: none;
@@ -667,6 +675,17 @@ body.title-open #app{background:#071521;box-shadow:none;}
   animation:
     cqPlayerDamage .24s ease-out both,
     cqRedFlash .24s linear both;
+}
+
+#game .field .player img.cq-player-lunge {
+  animation: cqPlayerLunge .32s cubic-bezier(.22,.75,.28,1) both;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #game .field .player img.cq-player-lunge {
+    animation-duration: .01ms;
+  }
 }
 
 
@@ -1958,6 +1977,7 @@ function ans(v,c,b,token){
     let dmg=baseAttack + S.combo*2;
 
     S.eh=Math.max(0,S.eh-dmg);
+    cqDamageFlash("#ps", "cq-player-lunge");
     cqDamageFlash(".enemy", "cq-damage-enemy");
     $("msg").textContent="✨ せいかい！ "+ch[0]+"のこうげき！";
     $("slash").classList.remove("hide");
