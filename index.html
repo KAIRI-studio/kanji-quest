@@ -1186,7 +1186,7 @@ body.is-transitioning{pointer-events:none;}
   border-radius:10px;
   background:linear-gradient(180deg,#2f73c9,#0d3e82);
   color:#fff;
-  box-shadow:0 0 0 1px #4a260c,0 4px 0 #30180b,inset 0 1px 0 rgba(255,255,255,.42);
+  box-shadow:0 0 0 1px #4a260c,0 3px 0 #30180b,inset 0 1px 0 rgba(255,255,255,.42);
   font:900 21px/1 system-ui,"Noto Sans JP",sans-serif;
   cursor:pointer;
   touch-action:manipulation;
@@ -1194,9 +1194,19 @@ body.is-transitioning{pointer-events:none;}
 #audioToggle:hover,#audioToggle:focus-visible{filter:brightness(1.1);outline:2px solid #fff;outline-offset:2px;}
 #audioToggle:active{transform:translateY(2px);box-shadow:0 0 0 1px #4a260c,0 2px 0 #30180b;}
 #audioToggle[aria-pressed="true"]{background:linear-gradient(180deg,#465668,#253444);color:#d5dde5;}
-body.cq-battle-active #audioToggle{right:max(84px,calc((100vw - 520px)/2 + 84px));}
+body.title-open #audioToggle{display:none;}
+body.cq-battle-active #audioToggle{right:max(96px,calc((100vw - 520px)/2 + 96px));}
+body.cq-battle-active #quitBattle{
+  top:12px;
+  right:8px;
+  width:76px;
+  height:44px;
+  padding:0;
+  border-radius:10px;
+}
 @media(max-width:600px){
   #audioToggle{top:6px;width:42px;height:42px;font-size:20px;}
+  body.cq-battle-active #quitBattle{top:6px;right:6px;height:42px;}
 }
 
 </style>
