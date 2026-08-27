@@ -646,6 +646,13 @@ body.title-open #app{background:#071521;box-shadow:none;}
   68% { transform: translateX(-14px) scale(1.015); }
 }
 
+/* The enemy stands on the left, so moving right reads as attacking the player. */
+@keyframes cqEnemyLunge {
+  0%, 100% { transform: translateX(0) scale(1); }
+  42% { transform: translateX(18px) scale(1.025); }
+  68% { transform: translateX(14px) scale(1.015); }
+}
+
 @keyframes cqRedFlash {
   0%, 100% {
     filter: none;
@@ -682,8 +689,14 @@ body.title-open #app{background:#071521;box-shadow:none;}
   will-change: transform;
 }
 
+#game .field .enemy img.cq-enemy-lunge {
+  animation: cqEnemyLunge .32s cubic-bezier(.22,.75,.28,1) both;
+  will-change: transform;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  #game .field .player img.cq-player-lunge {
+  #game .field .player img.cq-player-lunge,
+  #game .field .enemy img.cq-enemy-lunge {
     animation-duration: .01ms;
   }
 }
@@ -1136,9 +1149,12 @@ body.is-transitioning{pointer-events:none;}
 }
 #select .card > *{position:relative;z-index:1;}
 #select .card:hover,#select .card:focus-visible{filter:brightness(1.07);outline:none;}
+#select .card:not(.sel){filter:brightness(.72) saturate(.76);}
+#select .card:not(.sel):hover,#select .card:not(.sel):focus-visible{filter:brightness(.84) saturate(.88);}
 #select .card.sel{
   border-color:var(--ui-gold-light);
   transform:translateY(-2px);
+  filter:brightness(1.06) saturate(1.06);
   box-shadow:0 0 0 2px #a85a16,0 5px 0 #3b1d10,0 0 18px rgba(255,216,61,.26),inset 0 1px 0 rgba(255,255,255,.2);
 }
 #select .card .name{color:#fff3bf;text-shadow:0 2px 2px #000;}
@@ -2018,6 +2034,7 @@ function ans(v,c,b,token){
   }else{
     b.classList.add("wrong");
     if(S.char!=="kappa")S.combo=0;
+    cqDamageFlash("#enemyImg", "cq-enemy-lunge");
     cqDamageFlash(".player", "cq-damage-player");
     S.ph=Math.max(0,S.ph-10);
 
