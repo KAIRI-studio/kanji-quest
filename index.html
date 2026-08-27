@@ -1,25 +1,6 @@
 <!doctype html><html lang="ja"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>CASTOR KANJI QUEST</title>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
@@ -30,16 +11,6 @@
   <link rel="preload" as="image" type="image/webp" href="assets/stages/5.webp">
   <link rel="preload" as="image" type="image/webp" href="assets/stages/6.webp">
   <meta name="theme-color" content="#051927">
-
-
-
-
-
-
-
-
-
-
 <style id="app-styles-consolidated">
 *{box-sizing:border-box;}body{margin:0;background:#02070c;color:#fff;font-family:monospace;}#app{max-width:520px;min-height:100vh;margin:auto;background:#071521;}body.title-open{background:#fff;}body.title-open #app{background:#fff;box-shadow:none;}body.title-open header{display:none!important;}
 header{height:70px;border-bottom:3px solid #fff;padding:9px 12px;display:flex;justify-content:space-between;align-items:center;font-weight:900;font-size:17px;}
@@ -49,7 +20,7 @@ button.primary,button.secondary{width:100%;height:55px;margin-top:14px;border:3p
 .battlehead{display:flex;justify-content:space-between;font-size:16px;margin-bottom:10px;color:#fff;font-weight:900;}.field{height:470px;border:3px solid #fff;position:relative;overflow:hidden;background:#000;}.field:after{content:none;}
 .enemybox{position:absolute;left:10px;top:10px;width:49%;z-index:3;background:#050505;border:3px solid #f04444;padding:8px 9px;font-size:13px;}.hp{height:9px;border:2px solid #fff;background:#111;}.fill{height:100%;transition:.25s;}.red{background:#f44;}.green{background:#39df6c;}.enemy{left:8%;top:95px;width:36%;z-index:2;position:relative;height:100%;display:flex;align-items:flex-end;justify-content:center;}.enemy img{width:100%;height:100%;max-width:160px;max-height:160px;object-fit:contain;image-rendering:auto;filter:drop-shadow(3px 4px 0 rgba(0,0,0,.65));}.player{position:absolute;right:5%;bottom:62px;width:48%;text-align:center;z-index:3;}.player img{width:175px;height:175px;object-fit:contain;}.pname{font-size:17px;font-weight:900;text-shadow:2px 2px #000;margin-top:2px;}.player .hp{width:88%;margin:6px auto;}.msg{position:absolute;left:10px;right:10px;bottom:9px;background:#050505;border:3px solid #fff;padding:10px;text-align:center;font-size:17px;font-weight:900;z-index:5;min-height:47px;display:flex;align-items:center;justify-content:center;}.combo{position:absolute;left:15px;top:52%;font-size:31px;color:#ffd83d;font-weight:900;z-index:6;text-shadow:3px 3px #000;}.damage{position:absolute;left:32%;top:47%;font-size:42px;color:#ff321f;font-weight:900;z-index:8;animation:up .55s;}.slash{position:absolute;left:45%;top:42%;font-size:100px;color:#fff;z-index:8;animation:hit .4s;}.hide{display:none!important;}@keyframes up{from{transform:translateY(10px);opacity:0;}30%{opacity:1;}to{transform:translateY(-30px);opacity:0;}}@keyframes hit{from{transform:scale(.4) rotate(-20deg);opacity:0;}40%{opacity:1;}to{transform:scale(1.3);opacity:0;}}
 .qpanel{margin-top:10px;border:3px solid #fff;background:#06121e;padding:11px;}.kanji{text-align:center;font-size:72px;font-weight:bold;margin:5px 0 10px;}.answers{display:grid;gap:8px;}.answer{height:52px;border:3px solid #2592ff;background:#0d55a8;color:#fff;font: bold 18px monospace;cursor:pointer;}.answer.correct{background:#fff;color:#071521;}.answer.wrong{background:#a31d29;}
-.clear{text-align:center;color:#ffd83d;font-size:34px;font-weight:bold;margin:55px 0 20px;}.resultchar{display:flex;justify-content:center;align-items:center;gap:10px;border:3px solid #fff;}.resultchar img{width:90px;height:90px;object-fit:contain;transform:none;}.resultchar strong,.resultchar small{display:block;}.final{text-align:center;border:3px solid #fff;margin-top:10px;padding:10px;}.final b{display:block;color:#ffd83d;font-size:40px;}.rg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px;}.rg div{border:2px solid #718392;text-align:center;padding:9px;font-size:9px;}.rg b{display:block;font-size:18px;margin-top:5px;}.record{text-align:center;color:#ffd83d;font-size:21px;font-weight:bold;margin:13px;}.toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);opacity:0;background:#050a10;border:2px solid #fff;padding:8px 13px;font-weight:bold;transition:.2s;}.toast.on{opacity:1;transform:translate(-50%,0);}
+.clear{text-align:center;color:#ffd83d;font-size:34px;font-weight:bold;margin:55px 0 20px;}.resultchar{display:flex;justify-content:center;align-items:center;gap:10px;border:3px solid #fff;}.resultchar img{width:90px;height:90px;object-fit:contain;transform:none;}.resultchar strong,.resultchar small{display:block;}.rg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px;}.rg div{border:2px solid #718392;text-align:center;padding:9px;font-size:9px;}.rg b{display:block;font-size:18px;margin-top:5px;}.record{text-align:center;color:#ffd83d;font-size:21px;font-weight:bold;margin:13px;}.toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);opacity:0;background:#050a10;border:2px solid #fff;padding:8px 13px;font-weight:bold;transition:.2s;}.toast.on{opacity:1;transform:translate(-50%,0);}
 
 .score-breakdown{margin:10px 0 12px;border:2px solid #73879a;background:#0b1b2a;padding:8px 12px;font-size:14px;font-weight:900;}
 .score-breakdown .breakdown-title{color:#ffd83d;text-align:center;font-size:13px;letter-spacing:1px;margin-bottom:5px;}
@@ -59,22 +30,16 @@ button.primary,button.secondary{width:100%;height:55px;margin-top:14px;border:3p
 .score-breakdown .breakdown-total{display:flex;justify-content:space-between;align-items:center;border-top:2px solid #fff;margin-top:5px;padding-top:7px;font-size:16px;}
 .score-breakdown .breakdown-total b{color:#ffd83d;font-size:20px;}
 
-.time-rank{font-size:11px;color:#ffd83d;border:1px solid #ffd83d;padding:1px 4px;margin-left:3px;}
-#resultTime b{color:#ffd83d;}
-
 /* Readable type sizes for younger players */
 body{font-size:17px;}
 header{font-size:20px;}
 header span{font-size:20px;}
 .battlehead{font-size:19px;}
 .enemybox{font-size:17px;}
-.enemy-name{font-size:20px;}
-.enemy-status>span{font-size:18px;}
 .pname{font-size:21px;}
 .player>span{font-size:18px;}
 .msg{font-size:21px;min-height:58px;padding:12px;}
 .combo{font-size:36px;}
-.scorebox{font-size:21px;}
 .qpanel{padding:14px;}
 .answer{font-size:24px !important;min-height:58px;}
 #kanji{font-size:64px !important;}
@@ -88,7 +53,6 @@ header span{font-size:20px;}
 .score-breakdown .breakdown-row b{font-size:19px;}
 .score-breakdown .breakdown-total{font-size:19px;}
 .score-breakdown .breakdown-total b{font-size:23px;}
-#resultTime{font-size:19px !important;}
 
 /* Battle and question cards */
 #game{gap:12px;}
@@ -146,13 +110,6 @@ header span{font-size:20px;}
 
 /* --- consolidated cascade block --- */
 
-/* v3.1: forest background + fixed battle positions */
-.field{background:#000 url("assets/stages/forest_stage.png") center center / cover no-repeat !important;}
-
-/* Enemy: always on the LEFT side of the battle field */
-.field .enemy{left:8% !important;right:auto !important;top:215px !important;bottom:auto !important;width:28% !important;height:110px !important;z-index:2 !important;}
-.field .enemy img{width:105px !important;height:105px !important;max-width:105px !important;max-height:105px !important;object-fit:contain !important;}
-
 /* Player: always on the RIGHT side of the battle field */
 .field .player{left:auto !important;right:4% !important;top:auto !important;bottom:58px !important;width:44% !important;z-index:3 !important;}
 .field .player img{width:155px !important;height:155px !important;object-fit:contain !important;}
@@ -160,14 +117,6 @@ header span{font-size:20px;}
 /* Keep the instruction bar at the bottom of the battle field,
    below both fighters and their HP displays. */
 #game .field .msg{left:10px !important;right:10px !important;bottom:9px !important;z-index:5 !important;}
-
-/* --- consolidated cascade block --- */
-
-/* v3.2: align enemy and player visually at the same battle height */
-@media(max-width:390px){
-  #game .field .enemy{left:8% !important;top:215px !important;width:28% !important;height:110px !important;}
-  #game .field .enemy img{width:105px !important;height:105px !important;max-width:105px !important;max-height:105px !important;}
-}
 
 /* --- consolidated cascade block --- */
 
@@ -258,19 +207,15 @@ header > div:nth-child(2) #score{font-size:30px;font-weight:900;letter-spacing:1
   #game .field{height:300px !important;border-width:2px;}
   #game .field .enemybox{left:7px !important;top:7px !important;width:45% !important;padding:5px 6px !important;font-size:11px !important;border-width:2px !important;}
   #game .field .enemybox .hp{height:7px;}
-  #game .field .enemy{left:4% !important;top:70px !important;width:42% !important;height:145px !important;}
-  #game .field .enemy img{width:145px !important;height:145px !important;max-width:145px !important;max-height:145px !important;}
   #game .field .player{right:2% !important;bottom:43px !important;width:47% !important;}
   #game .field .player img{width:105px !important;height:105px !important;}
   #game .field .pname{font-size:14px !important;margin-top:0 !important;}
   #game .field .player .hp{width:84% !important;margin:3px auto !important;height:7px !important;}
   #game .field .msg{left:5px !important;right:5px !important;bottom:5px !important;min-height:36px !important;height:36px !important;padding:5px !important;border-width:2px !important;font-size:14px !important;}
-  #game .field .combo{left:5% !important;top:205px !important;font-size:23px !important;}
   #game .field .damage{font-size:30px;}
   #game .field .slash{font-size:70px;}
 
   #game .qpanel{margin-top:6px !important;padding:6px 7px 7px !important;border-width:2px !important;}
-  #game .qpanel .qt{font-size:11px !important;margin:0 !important;}
   #game .qpanel .kanji{font-size:50px !important;line-height:1 !important;margin:4px 0 7px !important;}
   #game .qpanel .answers{gap:6px !important;}
   #game .qpanel .answer{height:42px !important;border-width:2px !important;font-size:16px !important;}
@@ -304,7 +249,6 @@ header > div:nth-child(2) #score{font-size:30px;font-weight:900;letter-spacing:1
   #select .card .name{font-size:17px;line-height:1.05;}
   #select .card .type{font-size:11px;line-height:1.05;}
   #select .card .stars{font-size:9px;line-height:1.1;}
-  #select .card .ability{font-size:10px;line-height:1.05;margin-top:2px;}
   #select #characterBack.back-large{margin-top:5px;padding:7px 10px;font-size:14px;height:38px;}
   #select #start{margin-top:5px;height:42px;font-size:16px !important;}
 
@@ -318,8 +262,6 @@ header > div:nth-child(2) #score{font-size:30px;font-weight:900;letter-spacing:1
   #result .resultchar img{width:58px;height:58px;}
   #result .resultchar strong{font-size:16px;}
   #result .resultchar small{font-size:11px;}
-  #result .final{margin-top:6px;padding:5px;border-width:2px;font-size:15px;}
-  #result .final b{font-size:34px;line-height:1;}
   #result .rg{gap:4px;margin-top:5px;}
   #result .rg div{padding:5px 3px;font-size:9px;border-width:1px;}
   #result .rg b{font-size:15px;margin-top:2px;}
@@ -330,62 +272,8 @@ header > div:nth-child(2) #score{font-size:30px;font-weight:900;letter-spacing:1
   #result .score-breakdown .breakdown-row b{font-size:13px;}
   #result .score-breakdown .breakdown-total{margin-top:2px;padding-top:3px;font-size:13px;}
   #result .score-breakdown .breakdown-total b{font-size:16px;}
-  #result #resultTime{font-size:13px !important;}
   #result #retry,
   #result #change{height:42px;margin-top:5px;font-size:16px !important;}
-}
-
-/* --- consolidated cascade block --- */
-
-/* v4.4: combo text must appear BELOW the enemy, never over it.
-   Keep enemy/player positions and all game logic unchanged. */
-#game .field .combo{left:5% !important;top:325px !important;width:36% !important;text-align:center !important;z-index:6 !important;pointer-events:none !important;}
-@media(max-width:390px){
-  #game .field .combo{left:5% !important;top:205px !important;width:40% !important;font-size:23px !important;}
-}
-
-/* --- consolidated cascade block --- */
-
-/* v4.30: title screen unified with the main game UI. The logo intro remains white;
-   once it fades, the title uses the same dark/grid visual language as stage/character select. */
-body.title-open{overflow:hidden;background:#071521;}
-body.title-open #app{background:#071521;box-shadow:none;}
-body.title-open header{display:none!important;}
-.title-screen{min-height:100dvh;height:100dvh;width:100%;padding:0;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:
-    radial-gradient(circle at 50% 10%,rgba(34,104,138,.38),transparent 30%),
-    linear-gradient(180deg,#0a2230 0%,#071521 48%,#050d15 100%);}
-/* Subtle grid texture matching the stage/character selection screens. */
-.title-screen::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;opacity:.28;background:
-    repeating-linear-gradient(0deg,transparent 0 7px,rgba(255,255,255,.035) 7px 8px),
-    repeating-linear-gradient(90deg,transparent 0 7px,rgba(255,216,61,.025) 7px 8px);}
-.title-logo-intro{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:4;pointer-events:none;background:#fff;animation:titleIntroOut 3s ease forwards;}
-.title-logo-row{display:flex;align-items:center;justify-content:center;gap:18px;width:min(92%,470px);animation:titleLogoFloat 4s ease-in-out forwards;}
-.title-logo-row img{width:40%;height:auto;max-height:150px;object-fit:contain;filter:drop-shadow(0 8px 18px rgba(0,0,0,.45));}
-.title-logo-row img:last-child{width:43%;filter:drop-shadow(0 8px 18px rgba(0,0,0,.3));}
-.title-main{position:absolute;inset:0;z-index:3;width:100%;max-width:none;text-align:center;opacity:0;transform:translateY(10px);animation:titleMainIn .9s ease 4.25s forwards;pointer-events:none;}
-.title-game{position:absolute;left:50%;top:34%;transform:translateX(-50%);width:94%;margin:0;color:#ffd83d;font-size:clamp(34px,10vw,58px);font-weight:900;letter-spacing:2px;white-space:nowrap;font-family:system-ui,"Noto Sans JP",sans-serif;text-shadow:
-    0 4px 0 #6e3218,
-    0 7px 0 #3b1d12,
-    3px 0 0 #3b1d12,
-    -3px 0 0 #3b1d12,
-    0 0 16px rgba(0,0,0,.45);}
-.title-game-en{position:absolute;left:50%;top:41%;transform:translateX(-50%);color:#fff4d2;font-size:clamp(14px,4vw,22px);font-weight:900;letter-spacing:4px;white-space:nowrap;font-family:Georgia,"Times New Roman",serif;text-shadow:2px 3px 0 #4b2617,0 0 10px rgba(0,0,0,.5);}
-.title-start{position:absolute;left:50%;top:57%;transform:translate(-50%,-50%);width:min(72%,330px);height:62px;margin:0;border:4px solid #5a2b13;border-radius:12px;background:linear-gradient(#ffe36a,#ffbf24);color:#4b2815;font-size:clamp(22px,6vw,30px);font-weight:900;font-family:system-ui,"Noto Sans JP",sans-serif;box-shadow:0 7px 0 #3a1c10,0 10px 20px rgba(0,0,0,.35),inset 0 2px 0 rgba(255,255,255,.8);cursor:pointer;pointer-events:auto;}
-.title-start:hover,.title-start:focus-visible{filter:brightness(1.06);transform:translate(-50%,-50%) scale(1.02);}
-.title-start:active{transform:translate(-50%,-47%);}
-@keyframes titleLogoFloat{
-  0%{opacity:0;transform:translateY(18px) scale(.97);}
-  20%{opacity:1;transform:translateY(0) scale(1);}
-  68%{opacity:1;transform:translateY(-4px) scale(1);}
-  100%{opacity:0;transform:translateY(-14px) scale(1.02);}
-}
-@keyframes titleIntroOut{0%,72%{opacity:1;}100%{opacity:0;}}
-@keyframes titleMainIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-@media(max-width:600px){
-  .title-screen{background-position:center center;}
-  .title-game{top:33%;font-size:clamp(32px,10vw,52px);}
-  .title-game-en{top:40%;}
-  .title-start{top:56%;height:58px;width:72%;}
 }
 
 /* --- consolidated cascade block --- */
@@ -548,11 +436,6 @@ body.title-open #app{background:#071521;box-shadow:none;}
 .title-main{z-index:3 !important;animation:titleMainIn .9s ease 4.25s forwards !important;}
 .title-main::before{content:"CASTOR PROJECT  •  KANJI QUEST";position:absolute;left:50%;top:18%;transform:translateX(-50%);color:rgba(214,235,245,.62);font-family:system-ui,"Noto Sans JP",sans-serif;font-size:clamp(9px,2.5vw,12px);font-weight:700;letter-spacing:3px;white-space:nowrap;text-shadow:0 1px 5px rgba(0,0,0,.6);}
 .title-main::after{content:"";position:absolute;left:50%;top:24%;transform:translateX(-50%);width:min(62%,270px);height:1px;background:linear-gradient(90deg,transparent,rgba(255,216,61,.55),rgba(255,255,255,.75),rgba(255,216,61,.55),transparent);box-shadow:0 0 9px rgba(255,216,61,.12);}
-.title-game{top:34% !important;font-size:clamp(38px,11vw,60px) !important;letter-spacing:4px !important;color:#ffe47a !important;background:linear-gradient(180deg,#fff5b0 0%,#ffd83d 42%,#e7a900 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:
-    0 3px 0 rgba(82,48,13,.95),
-    0 6px 0 rgba(48,28,10,.95),
-    0 0 18px rgba(255,216,61,.14) !important;}
-.title-game-en{top:42% !important;color:#dcecf3 !important;font-size:clamp(12px,3.5vw,18px) !important;letter-spacing:6px !important;text-shadow:0 2px 0 #071521,0 0 10px rgba(0,0,0,.55) !important;}
 .title-start{top:58% !important;width:min(68%,315px) !important;height:60px !important;border:2px solid #f7d45b !important;border-radius:8px !important;background:
     linear-gradient(180deg,rgba(255,239,145,.98) 0%,rgba(255,214,74,.98) 46%,rgba(218,158,25,.98) 100%) !important;color:#2d2412 !important;font-size:clamp(21px,5.5vw,28px) !important;letter-spacing:2px;box-shadow:
     0 0 0 1px rgba(73,42,10,.9),
@@ -567,8 +450,6 @@ body.title-open #app{background:#071521;box-shadow:none;}
   .title-screen::after{inset:4% 4.5%;}
   .title-main::before{top:15%;letter-spacing:2px;}
   .title-main::after{top:21%;width:58%;}
-  .title-game{top:32% !important;}
-  .title-game-en{top:40% !important;}
   .title-start{top:56% !important;width:72% !important;}
 }
 
@@ -582,43 +463,14 @@ body.title-open #app{background:#071521;box-shadow:none;}
 
 /* --- consolidated cascade block --- */
 
-/* v4.5: all Stage 1 enemies use the same display box/size.
-   Visual differences are handled by the transparent padding inside each PNG,
-   so the enemy does not jump larger/smaller when the monster changes.
-   Position is unchanged from v4.4. */
-#game .field .enemy{left:4% !important;top:125px !important;width:44% !important;height:200px !important;bottom:auto !important;z-index:2 !important;position:absolute !important;display:flex !important;align-items:flex-end !important;justify-content:center !important;}
-#game .field .enemy img{width:175px !important;height:175px !important;max-width:175px !important;max-height:175px !important;object-fit:contain !important;}
-@media(max-width:600px){
-  #game .field .enemy{left:3% !important;top:52px !important;width:45% !important;height:180px !important;bottom:auto !important;}
-  #game .field .enemy img{width:160px !important;height:160px !important;max-width:160px !important;max-height:160px !important;}
-}
-
-/* --- consolidated cascade block --- */
-
-/* v4.6: Stage 1 enemy sprites are larger, and combo is placed clearly below the enemy. */
-#game .field .enemy{left:2% !important;top:105px !important;width:48% !important;height:235px !important;}
-#game .field .enemy img{width:220px !important;height:220px !important;max-width:220px !important;max-height:220px !important;}
-#game .field .combo{left:8% !important;top:325px !important;}
+/* Consistent battle actor sizing and combo placement. */
+#game .field .enemy{left:2% !important;top:105px !important;width:48% !important;height:235px !important;bottom:auto !important;z-index:2 !important;position:absolute !important;display:flex !important;align-items:flex-end !important;justify-content:center !important;}
+#game .field .enemy img{width:220px !important;height:220px !important;max-width:220px !important;max-height:220px !important;object-fit:contain !important;}
+#game .field .combo{left:8% !important;top:325px !important;width:36% !important;text-align:center !important;z-index:6 !important;pointer-events:none !important;}
 @media(max-width:600px){
   #game .field .enemy{left:1% !important;top:38px !important;width:49% !important;height:215px !important;}
-  #game .field .enemy img{width:175px !important;height:175px !important;max-width:175px !important;max-height:175px !important;}
-  #game .field .combo{left:5% !important;top:282px !important;}
-}
-
-/* --- consolidated cascade block --- */
-
-/* v4.9: Smartphone only — reduce Stage 1 enemy sprite size further.
-   Desktop size, enemy position, combo position, enemy order, and game balance remain unchanged. */
-@media(max-width:600px){
   #game .field .enemy img{width:150px !important;height:150px !important;max-width:150px !important;max-height:150px !important;}
-}
-
-/* --- consolidated cascade block --- */
-
-/* v4.11: Smartphone combo must appear at the enemy's feet,
-   slightly overlapping the feet, and remain above the question prompt. */
-@media(max-width:600px){
-  #game .field .combo{left:5% !important;top:205px !important;width:40% !important;text-align:center !important;z-index:6 !important;pointer-events:none !important;}
+  #game .field .combo{left:5% !important;top:205px !important;width:40% !important;font-size:23px !important;text-align:center !important;z-index:6 !important;pointer-events:none !important;}
 }
 
 /* === Correct / Incorrect damage feedback === */
@@ -1956,21 +1808,11 @@ function calcScore(gameOver=false){
     ? 0
     : Math.max(0,Math.round(1800-S.elapsed*30));
 
-  let timeRank="E";
-  if(!gameOver){
-    if(S.elapsed<20) timeRank="S";
-    else if(S.elapsed<30) timeRank="A";
-    else if(S.elapsed<40) timeRank="B";
-    else if(S.elapsed<50) timeRank="C";
-    else if(S.elapsed<60) timeRank="D";
-  }
-
   return {
     correctPts,
     killPts,
     comboPts,
     timeBonus,
-    timeRank,
     total:correctPts+killPts+comboPts+timeBonus
   };
 }
@@ -2267,8 +2109,6 @@ $("retry").onclick=(e)=>{
   S.over=false;
   S.lock=false;
   S.resultShown=false;
-  sessionStorage.setItem("cqAutoStart","");
-
   start({stageIntro:false});
 };
 
@@ -2289,8 +2129,6 @@ $("change").onclick=()=>{
   S.lock=true;
   S.over=true;
   S.resultShown=false;
-  sessionStorage.removeItem("cqAutoStart");
-  sessionStorage.removeItem("cqReturnStage");
   cards();
   $("start").disabled=true;
   $("start").textContent="キャラクターをえらんでスタート";
@@ -2300,20 +2138,6 @@ $("change").onclick=()=>{
 
 cards();
 setscore();
-
-const autoChar=sessionStorage.getItem("cqAutoStart");
-sessionStorage.removeItem("cqAutoStart");
-if(autoChar && C[autoChar]){
-  S.char=autoChar;
-  const card=document.querySelector('.card[data-id="'+autoChar+'"]');
-  if(card){
-    card.classList.add("sel");
-    $("start").disabled=false;
-    $("start").textContent="▶ "+C[autoChar][0]+"でスタート";
-  }
-  start();
-}
-
 
 const rankingButton=document.getElementById("rankingButton");
 if(rankingButton)rankingButton.addEventListener("click",()=>{cqAudio.playSfx("select",.68);showRanking();});
@@ -2379,14 +2203,6 @@ function showStage4Characters(){ selectGradeStage(4); }
 function showStage5Characters(){ selectGradeStage(5); }
 function showStage6Characters(){ selectGradeStage(6); }
 
-const returnStage=sessionStorage.getItem("cqReturnStage");
-sessionStorage.removeItem("cqReturnStage");
-if(returnStage){
-  const stageNum=Number(returnStage);
-  if(GRADE_QUESTIONS[stageNum]){
-    selectGradeStage(stageNum);
-  }
-}
 </script>
 
 <script>
