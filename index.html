@@ -1207,6 +1207,14 @@ body.cq-battle-active #quitBattle{
 @media(max-width:600px){
   #audioToggle{top:6px;width:42px;height:42px;font-size:20px;}
   body.cq-battle-active #quitBattle{top:6px;right:6px;height:42px;}
+  body.cq-battle-active header > div:nth-child(2){
+    left:auto;
+    right:148px;
+    transform:translateY(-50%);
+    font-size:13px;
+  }
+  body.cq-battle-active header > div:nth-child(2) #score{font-size:21px;}
+  body.cq-battle-active .player-id{max-width:105px;}
 }
 
 </style>
@@ -1416,7 +1424,8 @@ const $=x=>document.getElementById(x);
 
 /* ===== Audio =====
    BGM begins silently inside the user's click, then becomes audible after the
-   requested delay. This also keeps delayed playback reliable on iPhone. */
+   requested delay. Web Audio gain keeps fades and volume reliable on iPhone,
+   where HTMLMediaElement.volume may be ignored. */
 const cqAudio=(()=>{
   const base="assets/audio/";
   const connection=navigator.connection||navigator.mozConnection||navigator.webkitConnection;
@@ -1456,8 +1465,12 @@ const cqAudio=(()=>{
     audio.volume=0;
   });
 
-  const BGM_VOLUME=.22;
+  const BGM_VOLUME=.16;
   const SFX_VOLUME=.78;
+  const AudioContextClass=window.AudioContext||window.webkitAudioContext;
+  const audioGains=new Map();
+  let audioContext=null;
+  let audioGraphReady=false;
   let bgmToken=0;
   let fadeFrame=0;
   let delayTimer=0;
@@ -1465,6 +1478,41 @@ const cqAudio=(()=>{
   let loopFading=false;
   let muted=false;
   try{muted=localStorage.getItem("cqMuted")==="1";}catch(_){muted=false;}
+
+  function ensureAudioGraph(){
+    if(!audioGraphReady&&AudioContextClass){
+      try{
+        audioContext=new AudioContextClass();
+        [...Object.values(sfx),...Object.values(bgm)].forEach(audio=>{
+          const source=audioContext.createMediaElementSource(audio);
+          const gain=audioContext.createGain();
+          gain.gain.value=0;
+          source.connect(gain).connect(audioContext.destination);
+          audioGains.set(audio,gain);
+          audio.volume=1;
+        });
+        audioGraphReady=true;
+      }catch(_){
+        audioContext=null;
+        audioGraphReady=false;
+      }
+    }
+    if(audioContext&&audioContext.state==="suspended"){
+      const resumed=audioContext.resume();
+      if(resumed&&typeof resumed.catch==="function")resumed.catch(()=>{});
+    }
+    return audioGraphReady;
+  }
+  function getAudioLevel(audio){
+    const gain=audioGains.get(audio);
+    return gain?gain.gain.value:audio.volume;
+  }
+  function setAudioLevel(audio,level){
+    const safeLevel=Math.max(0,Math.min(1,level));
+    const gain=audioGains.get(audio);
+    if(gain)gain.gain.value=safeLevel;
+    else audio.volume=safeLevel;
+  }
 
   function safePlay(audio){
     if(muted)return;
@@ -1475,9 +1523,10 @@ const cqAudio=(()=>{
     if(muted)return;
     const audio=sfx[name];
     if(!audio)return;
+    ensureAudioGraph();
     audio.pause();
     audio.currentTime=0;
-    audio.volume=Math.max(0,Math.min(1,volume));
+    setAudioLevel(audio,volume);
     safePlay(audio);
   }
   function stopSfx(name){
@@ -1493,12 +1542,12 @@ const cqAudio=(()=>{
     loopFading=false;
   }
   function fadeVolume(audio,to,duration,token,onDone){
-    const from=audio.volume;
+    const from=getAudioLevel(audio);
     const started=performance.now();
     const tick=now=>{
       if(token!==bgmToken)return;
       const p=Math.min(1,(now-started)/Math.max(1,duration));
-      audio.volume=from+(to-from)*p;
+      setAudioLevel(audio,from+(to-from)*p);
       if(p<1)fadeFrame=requestAnimationFrame(tick);
       else if(onDone)onDone();
     };
@@ -1506,16 +1555,17 @@ const cqAudio=(()=>{
   }
   function startBgm(name,delay=650,fade=1300){
     cancelBgmAutomation();
+    ensureAudioGraph();
     const token=bgmToken;
     const target=bgm[name];
     const other=name==="menu"?bgm.battle:bgm.menu;
     activeBgmName=name;
     other.pause();
     other.currentTime=0;
-    other.volume=0;
+    setAudioLevel(other,0);
     target.pause();
     target.currentTime=0;
-    target.volume=0;
+    setAudioLevel(target,0);
     if(muted)return;
     // Start inaudibly during the trusted user gesture; the fade begins later.
     safePlay(target);
@@ -1543,7 +1593,7 @@ const cqAudio=(()=>{
     Object.values(bgm).forEach(audio=>{
       audio.pause();
       audio.currentTime=0;
-      audio.volume=0;
+      setAudioLevel(audio,0);
     });
     Object.values(sfx).forEach(audio=>{
       audio.pause();
@@ -1585,7 +1635,7 @@ const cqAudio=(()=>{
       cancelAnimationFrame(fadeFrame);
       const token=bgmToken;
       audio.currentTime=0;
-      audio.volume=0;
+      setAudioLevel(audio,0);
       safePlay(audio);
       delayTimer=setTimeout(()=>{
         if(token!==bgmToken||activeBgmName!==name)return;
