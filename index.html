@@ -653,6 +653,12 @@ body.title-open #app{background:#071521;box-shadow:none;}
   68% { transform: translateX(14px) scale(1.015); }
 }
 
+@keyframes cqEnemyDefeated {
+  0% { opacity:1;transform:translateY(0) scale(1);filter:brightness(1); }
+  24% { opacity:1;transform:translateY(-3px) scale(1.06);filter:brightness(1.9); }
+  100% { opacity:0;transform:translateY(9px) scale(.72);filter:brightness(2.4) blur(2px); }
+}
+
 @keyframes cqRedFlash {
   0%, 100% {
     filter: none;
@@ -694,9 +700,15 @@ body.title-open #app{background:#071521;box-shadow:none;}
   will-change: transform;
 }
 
+#game .field .enemy img.cq-enemy-defeated {
+  animation: cqEnemyDefeated .46s ease-in forwards !important;
+  will-change:transform,opacity,filter;
+}
+
 @media (prefers-reduced-motion: reduce) {
   #game .field .player img.cq-player-lunge,
-  #game .field .enemy img.cq-enemy-lunge {
+  #game .field .enemy img.cq-enemy-lunge,
+  #game .field .enemy img.cq-enemy-defeated {
     animation-duration: .01ms;
   }
 }
@@ -1546,7 +1558,8 @@ const cqAudio=(()=>{
     battle:new Audio(base+files.battle)
   };
   Object.values(bgm).forEach(audio=>{
-    audio.loop=true;
+    // Loop manually so the end can fade instead of cutting back to the start.
+    audio.loop=false;
     audio.preload="auto";
     audio.volume=0;
   });
@@ -1556,6 +1569,8 @@ const cqAudio=(()=>{
   let bgmToken=0;
   let fadeFrame=0;
   let delayTimer=0;
+  let activeBgmName=null;
+  let loopFading=false;
 
   function safePlay(audio){
     const result=audio.play();
@@ -1573,6 +1588,7 @@ const cqAudio=(()=>{
     bgmToken++;
     clearTimeout(delayTimer);
     cancelAnimationFrame(fadeFrame);
+    loopFading=false;
   }
   function fadeVolume(audio,to,duration,token,onDone){
     const from=audio.volume;
@@ -1591,6 +1607,7 @@ const cqAudio=(()=>{
     const token=bgmToken;
     const target=bgm[name];
     const other=name==="menu"?bgm.battle:bgm.menu;
+    activeBgmName=name;
     other.pause();
     other.currentTime=0;
     other.volume=0;
@@ -1608,12 +1625,37 @@ const cqAudio=(()=>{
     cancelBgmAutomation();
     const token=bgmToken;
     const active=Object.values(bgm).find(audio=>!audio.paused);
+    activeBgmName=null;
     if(!active)return;
     fadeVolume(active,0,fade,token,()=>{
       active.pause();
       active.currentTime=0;
     });
   }
+
+  // Fade the final 1.8 seconds, restart silently, then gently fade back in.
+  Object.entries(bgm).forEach(([name,audio])=>{
+    audio.addEventListener("timeupdate",()=>{
+      if(activeBgmName!==name||loopFading||audio.paused||!Number.isFinite(audio.duration))return;
+      const remaining=audio.duration-audio.currentTime;
+      if(audio.currentTime<1||remaining>1.8)return;
+      loopFading=true;
+      cancelAnimationFrame(fadeFrame);
+      fadeVolume(audio,0,Math.max(300,(remaining-.06)*1000),bgmToken);
+    });
+    audio.addEventListener("ended",()=>{
+      if(activeBgmName!==name)return;
+      cancelAnimationFrame(fadeFrame);
+      const token=bgmToken;
+      audio.currentTime=0;
+      audio.volume=0;
+      safePlay(audio);
+      delayTimer=setTimeout(()=>{
+        if(token!==bgmToken||activeBgmName!==name)return;
+        fadeVolume(audio,BGM_VOLUME,900,token,()=>{loopFading=false;});
+      },120);
+    });
+  });
   return {playSfx,startMenu:(delay=650)=>startBgm("menu",delay),startBattle:(delay=500)=>startBgm("battle",delay),stopBgm};
 })();
 
@@ -1849,7 +1891,6 @@ $("quitBattle").style.display="block";
   render(token);
   const entered=await cqNavigate("game",{stageIntro:options.stageIntro});
   if(!entered)return;
-  cqAudio.playSfx("battleStart",.82);
   S.startAt=performance.now();
   S.timeFrame=requestAnimationFrame(()=>updateTime(token));
 }
@@ -1862,6 +1903,7 @@ function spawnEnemy(index){
   S.eh=e.hp;
 
   $("enemyName").textContent=e.name;
+  $("enemyImg").classList.remove("cq-enemy-defeated","cq-enemy-lunge");
   $("enemyImg").src=e.img;
   $("enemyImg").alt=e.name;
   $("enemy").style.filter="none";
@@ -2072,7 +2114,6 @@ function ans(v,c,b,token){
 
   if(v===c){
     b.classList.add("correct");
-    cqAudio.playSfx("correct",.76);
     S.correct++;
     S.combo++;
 
@@ -2104,6 +2145,9 @@ function ans(v,c,b,token){
     let dmg=baseAttack + S.combo*2;
 
     S.eh=Math.max(0,S.eh-dmg);
+    const defeated=S.eh<=0;
+    // Do not stack the correct and defeat sounds; the overlap sounded louder.
+    cqAudio.playSfx(defeated?"defeat":"correct",defeated?.78:.76);
     cqDamageFlash("#ps", "cq-player-lunge");
     cqDamageFlash(".enemy", "cq-damage-enemy");
     $("msg").textContent="✨ せいかい！ "+ch[0]+"のこうげき！";
@@ -2125,7 +2169,9 @@ function ans(v,c,b,token){
       const enemies=getStageEnemies();
       const e=enemies[S.enemyIndex%enemies.length];
       S.kills++;
-      cqAudio.playSfx("defeat",.86);
+      $("enemyImg").classList.remove("cq-enemy-lunge");
+      void $("enemyImg").offsetWidth;
+      $("enemyImg").classList.add("cq-enemy-defeated");
 
       // Enemy defeat: +220 immediately, at the moment of the kill.
       S.score += 220;
@@ -2186,14 +2232,14 @@ function ans(v,c,b,token){
 }
 
 $("start").onclick=()=>{
-  cqAudio.playSfx("decide",.74);
+  cqAudio.playSfx("battleStart",.82);
   start({stageIntro:true});
 };
 
 $("retry").onclick=(e)=>{
   e.preventDefault();
   e.stopImmediatePropagation();
-  cqAudio.playSfx("decide",.74);
+  cqAudio.playSfx("battleStart",.82);
 
   // The result screen is already the end of the previous run.
   // Do not increment the run here: start() owns the single newRun() call.
@@ -2208,11 +2254,28 @@ $("retry").onclick=(e)=>{
 
 $("change").onclick=()=>{
   cqAudio.playSfx("cancel",.76);
-  // いったんページを再読み込みして戦闘の実行状態を完全に初期化する。
-  // 現在の学年だけ保存し、再読み込み後は同じ学年のキャラクター選択へ戻す。
+  cqAudio.startMenu(650);
+  // Reset the completed run without reloading. Reloading would stop the menu
+  // music and a browser may block it from restarting without another tap.
+  newRun();
+  clearTimer();
+  S.char=null;
+  S.score=0;
+  S.combo=0;
+  S.max=0;
+  S.correct=0;
+  S.kills=0;
+  S.q=0;
+  S.lock=true;
+  S.over=true;
+  S.resultShown=false;
   sessionStorage.removeItem("cqAutoStart");
-  sessionStorage.setItem("cqReturnStage", String(S.stage || 1));
-  setTimeout(()=>window.location.reload(),260);
+  sessionStorage.removeItem("cqReturnStage");
+  cards();
+  $("start").disabled=true;
+  $("start").textContent="キャラクターをえらんでスタート";
+  setscore();
+  cqNavigate("select");
 };
 
 cards();
