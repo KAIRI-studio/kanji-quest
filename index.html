@@ -1422,6 +1422,7 @@ body.cq-battle-active #quitBattle{
 <div id="toast" class="toast"></div></main>
 <div id="screenTransitionShade" class="screen-transition-shade" aria-hidden="true"><span class="screen-transition-panel top"></span><span class="screen-transition-panel bottom"></span></div>
 <div id="stageIntroOverlay" class="stage-intro-overlay" aria-hidden="true"><span>ステージ 1</span></div>
+<script src="questions.js?v=1"></script>
 <script>
 /* ===== Monthly Ranking Screen ===== */
 async function showRanking(){
@@ -1452,21 +1453,16 @@ function cqDamageFlash(selector, className){
 
 
 const C={castor:["CASTOR","バランス型","assets/castor.webp",3,3,3,"基本性能が安定"],kairi:["KAIRI","こうげき特化型","assets/kairi.webp?v=2",5,1,3,"正解時のこうげき力UP"],sota:["SOTA","コンボ特化型","assets/sota.webp",4,2,5,"コンボ倍率が高い"],kappa:["KAPPA","安定型","assets/kappa.webp",2,4,2,"1回ミスしてもコンボが途切れない"]};
-const Q1=[["山","やま","かわ","そら"],["川","かわ","やま","うみ"],["森","もり","はやし","くさ"],["空","そら","あめ","ほし"],["雨","あめ","ゆき","くも"],["花","はな","くさ","き"],["草","くさ","はな","もり"],["木","き","いし","はやし"],["林","はやし","もり","き"],["石","いし","つち","たま"],["土","つち","いし","みず"],["水","みず","ひ","あめ"],["火","ひ","みず","つち"],["月","つき","ひ","ほし"],["犬","いぬ","ねこ","とり"],["虫","むし","とり","さかな"],["鳥","とり","むし","いぬ"],["貝","かい","さかな","とり"],["人","ひと","こ","おとこ"],["男","おとこ","おんな","ひと"],["女","おんな","おとこ","こ"],["子","こ","ひと","おんな"],["目","め","みみ","くち"],["耳","みみ","め","て"],["口","くち","め","あし"],["手","て","あし","みみ"],["足","あし","て","くち"],["車","くるま","ふね","みち"],["本","ほん","えんぴつ","つくえ"],["玉","たま","いし","つき"]];
-const Q2=[["池","いけ","かわ","うみ"],["海","うみ","いけ","かわ"],["岩","いわ","いし","やま"],["谷","たに","やま","いわ"],["園","その","にわ","もり"],["原","はら","たに","やま"],["野","の","はら","やま"],["星","ほし","つき","そら"],["雲","くも","あめ","そら"],["雪","ゆき","あめ","くも"],["風","かぜ","ゆき","あめ"],["春","はる","なつ","あき"],["夏","なつ","はる","あき"],["秋","あき","はる","なつ"],["冬","ふゆ","はる","なつ"],["朝","あさ","よる","ひる"],["昼","ひる","あさ","よる"],["夜","よる","あさ","ひる"],["週","しゅう","つき","とき"],["父","ちち","はは","あに"],["母","はは","ちち","あに"],["兄","あに","あね","ちち"],["姉","あね","あに","ちち"],["弟","おとうと","あに","あね"],["妹","いもうと","あに","あね"],["友","とも","ちち","あに"],["店","みせ","いえ","へや"],["門","もん","いえ","みせ"],["船","ふね","くるま","でんしゃ"],["魚","さかな","とり","むし"],["牛","うし","うま","ぶた"],["馬","うま","うし","ぶた"],["羽","はね","つばさ","とり"],["米","こめ","むぎ","まめ"],["茶","ちゃ","みず","ゆ"],["色","いろ","かたち","ひかり"]];
-const Q3=[["駅","えき","みせ","みち"],["横","よこ","たて","うえ"],["岸","きし","しま","はま"],["橋","はし","みち","かわ"],["客","きゃく","みせ","ひと"],["君","きみ","とも","ひと"],["係","かかり","しごと","ひと"],["血","ち","ほね","にく"],["皿","さら","はし","ちゃわん"],["指","ゆび","て","あし"],["歯","は","め","くち"],["酒","さけ","みず","ちゃ"],["神","かみ","ほとけ","ひと"],["炭","すみ","ひ","いし"],["豆","まめ","こめ","むぎ"],["島","しま","かわ","やま"],["湯","ゆ","みず","あめ"],["箱","はこ","かご","ふくろ"],["畑","はたけ","た","の"],["鼻","はな","くち","め"],["氷","こおり","ゆき","あめ"],["羊","ひつじ","うし","うま"]];
-const Q4=[["愛","あい","ゆめ","こころ"],["塩","しお","さとう","こめ"],["億","おく","まん","せん"],["芽","め","はな","くき"],["街","まち","みち","いえ"],["鏡","かがみ","ガラス","まど"],["芸","げい","わざ","おどり"],["差","さ","ちがい","ひらき"],["札","さつ","ふだ","かね"]];
-const Q5=[["圧","あつ","おもい","ちから"],["液","えき","みず","しる"],["桜","さくら","うめ","まつ"],["可","か","よい","できる"],["仮","かり","ほんもの","うそ"],["格","かく","かたち","きまり"],["刊","かん","ほん","しんぶん"],["逆","ぎゃく","まえ","うしろ"],["旧","きゅう","ふるい","むかし"],["個","こ","ひとつ","もの"]];
-const Q6=[["胃","い","はら","むね"],["域","いき","くに","ばしょ"],["我","われ","じぶん","おれ"],["革","かわ","かみ","ぬの"],["株","かぶ","き","ね"],["机","つくえ","いす","たな"],["胸","むね","はら","せなか"],["筋","すじ","ほね","ちから"],["系","けい","つながり","なかま"],["穴","あな","くぼみ","すきま"],["孝","こう","おや","こども"],["鋼","はがね","てつ","きんぞく"],["冊","さつ","ほん","かみ"],["私","わたし","ぼく","じぶん"],["姿","すがた","かたち","からだ"]];
-let Q=Q1;
-const GRADE_QUESTIONS={1:Q1,2:Q2,3:Q3,4:Q4,5:Q5,6:Q6};
+const GRADE_QUESTIONS=window.KANJI_QUESTIONS;
+let Q=GRADE_QUESTIONS[1];
 
 /* ===== Data / State ===== */
 let S={
   char:null,stage:1,q:0,score:0,combo:0,max:0,correct:0,
   eh:20,emax:20,ph:40,pmax:40,lock:false,best:+localStorage.cqBest||0,
   enemyIndex:0,kills:0,timer:null,over:false,run:0,
-  startAt:0,endAt:0,elapsed:0,resultShown:false,rankingSubmitted:false
+  startAt:0,endAt:0,elapsed:0,resultShown:false,rankingSubmitted:false,
+  questions:[]
 };
 
 const ENEMIES=[
@@ -1921,7 +1917,14 @@ const initialHeader=document.querySelector("header");
 if(initialHeader) initialHeader.style.display="none";
 document.body.classList.add("title-open");
 
-const sh=a=>[...a].sort(()=>Math.random()-.5);
+const sh=a=>{
+  const copy=[...a];
+  for(let i=copy.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [copy[i],copy[j]]=[copy[j],copy[i]];
+  }
+  return copy;
+};
 
 function clearTimer(){
   if(S.timer!==null){
@@ -2033,6 +2036,9 @@ $("quitBattle").style.display="block";
   S.resultShown=false;
   S.rankingSubmitted=false;
   S.q=0;
+  // Pick the ten questions once per run. render() then reads by index, so a
+  // question cannot repeat even if the battle UI is rendered more than once.
+  S.questions=sh(Q).slice(0,10);
   S.score=0;
   S.combo=0;
   S.max=0;
@@ -2094,7 +2100,7 @@ function render(token=S.run){
   $("php").style.width=S.ph/S.pmax*100+"%";
   $("pt").textContent=S.ph+"/"+S.pmax;
 
-  let q=Q[Math.floor(Math.random()*Q.length)];
+  const q=S.questions[S.q]||Q[S.q%Q.length];
   $("kanji").textContent=q[0];
   $("answers").innerHTML="";
 
