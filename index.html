@@ -1502,14 +1502,16 @@ const cqAudio=(()=>{
     cursor:"ka-soruidoutokyarasentaku.mp3",
     battleStart:"sentousuta-to.mp3"
   };
-  const sfx={};
+  // SFX are decoded into memory up front. Starting an AudioBuffer is much
+  // faster than seeking and replaying an MP3 element, especially on Safari.
+  // Keep small media-element fallbacks for browsers where Web Audio decoding
+  // is unavailable or an asset has not finished loading yet.
+  const sfxFallback={};
   Object.entries(files).forEach(([name,file])=>{
     if(name==="menu"||name==="battle")return;
     const audio=new Audio(base+file);
-    // On constrained connections, only the first tap sound competes with the
-    // title artwork. The remaining sounds are primed near their first use.
-    audio.preload=(!constrainedNetwork||name==="titleStart")?"auto":"none";
-    sfx[name]=audio;
+    audio.preload="auto";
+    sfxFallback[name]=audio;
   });
   const bgm={
     menu:new Audio(base+files.menu),
@@ -1526,6 +1528,9 @@ const cqAudio=(()=>{
   const SFX_VOLUME=.78;
   const AudioContextClass=window.AudioContext||window.webkitAudioContext;
   const audioGains=new Map();
+  const sfxBuffers=new Map();
+  const sfxBufferPromises=new Map();
+  const activeSfx=new Map();
   let audioContext=null;
   let audioGraphReady=false;
   let bgmToken=0;
@@ -1539,8 +1544,9 @@ const cqAudio=(()=>{
   function ensureAudioGraph(){
     if(!audioGraphReady&&AudioContextClass){
       try{
-        audioContext=new AudioContextClass();
-        [...Object.values(sfx),...Object.values(bgm)].forEach(audio=>{
+        try{audioContext=new AudioContextClass({latencyHint:"interactive"});}
+        catch(_){audioContext=new AudioContextClass();}
+        Object.values(bgm).forEach(audio=>{
           const source=audioContext.createMediaElementSource(audio);
           const gain=audioContext.createGain();
           gain.gain.value=0;
@@ -1560,6 +1566,28 @@ const cqAudio=(()=>{
     }
     return audioGraphReady;
   }
+  function loadSfx(name){
+    if(sfxBuffers.has(name))return Promise.resolve(sfxBuffers.get(name));
+    if(!AudioContextClass||!files[name])return Promise.resolve(null);
+    ensureAudioGraph();
+    if(!audioContext)return Promise.resolve(null);
+    const file=files[name];
+    let promise=sfxBufferPromises.get(file);
+    if(!promise){
+      promise=fetch(base+file,{cache:"force-cache"})
+        .then(response=>{
+          if(!response.ok)throw new Error(`Audio ${response.status}`);
+          return response.arrayBuffer();
+        })
+        .then(data=>audioContext.decodeAudioData(data))
+        .catch(()=>null);
+      sfxBufferPromises.set(file,promise);
+    }
+    return promise.then(buffer=>{
+      if(buffer)sfxBuffers.set(name,buffer);
+      return buffer;
+    });
+  }
   function getAudioLevel(audio){
     const gain=audioGains.get(audio);
     return gain?gain.gain.value:audio.volume;
@@ -1578,19 +1606,45 @@ const cqAudio=(()=>{
   }
   function playSfx(name,volume=SFX_VOLUME){
     if(muted)return;
-    const audio=sfx[name];
-    if(!audio)return;
     ensureAudioGraph();
+    const buffer=sfxBuffers.get(name);
+    if(audioContext&&buffer){
+      stopSfx(name);
+      const source=audioContext.createBufferSource();
+      const gain=audioContext.createGain();
+      source.buffer=buffer;
+      gain.gain.value=Math.max(0,Math.min(1,volume));
+      source.connect(gain).connect(audioContext.destination);
+      activeSfx.set(name,{source,gain});
+      source.addEventListener("ended",()=>{
+        if(activeSfx.get(name)?.source===source)activeSfx.delete(name);
+        source.disconnect();
+        gain.disconnect();
+      },{once:true});
+      source.start(0,name==="wrong"?.08:0);
+      return;
+    }
+    // The eager decode normally finishes during the logo screen. This fallback
+    // only covers an exceptionally early tap or a browser without Web Audio.
+    const audio=sfxFallback[name];
+    if(!audio)return;
     audio.pause();
-    audio.currentTime=0;
-    setAudioLevel(audio,volume);
+    audio.currentTime=name==="wrong"?.08:0;
+    audio.volume=Math.max(0,Math.min(1,volume));
     safePlay(audio);
+    loadSfx(name);
   }
   function stopSfx(name){
-    const audio=sfx[name];
-    if(!audio)return;
-    audio.pause();
-    audio.currentTime=0;
+    const active=activeSfx.get(name);
+    if(active){
+      activeSfx.delete(name);
+      try{active.source.stop();}catch(_){}
+    }
+    const audio=sfxFallback[name];
+    if(audio){
+      audio.pause();
+      audio.currentTime=0;
+    }
   }
   function cancelBgmAutomation(){
     bgmToken++;
@@ -1652,7 +1706,8 @@ const cqAudio=(()=>{
       audio.currentTime=0;
       setAudioLevel(audio,0);
     });
-    Object.values(sfx).forEach(audio=>{
+    [...activeSfx.keys()].forEach(stopSfx);
+    Object.values(sfxFallback).forEach(audio=>{
       audio.pause();
       audio.currentTime=0;
     });
@@ -1665,12 +1720,7 @@ const cqAudio=(()=>{
     const names=constrainedNetwork
       ? ["battleStart","correct","wrong"]
       : ["battleStart","correct","wrong","defeat","clear","gameOverResult"];
-    names.forEach(name=>{
-      const audio=sfx[name];
-      if(!audio)return;
-      audio.preload="auto";
-      audio.load();
-    });
+    names.forEach(loadSfx);
     if(!constrainedNetwork){
       bgm.battle.preload="auto";
       bgm.battle.load();
@@ -1698,6 +1748,15 @@ const cqAudio=(()=>{
         if(token!==bgmToken||activeBgmName!==name)return;
         fadeVolume(audio,BGM_VOLUME,900,token,()=>{loopFading=false;});
       },120);
+    });
+  });
+
+  // The three-second logo gives these small files time to decode before the
+  // first usable button appears. Title start is requested first so it cannot
+  // be held behind the rest of the queue on a slow connection.
+  loadSfx("titleStart").finally(()=>{
+    Object.keys(sfxFallback).forEach(name=>{
+      if(name!=="titleStart")loadSfx(name);
     });
   });
   return {
