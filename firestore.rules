@@ -1,0 +1,88 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function validBoard(boardId) {
+      return boardId.matches('^[0-9]{4}-(0[1-9]|1[0-2])-grade-[1-6]$');
+    }
+
+    function validEntry(data) {
+      return data.keys().hasOnly([
+          'uid', 'name', 'score', 'correct', 'character', 'kills',
+          'maxCombo', 'elapsedMs', 'gameOver', 'achievedAt', 'updatedAt'
+        ])
+        && data.uid is string
+        && data.name is string
+        && data.name.size() >= 1
+        && data.name.size() <= 8
+        && data.score is int
+        && data.score >= 0
+        && data.score <= 8000
+        && data.correct is int
+        && data.correct >= 0
+        && data.correct <= 10
+        && data.character in ['castor', 'kairi', 'sota', 'kappa']
+        && data.kills is int
+        && data.kills >= 0
+        && data.kills <= 10
+        && data.kills <= data.correct
+        && data.maxCombo is int
+        && data.maxCombo >= 0
+        && data.maxCombo <= 10
+        && data.maxCombo <= data.correct
+        && data.elapsedMs is int
+        && data.elapsedMs >= 0
+        && data.elapsedMs <= 3600000
+        && data.gameOver is bool
+        && data.score >= data.correct * 300 + data.kills * 220 + data.maxCombo * 70
+        && data.score <= data.correct * 300 + data.kills * 220 + data.maxCombo * 70 + 1800
+        && (!data.gameOver
+          || data.score == data.correct * 300 + data.kills * 220 + data.maxCombo * 70)
+        && data.achievedAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function sameResultAsBefore() {
+      return request.resource.data.score == resource.data.score
+        && request.resource.data.correct == resource.data.correct
+        && request.resource.data.character == resource.data.character
+        && request.resource.data.kills == resource.data.kills
+        && request.resource.data.maxCombo == resource.data.maxCombo
+        && request.resource.data.elapsedMs == resource.data.elapsedMs
+        && request.resource.data.gameOver == resource.data.gameOver
+        && request.resource.data.achievedAt == resource.data.achievedAt;
+    }
+
+    match /rankings/{boardId}/entries/{entryId} {
+      allow read: if signedIn() && validBoard(boardId);
+
+      allow create: if signedIn()
+        && validBoard(boardId)
+        && entryId == request.auth.uid
+        && request.resource.data.uid == request.auth.uid
+        && validEntry(request.resource.data)
+        && request.resource.data.achievedAt == request.time
+        && request.resource.data.updatedAt == request.time;
+
+      allow update: if signedIn()
+        && validBoard(boardId)
+        && entryId == request.auth.uid
+        && resource.data.uid == request.auth.uid
+        && request.resource.data.uid == request.auth.uid
+        && validEntry(request.resource.data)
+        && request.resource.data.score >= resource.data.score
+        && request.resource.data.updatedAt == request.time
+        && (
+          (request.resource.data.score > resource.data.score
+            && request.resource.data.achievedAt == request.time)
+          || sameResultAsBefore()
+        );
+
+      allow delete: if false;
+    }
+  }
+}
