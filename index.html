@@ -2343,8 +2343,9 @@ function ans(v,c,b,token){
 
     S.eh=Math.max(0,S.eh-dmg);
     const defeated=S.eh<=0;
-    // Do not stack the correct and defeat sounds; the overlap sounded louder.
-    cqAudio.playSfx(defeated?"defeat":"correct",defeated?.78:.76);
+    // A defeated enemy still gives the learner the normal correct-answer cue.
+    // Keep it quieter because the stronger defeat sound follows shortly after.
+    cqAudio.playSfx("correct",defeated?.46:.76);
     cqDamageFlash("#ps", "cq-player-lunge");
     cqDamageFlash(".enemy", "cq-damage-enemy");
     $("msg").textContent="✨ せいかい！ "+ch[0]+"のこうげき！";
@@ -2367,15 +2368,23 @@ function ans(v,c,b,token){
       const e=enemies[S.enemyIndex%enemies.length];
       S.kills++;
       $("enemyImg").classList.remove("cq-enemy-lunge");
-      void $("enemyImg").offsetWidth;
-      $("enemyImg").classList.add("cq-enemy-defeated");
       const defeatedSprite=$("enemyImg");
       const defeatedToken=token;
+      // Let the correct cue land first, then start the disappearance and its
+      // defeat sound together. This keeps both meanings clear without a loud
+      // same-frame overlap.
+      setTimeout(()=>{
+        if(defeatedToken===S.run&&S.eh===0){
+          cqAudio.playSfx("defeat",.78);
+          void defeatedSprite.offsetWidth;
+          defeatedSprite.classList.add("cq-enemy-defeated");
+        }
+      },100);
       setTimeout(()=>{
         if(defeatedToken===S.run&&S.eh===0&&defeatedSprite.classList.contains("cq-enemy-defeated")){
           defeatedSprite.classList.add("hide");
         }
-      },460);
+      },560);
 
       // Enemy defeat: +220 immediately, at the moment of the kill.
       S.score += 220;
