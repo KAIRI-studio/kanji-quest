@@ -745,6 +745,44 @@ body.title-open #app{background:#071521;box-shadow:none;}
   white-space:nowrap;
   font-size:clamp(13px,3.3vw,16px);
 }
+#rankingScreen .ranking-player{
+  display:flex;
+  align-items:center;
+  min-width:0;
+  gap:8px;
+}
+#rankingScreen .ranking-avatar{
+  position:relative;
+  flex:0 0 38px;
+  width:38px;
+  height:38px;
+  overflow:hidden;
+  border:2px solid #7692a1;
+  border-radius:50%;
+  box-sizing:border-box;
+  background:radial-gradient(circle at 50% 35%,#315c74 0%,#132e3e 72%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 2px 0 rgba(0,0,0,.28);
+}
+#rankingScreen .ranking-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  image-rendering:pixelated;
+  transform:scale(1.8);
+  transform-origin:50% 27%;
+}
+#rankingScreen .ranking-avatar-fallback{
+  display:grid;
+  place-items:center;
+  color:#d7e8f2;
+  font-size:20px;
+  line-height:1;
+}
+#rankingScreen .ranking-row:nth-child(-n+3) .ranking-avatar,
+#rankingScreen .ranking-row.is-current .ranking-avatar{
+  border-color:#ffd83d;
+  box-shadow:0 0 0 1px #8a4d13,inset 0 1px 0 rgba(255,255,255,.2);
+}
 #rankingScreen .ranking-name small{
   display:block;
   margin-top:2px;
@@ -869,9 +907,11 @@ body.is-transitioning{pointer-events:none;}
   #rankingScreen .ranking-list{gap:5px;margin-bottom:11px;}
   #rankingScreen .ranking-row{
     grid-template-columns:45px minmax(0,1fr) 70px;
-    min-height:37px;
+    min-height:42px;
     padding:3px 5px;
   }
+  #rankingScreen .ranking-player{gap:6px;}
+  #rankingScreen .ranking-avatar{flex-basis:34px;width:34px;height:34px;}
   #rankingScreen .ranking-title{font-size:23px;}
   #rankingScreen .ranking-back{min-height:42px;font-size:15px;}
   .ranking-stage-button{width:min(280px,82vw);aspect-ratio:3 / 1;height:auto;margin-top:14px;}
@@ -2567,6 +2607,13 @@ function selectRankingGrade(grade){
   if(title)title.textContent=`${Number(period.month)}月 ${activeRankingGrade}年生ランキング`;
 }
 
+const rankingCharacters={
+  castor:{name:"CASTOR",image:"assets/castor.webp"},
+  kairi:{name:"KAIRI",image:"assets/kairi.webp?v=2"},
+  sota:{name:"SOTA",image:"assets/sota.webp"},
+  kappa:{name:"KAPPA",image:"assets/kappa.webp"}
+};
+
 function renderRankingRows(entries,currentUid){
   const list=document.getElementById("rankingList");
   if(!list)return;
@@ -2579,18 +2626,39 @@ function renderRankingRows(entries,currentUid){
     rank.className="ranking-rank";
     rank.textContent=`${index+1}位`;
 
+    const player=document.createElement("div");
+    player.className="ranking-player";
+
+    const character=rankingCharacters[entry.character];
+    const avatar=document.createElement("div");
+    avatar.className="ranking-avatar"+(character?"":" ranking-avatar-fallback");
+    if(character){
+      const image=document.createElement("img");
+      image.src=character.image;
+      image.alt=`${character.name}のかお`;
+      image.loading="lazy";
+      image.decoding="async";
+      avatar.title=character.name;
+      avatar.append(image);
+    }else{
+      avatar.textContent="?";
+      avatar.title="キャラクター情報なし";
+      avatar.setAttribute("aria-label","キャラクター情報なし");
+    }
+
     const name=document.createElement("div");
     name.className="ranking-name";
     name.append(document.createTextNode(entry.name||"なまえなし"));
     const detail=document.createElement("small");
     detail.textContent=`せいかい ${Number(entry.correct)||0}/10`;
     name.append(detail);
+    player.append(avatar,name);
 
     const score=document.createElement("div");
     score.className="ranking-score";
     score.textContent=(Number(entry.score)||0).toLocaleString();
 
-    row.append(rank,name,score);
+    row.append(rank,player,score);
     list.append(row);
   });
 }
