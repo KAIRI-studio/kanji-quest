@@ -2345,7 +2345,7 @@ function ans(v,c,b,token){
     const defeated=S.eh<=0;
     // A defeated enemy still gives the learner the normal correct-answer cue.
     // Keep it quieter because the stronger defeat sound follows shortly after.
-    cqAudio.playSfx("correct",defeated?.46:.76);
+    cqAudio.playSfx("correct",defeated?.65:.76);
     cqDamageFlash("#ps", "cq-player-lunge");
     cqDamageFlash(".enemy", "cq-damage-enemy");
     $("msg").textContent="✨ せいかい！ "+ch[0]+"のこうげき！";
