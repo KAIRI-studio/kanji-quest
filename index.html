@@ -16,7 +16,7 @@ button.primary,button.secondary{width:100%;height:55px;margin-top:14px;border:3p
 .battlehead{display:flex;justify-content:space-between;font-size:16px;margin-bottom:10px;color:#fff;font-weight:900;}.field{height:470px;border:3px solid #fff;position:relative;overflow:hidden;background:#000;}.field:after{content:none;}
 .enemybox{position:absolute;left:10px;top:10px;width:49%;z-index:3;background:#050505;border:3px solid #f04444;padding:8px 9px;font-size:13px;}.hp{height:9px;border:2px solid #fff;background:#111;}.fill{height:100%;transition:.25s;}.red{background:#f44;}.green{background:#39df6c;}.enemy{left:8%;top:95px;width:36%;z-index:2;position:relative;height:100%;display:flex;align-items:flex-end;justify-content:center;}.enemy img{width:100%;height:100%;max-width:160px;max-height:160px;object-fit:contain;image-rendering:auto;filter:drop-shadow(3px 4px 0 rgba(0,0,0,.65));}.player{position:absolute;right:5%;bottom:62px;width:48%;text-align:center;z-index:3;}.player img{width:175px;height:175px;object-fit:contain;}.pname{font-size:17px;font-weight:900;text-shadow:2px 2px #000;margin-top:2px;}.player .hp{width:88%;margin:6px auto;}.msg{position:absolute;left:10px;right:10px;bottom:9px;background:#050505;border:3px solid #fff;padding:10px;text-align:center;font-size:17px;font-weight:900;z-index:5;min-height:47px;display:flex;align-items:center;justify-content:center;}.combo{position:absolute;left:15px;top:52%;font-size:31px;color:#ffd83d;font-weight:900;z-index:6;text-shadow:3px 3px #000;}.damage{position:absolute;left:32%;top:47%;font-size:42px;color:#ff321f;font-weight:900;z-index:8;animation:up .55s;}.slash{position:absolute;left:45%;top:42%;font-size:100px;color:#fff;z-index:8;animation:hit .4s;}.hide{display:none!important;}@keyframes up{from{transform:translateY(10px);opacity:0;}30%{opacity:1;}to{transform:translateY(-30px);opacity:0;}}@keyframes hit{from{transform:scale(.4) rotate(-20deg);opacity:0;}40%{opacity:1;}to{transform:scale(1.3);opacity:0;}}
 .qpanel{margin-top:10px;border:3px solid #fff;background:#06121e;padding:11px;}.kanji{text-align:center;font-size:72px;font-weight:bold;margin:5px 0 10px;}.answers{display:grid;gap:8px;}.answer{height:52px;border:3px solid #2592ff;background:#0d55a8;color:#fff;font: bold 18px monospace;cursor:pointer;}.answer.correct{background:#fff;color:#071521;}.answer.wrong{background:#a31d29;}
-.clear{text-align:center;color:#ffd83d;font-size:34px;font-weight:bold;margin:55px 0 20px;}.resultchar{display:flex;justify-content:center;align-items:center;gap:10px;border:3px solid #fff;}.resultchar img{width:90px;height:90px;object-fit:contain;transform:none;}.resultchar strong,.resultchar small{display:block;}.rg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px;}.rg div{border:2px solid #718392;text-align:center;padding:9px;font-size:9px;}.rg b{display:block;font-size:18px;margin-top:5px;}.record{text-align:center;color:#ffd83d;font-size:21px;font-weight:bold;margin:13px;}.toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);opacity:0;background:#050a10;border:2px solid #fff;padding:8px 13px;font-weight:bold;transition:.2s;}.toast.on{opacity:1;transform:translate(-50%,0);}
+.clear{text-align:center;color:#ffd83d;font-size:34px;font-weight:bold;margin:55px 0 20px;}.resultchar{display:flex;justify-content:center;align-items:center;gap:10px;border:3px solid #fff;}.resultchar img{width:90px;height:90px;object-fit:contain;transform:none;}.resultchar strong,.resultchar small{display:block;}.record{text-align:center;color:#ffd83d;font-size:21px;font-weight:bold;margin:13px;}.toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);opacity:0;background:#050a10;border:2px solid #fff;padding:8px 13px;font-weight:bold;transition:.2s;pointer-events:none;}.toast.on{opacity:1;transform:translate(-50%,0);}
 
 .score-breakdown{margin:10px 0 12px;border:2px solid #73879a;background:#0b1b2a;padding:8px 12px;font-size:14px;font-weight:900;}
 .score-breakdown .breakdown-title{color:#ffd83d;text-align:center;font-size:13px;letter-spacing:1px;margin-bottom:5px;}
@@ -258,9 +258,6 @@ header > div:nth-child(2) #score{font-size:30px;font-weight:900;letter-spacing:1
   #result .resultchar img{width:58px;height:58px;}
   #result .resultchar strong{font-size:16px;}
   #result .resultchar small{font-size:11px;}
-  #result .rg{gap:4px;margin-top:5px;}
-  #result .rg div{padding:5px 3px;font-size:9px;border-width:1px;}
-  #result .rg b{font-size:15px;margin-top:2px;}
   #result .record{font-size:16px;margin:5px;}
   #result .score-breakdown{margin:5px 0 6px;padding:5px 8px;font-size:11px;}
   #result .score-breakdown .breakdown-title{font-size:10px;margin-bottom:2px;}
@@ -1418,7 +1415,7 @@ body.cq-battle-active #quitBattle{
 <div id="combo" class="combo hide">コンボ ×<span>2</span>!</div><div id="slash" class="slash hide">✦</div><div id="damage" class="damage hide">-12</div><div id="msg" class="msg">よみかたを えらぼう！</div></div>
 <div class="qpanel"><div id="kanji" class="kanji">森</div><div id="answers" class="answers"></div></div></section>
 
-<section id="result" class="screen"><div class="clear">★ クリア！ ★</div><div class="resultchar"><img id="rs"><div><strong id="rn"></strong><small id="rt"></small></div></div><div class="result-hero-stats"><div class="result-hero-card">スコア<b id="fs">0</b></div><div class="result-hero-card">せいかい<b><span id="correctBig">0</span><small>/10</small></b></div></div><div class="rg"><div>たおした<b id="ex">0</b>たい</div><div>さいだいコンボ<b id="mc">0</b></div><div>タイム<b id="resultTimeValue">0.0秒</b></div></div><div id="rec" class="record hide">NEW RECORD!</div><div id="rankingSubmitStatus" class="ranking-submit-status" role="status" aria-live="polite"></div><button id="retry" class="primary">もう一度あそぶ</button><button id="change" class="secondary">キャラクターをかえる</button></section>
+<section id="result" class="screen"><div class="clear">★ クリア！ ★</div><div class="resultchar"><img id="rs"><div><strong id="rn"></strong><small id="rt"></small></div></div><div class="result-hero-stats"><div class="result-hero-card">スコア<b id="fs">0</b></div><div class="result-hero-card">せいかい<b><span id="correctBig">0</span><small>/10</small></b></div></div><div id="rec" class="record hide">NEW RECORD!</div><div id="rankingSubmitStatus" class="ranking-submit-status" role="status" aria-live="polite"></div><button id="retry" class="primary">もう一度あそぶ</button><button id="change" class="secondary">キャラクターをかえる</button></section>
 <div id="toast" class="toast"></div></main>
 <div id="screenTransitionShade" class="screen-transition-shade" aria-hidden="true"><span class="screen-transition-panel top"></span><span class="screen-transition-panel bottom"></span></div>
 <div id="stageIntroOverlay" class="stage-intro-overlay" aria-hidden="true"><span>ステージ 1</span></div>
@@ -1452,7 +1449,7 @@ function cqDamageFlash(selector, className){
 }
 
 
-const C={castor:["CASTOR","バランス型","assets/castor.webp",3,3,3,"基本性能が安定"],kairi:["KAIRI","こうげき特化型","assets/kairi.webp?v=2",5,1,3,"正解時のこうげき力UP"],sota:["SOTA","コンボ特化型","assets/sota.webp",4,2,5,"コンボ倍率が高い"],kappa:["KAPPA","安定型","assets/kappa.webp",2,4,2,"1回ミスしてもコンボが途切れない"]};
+const C={castor:["CASTOR","バランス型","assets/castor.webp",3,3,3,"基本性能が安定"],kairi:["KAIRI","こうげき特化型","assets/kairi.webp?v=2",5,1,3,"正解時のこうげき力UP"],sota:["SOTA","コンボ特化型","assets/sota.webp",4,2,5,"コンボ得点が高い"],kappa:["KAPPA","安定型","assets/kappa.webp",2,4,2,"1回ミスしてもコンボが途切れない"]};
 const GRADE_QUESTIONS=window.KANJI_QUESTIONS;
 let Q=GRADE_QUESTIONS[1];
 
@@ -2117,10 +2114,14 @@ function render(token=S.run){
   $("msg").textContent="よみかたを えらぼう！";
 }
 
+function comboPointStep(){
+  return S.char==="sota"?120:70;
+}
+
 function calcScore(gameOver=false){
   const correctPts=S.correct*300;
   const killPts=S.kills*220;
-  const comboPts=S.max*70;
+  const comboPts=S.max*comboPointStep();
 
   // ゲームオーバー時はタイムボーナスを一切加算しない。
   // クリアした場合だけ、クリアタイムに応じたボーナスを加算する。
@@ -2159,9 +2160,6 @@ function showResult(gameOver){
   $("rn").textContent=C[S.char][0];
   $("rt").textContent=C[S.char][1];
   $("correctBig").textContent=S.correct;
-  $("ex").textContent=S.kills;
-  $("mc").textContent=S.max;
-  $("resultTimeValue").textContent=S.elapsed.toFixed(1)+"秒";
 
   // Score breakdown: show exactly how the final score was made.
   let breakdown=document.getElementById("scoreBreakdown");
@@ -2177,10 +2175,10 @@ function showResult(gameOver){
 
   breakdown.innerHTML=
     '<div class="breakdown-title">スコアのうちわけ</div>'+
-    '<div class="breakdown-row"><span>🈶 せいかい '+S.correct+'もん</span><b>+'+score.correctPts.toLocaleString()+'</b></div>'+
-    '<div class="breakdown-row"><span>⚔️ たおした '+S.kills+'たい</span><b>+'+score.killPts.toLocaleString()+'</b></div>'+
-    '<div class="breakdown-row"><span>🔥 コンボ '+S.max+'</span><b>+'+score.comboPts.toLocaleString()+'</b></div>'+
-    '<div class="breakdown-row"><span>⏱️ タイム '+S.elapsed.toFixed(1)+'秒</span><b>+'+score.timeBonus.toLocaleString()+'</b></div>'+
+    '<div class="breakdown-row"><span>せいかい '+S.correct+'もん</span><b>+'+score.correctPts.toLocaleString()+'</b></div>'+
+    '<div class="breakdown-row"><span>たおした '+S.kills+'たい</span><b>+'+score.killPts.toLocaleString()+'</b></div>'+
+    '<div class="breakdown-row"><span>コンボ '+S.max+'</span><b>+'+score.comboPts.toLocaleString()+'</b></div>'+
+    '<div class="breakdown-row"><span>タイム '+S.elapsed.toFixed(1)+'秒</span><b>+'+score.timeBonus.toLocaleString()+'</b></div>'+
     '<div class="breakdown-total"><span>TOTAL</span><b>'+score.total.toLocaleString()+'</b></div>';
   if(gameOver){
     $("rec").classList.add("hide");
@@ -2319,11 +2317,12 @@ function ans(v,c,b,token){
     // Correct answer: +300
     S.score += 300;
 
-    // New maximum combo: +70 immediately.
+    // Each new maximum combo awards points immediately. SOTA receives a
+    // larger combo reward so the visible "combo specialist" role is real.
     const previousMax = S.max;
     S.max = Math.max(S.max, S.combo);
     if(S.max > previousMax){
-      S.score += 70;
+      S.score += comboPointStep();
     }
 
     // Character-specific attack power.
