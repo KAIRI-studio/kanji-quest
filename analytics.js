@@ -21,61 +21,6 @@
   }
   window.castorAnalytics = {event: event};
 
-  function setExcluded(next) {
-    try {
-      if (next) localStorage.setItem(excludedKey, '1');
-      else localStorage.removeItem(excludedKey);
-    } catch (_) { return false; }
-    excluded = next;
-    queue = [];
-    if (id) window['ga-disable-' + id] = next;
-    return true;
-  }
-  function addExclusionSetting() {
-    const host = site === 'cactus-factory'
-      ? document.querySelector('.save-settings')
-      : document.querySelector('#nameScreen .name-panel');
-    if (!host || document.getElementById('castorAnalyticsSetting')) return;
-    const box = document.createElement('div');
-    box.id = 'castorAnalyticsSetting';
-    box.style.cssText = 'margin:16px 0 4px;padding:14px;border:1px solid currentColor;border-radius:12px;font-size:14px;line-height:1.6;';
-    const label = document.createElement('p');
-    label.textContent = 'アクセスの かぞえかた（おとな用）';
-    label.style.cssText = 'margin:0 0 8px;font-weight:bold;';
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.style.cssText = 'display:block;width:100%;min-height:44px;padding:10px;border:1px solid currentColor;border-radius:8px;background:transparent;color:inherit;font:inherit;cursor:pointer;';
-    const status = document.createElement('p');
-    status.setAttribute('role', 'status');
-    status.style.cssText = 'margin:8px 0 0;font-size:14px;';
-    function render() {
-      button.textContent = excluded ? 'この端末の カウントを もどす' : 'この端末を カウントしない';
-      button.setAttribute('aria-pressed', String(excluded));
-      status.textContent = excluded ? '除外中：この端末では かぞえません。' : 'この端末のアクセスを かぞえます。';
-    }
-    button.addEventListener('click', function () {
-      const next = !excluded;
-      if (!setExcluded(next)) {
-        status.textContent = '設定を保存できませんでした。もう一度お試しください。';
-        return;
-      }
-      render();
-      if (!next) status.textContent = '計測する設定に戻しました。';
-    });
-    window.addEventListener('storage', function (e) {
-      if (e.key !== excludedKey) return;
-      excluded = e.newValue === '1';
-      queue = [];
-      if (id) window['ga-disable-' + id] = excluded;
-      render();
-    });
-    box.append(label, button, status);
-    host.appendChild(box);
-    render();
-  }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', addExclusionSetting, {once:true});
-  else addExclusionSetting();
-
   if (excluded || !site || navigator.globalPrivacyControl || navigator.doNotTrack === '1') return;
   const controller = new AbortController();
   const timeout = setTimeout(function () { controller.abort(); }, 5000);
