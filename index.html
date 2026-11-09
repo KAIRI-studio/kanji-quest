@@ -2415,7 +2415,7 @@ function ans(v,c,b,token){
     $("msg").textContent=S.char==="kappa"
       ?"💧 まちがえた！でもコンボはつづく！"
       :"💥 ざんねん！ こうげきされた！";
-    toast("もういっかい やってみよう！");
+    toast("せいかいは「" + c + "」だよ");
 
     if(S.ph<=0){
       $("php").style.width="0%";
@@ -2443,7 +2443,7 @@ function ans(v,c,b,token){
   $("combo").classList.toggle("hide",S.combo<2);
   $("combo").querySelector("span").textContent=S.combo;
 
-  scheduleNextQuestionNoEnemyChange(token,650);
+  scheduleNextQuestionNoEnemyChange(token,v===c ? 650 : 1500);
 }
 
 $("start").onclick=()=>{
