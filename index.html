@@ -1305,6 +1305,17 @@ body.cq-battle-active #quitBattle{
   body.cq-battle-active .player-id{max-width:105px;}
 }
 
+
+#select.screen{padding-block:8px 12px!important}
+#select .title{font-size:clamp(18px,3.5dvh,30px)!important;margin:2px 0!important}
+#select .sub{margin:2px 0!important}
+#select h1{font-size:clamp(16px,3.1dvh,26px)!important;margin:6px 0!important}
+#select .grid{gap:6px!important;margin-block:4px 6px!important}
+#select .card{position:relative;min-height:0!important;padding:4px!important}
+#select .card img{height:clamp(44px,calc((100dvh - 430px)/2),135px)!important;max-height:none!important}
+#select .card .name,#select .card .type,#select .card .stars{margin-block:1px!important}
+#select .starter-badge{position:absolute;z-index:2;top:5px;left:5px;border-radius:6px;padding:2px 5px;background:#ffd768;color:#302411;font:700 10px/1.3 sans-serif}
+#select #characterBack,#select #start{min-height:40px!important;height:42px!important;margin:4px 0 0!important}
 </style>
 <script src="analytics.js?v=family1" data-site="kanji-quest" defer></script>
 </head><body class="title-open"><main id="app"><button id="audioToggle" type="button" aria-label="音をミュート" aria-pressed="false" title="音をミュート"><span aria-hidden="true">🔊</span></button><header style="display:none"><div class="player-id"><span class="player-icon" aria-hidden="true"></span><span id="headerPlayerName">なまえなし</span></div><div>スコア <span id="score">00000</span></div><button id="quitBattle" class="battle-back" type="button" style="display:none;">やめる</button></header>
@@ -1408,7 +1419,7 @@ body.cq-battle-active #quitBattle{
   <span class="title-leaf leaf-5"></span><span class="title-leaf leaf-6"></span>
   <span class="title-leaf leaf-7"></span><span class="title-leaf leaf-8"></span>
 </div>
-<div class="title">KANJI QUEST</div><div class="sub">〜 かんじでたたかえ！ 〜</div><h1>キャラクターを えらぼう！</h1><p style="margin:.25em 0;font-size:.85em">はじめてなら CASTOR が おすすめ！</p><div id="grid" class="grid"></div><button id="characterBack" class="secondary back-large" type="button">ステージせんたくへもどる</button><button id="start" class="primary" disabled>キャラクターをえらんでスタート</button></section>
+<div class="title">KANJI QUEST</div><div class="sub">〜 かんじでたたかえ！ 〜</div><h1>キャラクターを えらぼう！</h1><div id="grid" class="grid"></div><button id="characterBack" class="secondary back-large" type="button">ステージせんたくへもどる</button><button id="start" class="primary" disabled>キャラクターをえらんでスタート</button></section>
 
 <section id="game" class="screen"><div class="battlehead"><span>タイム <b id="time">0.0s</b></span><b id="stageLabel">STAGE 1</b><b><span id="qn">1</span> / 10問</b></div>
 <div class="field"><div class="enemybox"><b id="enemyName">キッズスライム Lv.1</b><div class="hp"><div id="ehp" class="fill red"></div></div><span id="et">20/20</span></div><div id="enemy" class="enemy"><img id="enemyImg" alt=""></div>
@@ -1975,7 +1986,7 @@ function cards(){
     b.className="card";
     b.dataset.id=id;
     b.innerHTML=
-      `<img src="${c[2]}" loading="lazy" decoding="async" alt="${c[0]}"><div class="name">${c[0]}</div>`+
+      `${id==="castor"?'<span class="starter-badge">おすすめ</span>':""}<img src="${c[2]}" loading="lazy" decoding="async" alt="${c[0]}"><div class="name">${c[0]}</div>`+
       `<div class="type">${c[1]}</div>`+
       `<div class="stars">こうげき ${"★".repeat(c[3])}<br>`+
       `HP ${"★".repeat(c[4])}　スコア ${"★".repeat(c[5])}</div>`+
