@@ -1603,7 +1603,7 @@ const cqAudio=(()=>{
     menu:"Steel_Against_the_Storm.mp3",
     battle:"Before_the_Final_Strike.mp3",
     correct:"seikai.mp3",
-    wrong:"zannen.mp3",
+    wrong:"zannen-center.mp3",
     select:"sute-jisentaku.mp3",
     decide:"sute-jisentaku.mp3",
     defeat:"gekiha.mp3",
@@ -1636,8 +1636,11 @@ const cqAudio=(()=>{
     audio.volume=0;
   });
 
-  const BGM_VOLUME=.16;
+  const BGM_VOLUME=.13;
   const SFX_VOLUME=.78;
+  // Keep frequent feedback clear and soften louder one-shot sounds.
+  const SFX_LEVEL=.82;
+  const SFX_TRIM={wrong:.68,titleStart:.82,correct:.95,clear:.88,gameOverResult:.90};
   const AudioContextClass=window.AudioContext||window.webkitAudioContext;
   const audioGains=new Map();
   const sfxBuffers=new Map();
@@ -1718,6 +1721,7 @@ const cqAudio=(()=>{
   }
   function playSfx(name,volume=SFX_VOLUME){
     if(muted)return;
+    const level=Math.max(0,Math.min(1,volume*SFX_LEVEL*(SFX_TRIM[name]??1)));
     ensureAudioGraph();
     const buffer=sfxBuffers.get(name);
     if(audioContext&&buffer){
@@ -1725,7 +1729,7 @@ const cqAudio=(()=>{
       const source=audioContext.createBufferSource();
       const gain=audioContext.createGain();
       source.buffer=buffer;
-      gain.gain.value=Math.max(0,Math.min(1,volume));
+      gain.gain.value=level;
       source.connect(gain).connect(audioContext.destination);
       activeSfx.set(name,{source,gain});
       source.addEventListener("ended",()=>{
@@ -1742,7 +1746,7 @@ const cqAudio=(()=>{
     if(!audio)return;
     audio.pause();
     audio.currentTime=name==="wrong"?.08:0;
-    audio.volume=Math.max(0,Math.min(1,volume));
+    audio.volume=level;
     safePlay(audio);
     loadSfx(name);
   }
