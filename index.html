@@ -1345,6 +1345,44 @@ body.cq-battle-active #quitBattle{
 }
 #app.cq-fit-desktop #audioToggle{position:absolute;right:12px;}
 body.cq-battle-active #app.cq-fit-desktop #audioToggle{right:96px;}
+/* Preserve the mobile proportions on short viewports, including browser chrome. */
+@media (max-width:600px){
+  #app{--cq-mobile-height:max(650px,100dvh);}
+  #stageSelect,#select,#result.screen{
+    height:auto;
+    min-height:calc(var(--cq-mobile-height) - 54px);
+  }
+  #stageSelect .stage-card{
+    height:calc((var(--cq-mobile-height) - 54px - 82px)/3);
+  }
+  #select .card img{
+    height:clamp(44px,calc((var(--cq-mobile-height) - 430px)/2),135px)!important;
+  }
+  #app.cq-fit-mobile{
+    position:relative;
+    width:var(--cq-mobile-width);
+    min-height:var(--cq-mobile-height);
+    zoom:var(--cq-mobile-scale);
+  }
+  #app.cq-fit-mobile #titleScreen{
+    height:var(--cq-mobile-height);
+    min-height:var(--cq-mobile-height);
+  }
+  #app.cq-fit-mobile .title-logo-art{max-height:calc(var(--cq-mobile-height)*.42);}
+  #app.cq-fit-mobile #rankingScreen,
+  #app.cq-fit-mobile #nameScreen{
+    position:relative;
+    inset:auto;
+    width:100%;
+    height:calc(var(--cq-mobile-height) - 54px);
+    transform:none;
+  }
+  #app.cq-fit-mobile #rankingScreen .ranking-panel{
+    max-height:calc(var(--cq-mobile-height) - 98px);
+  }
+  #app.cq-fit-mobile #audioToggle{position:absolute;right:12px;}
+  body.cq-battle-active #app.cq-fit-mobile #audioToggle{right:88px;}
+}
 </style>
 <script src="analytics.js?v=family1" data-site="kanji-quest" defer></script>
 </head><body class="title-open"><main id="app"><button id="audioToggle" type="button" aria-label="音をミュート" aria-pressed="false" title="音をミュート"><span aria-hidden="true">🔊</span></button><header style="display:none"><div class="player-id"><span class="player-icon" aria-hidden="true"></span><span id="headerPlayerName">なまえなし</span></div><div>スコア <span id="score">00000</span></div><button id="quitBattle" class="battle-back" type="button" style="display:none;">やめる</button></header>
@@ -1870,7 +1908,7 @@ const desktopHeader=desktopApp.querySelector("header");
 const desktopCanvasHeight=951;
 let desktopScreen=$("titleScreen");
 
-function fitDesktop(){
+function fitGameViewport(){
   const viewportHeight=document.documentElement.clientHeight;
   const contentHeight=desktopHeader.offsetHeight+desktopScreen.offsetHeight;
   // Some screens already grow to fill the window at their normal size.
@@ -1878,7 +1916,19 @@ function fitDesktop(){
   const viewportSized=desktopScreen.id==="titleScreen"||
     desktopScreen.id==="rankingScreen"||desktopScreen.id==="nameScreen";
   const neededHeight=Math.max(desktopCanvasHeight,viewportSized?0:contentHeight);
-  const scale=desktopLayout.matches&&neededHeight>viewportHeight+1
+  const useDesktop=desktopLayout.matches;
+  const mobileHeight=Math.max(650,viewportHeight,viewportSized?0:contentHeight);
+  const mobileScale=useDesktop?1:viewportHeight/mobileHeight;
+  if(mobileScale<1){
+    desktopApp.style.setProperty("--cq-mobile-width",document.documentElement.clientWidth+"px");
+    desktopApp.style.setProperty("--cq-mobile-scale",String(mobileScale));
+  }else{
+    desktopApp.style.removeProperty("--cq-mobile-width");
+    desktopApp.style.removeProperty("--cq-mobile-scale");
+  }
+  desktopApp.classList.toggle("cq-fit-mobile",mobileScale<1);
+
+  const scale=useDesktop&&neededHeight>viewportHeight+1
     ?viewportHeight/neededHeight:1;
   if(scale<1){
     desktopApp.style.setProperty("--cq-desktop-height",desktopCanvasHeight+"px");
@@ -1890,10 +1940,10 @@ function fitDesktop(){
   desktopApp.classList.toggle("cq-fit-desktop",scale<1);
 }
 
-window.addEventListener("resize",fitDesktop);
-const desktopLayoutObserver=new ResizeObserver(fitDesktop);
+window.addEventListener("resize",fitGameViewport);
+const desktopLayoutObserver=new ResizeObserver(fitGameViewport);
 desktopLayoutObserver.observe(desktopScreen);
-fitDesktop();
+fitGameViewport();
 
 const SCREEN_IDS=["titleScreen","stageSelect","rankingScreen","nameScreen","select","game","result"];
 function setScreenImmediate(x){
@@ -1919,7 +1969,7 @@ function setScreenImmediate(x){
     desktopLayoutObserver.unobserve(desktopScreen);
     desktopScreen=target;
     desktopLayoutObserver.observe(desktopScreen);
-    fitDesktop();
+    fitGameViewport();
   }
 }
 let cqTransitioning=false;
