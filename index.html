@@ -1498,7 +1498,7 @@ body.cq-battle-active #app.cq-fit-desktop #audioToggle{right:96px;}
 <div id="toast" class="toast"></div></main>
 <div id="screenTransitionShade" class="screen-transition-shade" aria-hidden="true"><span class="screen-transition-panel top"></span><span class="screen-transition-panel bottom"></span></div>
 <div id="stageIntroOverlay" class="stage-intro-overlay" aria-hidden="true"><span>ステージ 1</span></div>
-<script src="questions.js?v=1"></script>
+<script src="questions.js?v=2"></script>
 <script>
 /* ===== Monthly Ranking Screen ===== */
 async function showRanking(){
@@ -2434,6 +2434,8 @@ function scheduleNextQuestionNoEnemyChange(token, delay){
   },delay);
 }
 
+const WRONG_FEEDBACK_MS=2800;
+
 function ans(v,c,b,token){
   if(!validRun(token) || S.lock)return;
 
@@ -2543,25 +2545,19 @@ function ans(v,c,b,token){
     cqDamageFlash(".player", "cq-damage-player");
     S.ph=Math.max(0,S.ph-10);
 
-    $("msg").textContent=S.char==="kappa"
-      ?"💧 まちがえた！でもコンボはつづく！"
-      :"💥 ざんねん！ こうげきされた！";
-    toast("せいかいは「" + c + "」だよ");
+    const correctReading="せいかいは「"+c+"」だよ";
+    $("msg").textContent=correctReading;
+    document.querySelectorAll("#answers .answer").forEach(answer=>{
+      if(answer.textContent===c)answer.classList.add("correct");
+    });
 
     if(S.ph<=0){
       $("php").style.width="0%";
       $("pt").textContent="0/"+S.pmax;
-      $("msg").textContent="💀 HPが 0 になった！ ゲームオーバー";
-
-      // HP 0 の表示をプレイヤーが確認できるように少し待ってから結果画面へ。
-      // 重要: S.timer は使わない。次回プレイのタイマー管理と競合しないよう、
-      // ゲームオーバー専用のローカルタイマーにする。
-      const gameOverToken=token;
-      setTimeout(()=>{
-        if(gameOverToken===S.run && !S.over){
-          gameOver(gameOverToken);
-        }
-      },800);
+      S.timer=setTimeout(()=>{
+        S.timer=null;
+        gameOver(token);
+      },WRONG_FEEDBACK_MS);
       return;
     }
   }
@@ -2574,7 +2570,7 @@ function ans(v,c,b,token){
   $("combo").classList.toggle("hide",S.combo<2);
   $("combo").querySelector("span").textContent=S.combo;
 
-  scheduleNextQuestionNoEnemyChange(token,v===c ? 650 : 1500);
+  scheduleNextQuestionNoEnemyChange(token,v===c ? 650 : WRONG_FEEDBACK_MS);
 }
 
 $("start").onclick=()=>{
