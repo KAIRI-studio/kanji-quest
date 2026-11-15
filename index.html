@@ -1383,6 +1383,11 @@ body.cq-battle-active #app.cq-fit-desktop #audioToggle{right:96px;}
   #app.cq-fit-mobile #audioToggle{position:absolute;right:12px;}
   body.cq-battle-active #app.cq-fit-mobile #audioToggle{right:88px;}
 }
+/* Keep taps and drags on the game controls from selecting page content. */
+html,body{touch-action:manipulation;}
+#app{-webkit-user-select:none;user-select:none;}
+#app input,#app textarea{-webkit-user-select:text;user-select:text;}
+#app img{-webkit-user-drag:none;}
 </style>
 <script src="analytics.js?v=family1" data-site="kanji-quest" defer></script>
 </head><body class="title-open"><main id="app"><button id="audioToggle" type="button" aria-label="音をミュート" aria-pressed="false" title="音をミュート"><span aria-hidden="true">🔊</span></button><header style="display:none"><div class="player-id"><span class="player-icon" aria-hidden="true"></span><span id="headerPlayerName">なまえなし</span></div><div>スコア <span id="score">00000</span></div><button id="quitBattle" class="battle-back" type="button" style="display:none;">やめる</button></header>
@@ -1905,6 +1910,10 @@ if(audioToggle){
     if(!muted)cqAudio.playSfx("select",.55);
   });
 }
+
+$("app").addEventListener("dragstart",event=>{
+  if(event.target instanceof HTMLImageElement)event.preventDefault();
+});
 
 const desktopLayout=window.matchMedia("(min-width: 601px)");
 const desktopApp=$("app");
