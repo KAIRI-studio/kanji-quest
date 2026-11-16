@@ -1465,6 +1465,7 @@ html,body{touch-action:manipulation;}
     </div>
     <div id="rankingState" class="ranking-state" role="status" aria-live="polite">よみこみ中…</div>
     <div id="rankingList" class="ranking-list"></div>
+    <button id="rankingRetry" class="ranking-back" type="button" hidden>もういちど よみこむ</button>
     <button id="rankingBack" class="stage-back ranking-back" type="button">ステージせんたくへもどる</button>
   </div>
 </section>
@@ -1506,15 +1507,35 @@ html,body{touch-action:manipulation;}
 <script src="questions.js?v=3"></script>
 <script>
 /* ===== Monthly Ranking Screen ===== */
-async function showRanking(){
-  const grade=Math.min(6,Math.max(1,Number(S&&S.stage)||1));
-  const opened=await window.cqNavigate("rankingScreen");
-  if(opened){
-    window.cqPendingRankingGrade=grade;
-    if(window.cqRanking)window.cqRanking.load(grade);
-  }
-  return opened;
+let rankingRequest=null;
+let requestedRankingGrade=1;
+
+function finishRankingRequest(request,message,isError=false){
+  if(rankingRequest!==request)return;
+  clearTimeout(request.timeout);
+  rankingRequest=null;
+  const state=document.getElementById("rankingState");
+  state.textContent=message;
+  state.classList.toggle("is-error",isError);
+  document.getElementById("rankingRetry").hidden=!isError;
 }
+
+function requestRanking(grade){
+  if(rankingRequest)clearTimeout(rankingRequest.timeout);
+  requestedRankingGrade=grade;
+  const state=document.getElementById("rankingState");
+  state.textContent="ランキングを よみこみ中…";
+  state.classList.remove("is-error");
+  document.getElementById("rankingRetry").hidden=true;
+  document.getElementById("rankingList").replaceChildren();
+  const request={grade,timeout:setTimeout(()=>{
+    finishRankingRequest(request,"ランキングを よみこめませんでした",true);
+  },10000)};
+  rankingRequest=request;
+  window.cqRanking?.load(request);
+}
+
+function showRanking(){ return window.cqNavigate("rankingScreen"); }
 function hideRanking(){ return window.cqNavigate("stageSelect"); }
 
 
@@ -1971,6 +1992,7 @@ function setScreenImmediate(x){
   if(target){
     target.classList.add("active");
     target.style.display=(x==="titleScreen"||x==="rankingScreen"||x==="nameScreen")?"flex":"block";
+    if(x==="rankingScreen")requestRanking(S.stage);
   }
   const header=document.querySelector("header");
   if(header) header.style.display=(x==="titleScreen")?"none":"flex";
@@ -2632,8 +2654,12 @@ const rankingButton=document.getElementById("rankingButton");
 if(rankingButton)rankingButton.addEventListener("click",()=>{cqAudio.playSfx("select",.68);showRanking();});
 const rankingBack=document.getElementById("rankingBack");
 if(rankingBack)rankingBack.addEventListener("click",()=>{cqAudio.playSfx("cancel",.76);hideRanking();});
+document.getElementById("rankingRetry").addEventListener("click",()=>requestRanking(requestedRankingGrade));
 document.querySelectorAll("[data-ranking-grade]").forEach(button=>{
-  button.addEventListener("click",()=>cqAudio.playSfx("cursor",.55));
+  button.addEventListener("click",()=>{
+    cqAudio.playSfx("cursor",.55);
+    requestRanking(Number(button.dataset.rankingGrade));
+  });
 });
 
 /* Name persistence is isolated behind this adapter so Firestore can replace it later. */
@@ -2735,13 +2761,6 @@ function rankingBoardId(grade){
   return `${jstPeriod().key}-grade-${safeGrade}`;
 }
 
-function setRankingState(message,isError=false){
-  const state=document.getElementById("rankingState");
-  if(!state)return;
-  state.textContent=message;
-  state.classList.toggle("is-error",isError);
-}
-
 function setSubmitState(message,isError=false){
   const state=document.getElementById("rankingSubmitStatus");
   if(!state)return;
@@ -2815,15 +2834,15 @@ function renderRankingRows(entries,currentUid){
   });
 }
 
-async function loadRanking(grade=activeRankingGrade){
-  selectRankingGrade(grade);
-  setRankingState("ランキングを よみこみ中…");
-  const list=document.getElementById("rankingList");
-  if(list)list.replaceChildren();
+async function loadRanking(request){
   try{
+    selectRankingGrade(request.grade);
+    const boardId=rankingBoardId(activeRankingGrade);
     const user=await ensureRankingUser();
-    const entriesRef=collection(firestoreDb,"rankings",rankingBoardId(activeRankingGrade),"entries");
+    if(rankingRequest!==request)return;
+    const entriesRef=collection(firestoreDb,"rankings",boardId,"entries");
     const snapshot=await getDocs(query(entriesRef,orderBy("score","desc"),limit(100)));
+    if(rankingRequest!==request)return;
     const entries=snapshot.docs.map(result=>result.data());
     entries.sort((a,b)=>{
       const scoreDifference=(Number(b.score)||0)-(Number(a.score)||0);
@@ -2834,10 +2853,10 @@ async function loadRanking(grade=activeRankingGrade){
     });
     const topEntries=entries.slice(0,50);
     renderRankingRows(topEntries,user.uid);
-    setRankingState(topEntries.length?`上位 ${topEntries.length}人`:`まだ きろくが ありません`);
+    finishRankingRequest(request,topEntries.length?`上位 ${topEntries.length}人`:"まだ きろくが ありません");
   }catch(error){
     console.error("Ranking load failed:",error);
-    setRankingState("ランキングを よみこめませんでした",true);
+    finishRankingRequest(request,"ランキングを よみこめませんでした",true);
   }
 }
 
@@ -2888,12 +2907,8 @@ async function submitRanking(result){
 }
 
 window.cqRanking={load:loadRanking,submit:submitRanking};
-document.querySelectorAll("[data-ranking-grade]").forEach(button=>{
-  button.addEventListener("click",()=>loadRanking(Number(button.dataset.rankingGrade)));
-});
-
 ensureRankingUser().catch(error=>console.warn("Anonymous sign-in failed:",error));
-if(window.cqPendingRankingGrade)loadRanking(window.cqPendingRankingGrade);
+if(rankingRequest)loadRanking(rankingRequest);
 if(window.cqPendingRankingResult)submitRanking(window.cqPendingRankingResult);
 </script>
 
