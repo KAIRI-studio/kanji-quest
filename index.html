@@ -650,8 +650,10 @@ body.title-open #app{background:#071521;box-shadow:none;}
   position:relative;
   z-index:3;
   width:min(100%,500px);
-  max-height:calc(100dvh - 98px);
-  overflow:auto;
+  display:flex;
+  flex-direction:column;
+  max-height:100%;
+  overflow:hidden;
   box-sizing:border-box;
   padding:84px 22px 22px;
   border:3px solid #607b8a;
@@ -673,9 +675,13 @@ body.title-open #app{background:#071521;box-shadow:none;}
   letter-spacing:.03em;
   text-shadow:3px 3px 0 #b52b27,5px 5px 0 #071521;
 }
+#rankingScreen .ranking-panel > :not(.ranking-list){flex-shrink:0;}
 #rankingScreen .ranking-list{
   display:flex;
   flex-direction:column;
+  min-height:0;
+  overflow:auto;
+  overscroll-behavior:contain;
   gap:9px;
   margin:0 auto 24px;
   width:100%;
@@ -712,6 +718,7 @@ body.title-open #app{background:#071521;box-shadow:none;}
 }
 #rankingScreen .ranking-state.is-error{color:#ffd0c9;}
 #rankingScreen .ranking-row{
+  flex-shrink:0;
   display:grid;
   grid-template-columns:52px minmax(0,1fr) 82px;
   align-items:center;
@@ -891,12 +898,43 @@ body.is-transitioning{pointer-events:none;}
 @media(max-width:390px){.stage-sub-actions{gap:7px;margin-top:4px}.ranking-stage-button{margin-top:8px}.name-stage-button{padding:8px 18px;font-size:14px}.name-panel{padding:22px 15px 18px}.name-actions{grid-template-columns:1fr}.name-actions button{min-height:43px}}
 @media(prefers-reduced-motion:reduce){.ranking-stage-button,.name-stage-button{transition:none;}}
 
-@media(max-width:600px){#rankingScreen,#nameScreen{top:54px;}#rankingScreen .ranking-panel{max-height:calc(100dvh - 70px);}}
+@media(max-width:600px){
+  #rankingScreen{
+    top:54px;
+    bottom:auto;
+    height:calc(100vh - 54px);
+    height:calc(100dvh - 54px);
+    padding-bottom:max(10px,env(safe-area-inset-bottom));
+  }
+  #nameScreen{
+    top:var(--cq-name-top,54px);
+    bottom:auto;
+    height:calc(100vh - 54px);
+    height:var(--cq-name-height,calc(100dvh - 54px));
+    align-items:flex-start;
+    overflow:auto;
+    overscroll-behavior:contain;
+    padding-bottom:max(18px,env(safe-area-inset-bottom));
+  }
+  #nameScreen .name-panel{margin-block:auto;}
+  #nameScreen.cq-name-compact{padding:8px 12px;}
+  .cq-name-compact .name-panel{padding:10px 12px;}
+  .cq-name-compact .name-title{margin-bottom:5px;font-size:24px;}
+  .cq-name-compact .name-help{margin-bottom:6px;font-size:13px;line-height:1.2;}
+  .cq-name-compact .name-help br{display:none;}
+  .cq-name-compact .current-name-box{margin-bottom:6px;padding:5px;font-size:12px;}
+  .cq-name-compact .current-name-box strong{display:inline;margin:0 0 0 4px;font-size:16px;}
+  .cq-name-compact .name-label{margin-bottom:3px;font-size:14px;}
+  .cq-name-compact #playerNameInput{padding-block:7px;}
+  .cq-name-compact .name-count{margin-block:3px;}
+  .cq-name-compact .name-error{min-height:0;margin-bottom:4px;}
+  .cq-name-compact .name-actions{grid-template-columns:1fr 1fr;gap:6px;}
+  .cq-name-compact .name-actions button{height:44px;min-height:44px;}
+}
 
 @media(max-width:390px){
-  #rankingScreen{padding:8px;}
+  #rankingScreen{padding:8px 8px max(8px,env(safe-area-inset-bottom));}
   #rankingScreen .ranking-panel{
-    max-height:calc(100vh - 16px);
     padding:68px 8px 11px;
     border-width:2px;
     border-radius:11px;
@@ -1340,9 +1378,6 @@ body.cq-battle-active #quitBattle{
   height:calc(var(--cq-desktop-height) - 70px);
   transform:none;
 }
-#app.cq-fit-desktop #rankingScreen .ranking-panel{
-  max-height:calc(var(--cq-desktop-height) - 114px);
-}
 #app.cq-fit-desktop #audioToggle{position:absolute;right:12px;}
 body.cq-battle-active #app.cq-fit-desktop #audioToggle{right:96px;}
 /* Preserve the mobile proportions on short viewports, including browser chrome. */
@@ -1369,17 +1404,6 @@ body.cq-battle-active #app.cq-fit-desktop #audioToggle{right:96px;}
     min-height:var(--cq-mobile-height);
   }
   #app.cq-fit-mobile .title-logo-art{max-height:calc(var(--cq-mobile-height)*.42);}
-  #app.cq-fit-mobile #rankingScreen,
-  #app.cq-fit-mobile #nameScreen{
-    position:relative;
-    inset:auto;
-    width:100%;
-    height:calc(var(--cq-mobile-height) - 54px);
-    transform:none;
-  }
-  #app.cq-fit-mobile #rankingScreen .ranking-panel{
-    max-height:calc(var(--cq-mobile-height) - 98px);
-  }
   #app.cq-fit-mobile #audioToggle{position:absolute;right:12px;}
   body.cq-battle-active #app.cq-fit-mobile #audioToggle{right:88px;}
 }
@@ -1468,7 +1492,7 @@ html,body{touch-action:manipulation;}
       <button class="ranking-grade-button" data-ranking-grade="6" type="button" aria-pressed="false">6年</button>
     </div>
     <div id="rankingState" class="ranking-state" role="status" aria-live="polite">よみこみ中…</div>
-    <div id="rankingList" class="ranking-list"></div>
+    <div id="rankingList" class="ranking-list" role="region" aria-label="順位の一覧" tabindex="0"></div>
     <button id="rankingRetry" class="ranking-back" type="button" hidden>もういちど よみこむ</button>
     <button id="rankingBack" class="stage-back ranking-back" type="button">ステージせんたくへもどる</button>
   </div>
@@ -1531,7 +1555,9 @@ function requestRanking(grade){
   state.textContent="ランキングを よみこみ中…";
   state.classList.remove("is-error");
   document.getElementById("rankingRetry").hidden=true;
-  document.getElementById("rankingList").replaceChildren();
+  const list=document.getElementById("rankingList");
+  list.replaceChildren();
+  list.scrollTop=0;
   const request={grade,timeout:setTimeout(()=>{
     finishRankingRequest(request,"ランキングを よみこめませんでした",true);
   },10000)};
@@ -1946,6 +1972,19 @@ const desktopApp=$("app");
 const desktopHeader=desktopApp.querySelector("header");
 const desktopCanvasHeight=951;
 let desktopScreen=$("titleScreen");
+const nameScreen=$("nameScreen");
+const nameViewport=window.visualViewport;
+
+function fitNameViewport(){
+  if(desktopScreen!==nameScreen||desktopLayout.matches)return;
+  const viewportTop=nameViewport?.offsetTop??0;
+  const viewportHeight=nameViewport?.height??document.documentElement.clientHeight;
+  const top=Math.max(desktopHeader.offsetHeight,viewportTop);
+  const height=Math.max(0,viewportHeight+viewportTop-top);
+  nameScreen.style.setProperty("--cq-name-top",Math.round(top)+"px");
+  nameScreen.style.setProperty("--cq-name-height",Math.floor(height)+"px");
+  nameScreen.classList.toggle("cq-name-compact",height<390);
+}
 
 function fitGameViewport(){
   const useDesktop=desktopLayout.matches;
@@ -1953,14 +1992,16 @@ function fitGameViewport(){
     !standaloneLayout.matches&&navigator.standalone!==true;
   desktopApp.classList.toggle("cq-stable-character-select",stableCharacterSelect);
   const viewportHeight=document.documentElement.clientHeight;
-  const contentHeight=stableCharacterSelect?0:desktopHeader.offsetHeight+desktopScreen.offsetHeight;
+  const plainMobileScreen=desktopScreen===nameScreen||desktopScreen.id==="rankingScreen";
+  const unscaledMobile=!useDesktop&&(stableCharacterSelect||plainMobileScreen);
+  const contentHeight=unscaledMobile?0:desktopHeader.offsetHeight+desktopScreen.offsetHeight;
   // Some screens already grow to fill the window at their normal size.
   // Only their overflowing content needs an additional reduction.
   const viewportSized=desktopScreen.id==="titleScreen"||
     desktopScreen.id==="rankingScreen"||desktopScreen.id==="nameScreen";
   const neededHeight=Math.max(desktopCanvasHeight,viewportSized?0:contentHeight);
   const mobileHeight=Math.max(650,viewportHeight,viewportSized?0:contentHeight);
-  const mobileScale=useDesktop||stableCharacterSelect?1:viewportHeight/mobileHeight;
+  const mobileScale=useDesktop||unscaledMobile?1:viewportHeight/mobileHeight;
   if(mobileScale<1){
     desktopApp.style.setProperty("--cq-mobile-width",document.documentElement.clientWidth+"px");
     desktopApp.style.setProperty("--cq-mobile-scale",String(mobileScale));
@@ -1980,9 +2021,12 @@ function fitGameViewport(){
     desktopApp.style.removeProperty("--cq-desktop-scale");
   }
   desktopApp.classList.toggle("cq-fit-desktop",scale<1);
+  fitNameViewport();
 }
 
 window.addEventListener("resize",fitGameViewport);
+nameViewport?.addEventListener("resize",fitNameViewport);
+nameViewport?.addEventListener("scroll",fitNameViewport);
 const desktopLayoutObserver=new ResizeObserver(fitGameViewport);
 desktopLayoutObserver.observe(desktopScreen);
 fitGameViewport();
@@ -2690,9 +2734,15 @@ function refreshNameScreen(){
 $("nameButton").addEventListener("click",()=>{
   cqAudio.playSfx("select",.68);
   refreshNameScreen();
-  cqNavigate("nameScreen").then(ok=>{if(ok)$("playerNameInput").focus();});
+  cqNavigate("nameScreen").then(ok=>{
+    if(ok&&desktopLayout.matches)$("playerNameInput").focus({preventScroll:true});
+  });
 });
-$("nameBack").addEventListener("click",()=>{cqAudio.playSfx("cancel",.76);cqNavigate("stageSelect");});
+$("nameBack").addEventListener("click",()=>{
+  $("playerNameInput").blur();
+  cqAudio.playSfx("cancel",.76);
+  cqNavigate("stageSelect");
+});
 $("playerNameInput").addEventListener("input",e=>{
   let chars=Array.from(e.target.value);
   if(chars.length>8){chars=chars.slice(0,8);e.target.value=chars.join("");}
@@ -2703,6 +2753,7 @@ $("nameSave").addEventListener("click",async()=>{
   const name=$("playerNameInput").value.trim();
   if(!name){$("nameError").textContent="なまえを いれてね！";$("playerNameInput").focus();return;}
   if(nameLength(name)>8){$("nameError").textContent="なまえは 8もじまでだよ！";return;}
+  $("playerNameInput").blur();
   cqAudio.playSfx("decide",.74);
   await playerNameStore.save(name);
   updateHeaderPlayerName(name);
