@@ -952,6 +952,20 @@ body.is-transitioning{pointer-events:none;}
   .ranking-stage-button{width:min(280px,82vw);aspect-ratio:3 / 1;height:auto;margin-top:14px;}
 }
 
+/* Leave room for the list and exit button on short landscape screens. */
+@media(max-width:600px) and (max-height:450px){
+  #rankingScreen{padding:8px 8px max(8px,env(safe-area-inset-bottom));}
+  #rankingScreen .ranking-panel{padding:18px 10px 8px;}
+  #rankingScreen .ranking-title-wrap{margin-bottom:7px;}
+  #rankingScreen .ranking-title{font-size:22px;}
+  #rankingScreen #rankingGlowCanvas{height:76px;}
+  #rankingScreen .ranking-grade-tabs{margin-bottom:6px;}
+  #rankingScreen .ranking-grade-button{min-height:32px;}
+  #rankingScreen .ranking-state{min-height:18px;margin:0 0 5px;}
+  #rankingScreen .ranking-list{margin-bottom:7px;}
+  #rankingScreen .ranking-back{min-height:42px;padding:6px 10px;font-size:15px;}
+}
+
 /* Keep the existing first-stage illustration explicit. */
 #stageSelect .stage-card[data-stage="1"]{
   background-image:url("assets/stages/1.webp");
