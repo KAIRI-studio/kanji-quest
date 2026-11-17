@@ -1383,6 +1383,23 @@ body.cq-battle-active #app.cq-fit-desktop #audioToggle{right:96px;}
   #app.cq-fit-mobile #audioToggle{position:absolute;right:12px;}
   body.cq-battle-active #app.cq-fit-mobile #audioToggle{right:88px;}
 }
+#characterSelectViewport{display:none;}
+@media (max-width:600px) and (display-mode:browser){
+  /* Keep the character picker stable while the browser toolbar moves. */
+  #app:has(#select.active){--cq-mobile-height:max(650px,100svh);}
+  #select .title{font-size:clamp(18px,3.5svh,30px)!important;}
+  #select h1{font-size:clamp(16px,3.1svh,26px)!important;}
+  #characterSelectViewport{
+    display:block;
+    position:fixed;
+    top:0;
+    left:0;
+    width:0;
+    height:100svh;
+    visibility:hidden;
+    pointer-events:none;
+  }
+}
 /* Keep taps and drags on the game controls from selecting page content. */
 html,body{touch-action:manipulation;}
 #app{-webkit-user-select:none;user-select:none;}
@@ -1936,6 +1953,11 @@ $("app").addEventListener("dragstart",event=>{
   if(event.target instanceof HTMLImageElement)event.preventDefault();
 });
 
+const characterSelectViewport=document.createElement("div");
+characterSelectViewport.id="characterSelectViewport";
+characterSelectViewport.setAttribute("aria-hidden","true");
+document.body.append(characterSelectViewport);
+
 const desktopLayout=window.matchMedia("(min-width: 601px)");
 const desktopApp=$("app");
 const desktopHeader=desktopApp.querySelector("header");
@@ -1943,7 +1965,8 @@ const desktopCanvasHeight=951;
 let desktopScreen=$("titleScreen");
 
 function fitGameViewport(){
-  const viewportHeight=document.documentElement.clientHeight;
+  const characterViewportHeight=desktopScreen.id==="select"?characterSelectViewport.offsetHeight:0;
+  const viewportHeight=characterViewportHeight||document.documentElement.clientHeight;
   const contentHeight=desktopHeader.offsetHeight+desktopScreen.offsetHeight;
   // Some screens already grow to fill the window at their normal size.
   // Only their overflowing content needs an additional reduction.
