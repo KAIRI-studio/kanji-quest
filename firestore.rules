@@ -133,5 +133,53 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    function validShortKitchenBoard(boardId) {
+      return boardId.matches('^[0-9]{4}-(0[1-9]|1[0-2])$');
+    }
+
+    function validShortKitchenEntry(data) {
+      let total = data.correct + data.misses;
+      return data.keys().hasAll([
+          'uid', 'name', 'served', 'correct', 'misses', 'elapsedMs',
+          'roundId', 'accuracy', 'score', 'achievedAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'uid', 'name', 'served', 'correct', 'misses', 'elapsedMs',
+          'roundId', 'accuracy', 'score', 'achievedAt', 'updatedAt'
+        ])
+        && data.uid is string
+        && data.name is string && data.name.size() >= 1 && data.name.size() <= 8
+        && data.served is int && data.served >= 1 && data.served <= 41
+        && data.correct is int && data.correct >= data.served * 3 && data.correct <= 100000
+        && data.misses is int && data.misses >= 0 && data.misses <= 100000
+        && data.elapsedMs == 120000
+        && data.roundId is string && data.roundId.size() >= 1 && data.roundId.size() <= 64
+        && data.accuracy is int && data.accuracy >= 0 && data.accuracy <= 10000
+        && data.accuracy * total >= data.correct * 10000 - total / 2
+        && data.accuracy * total <= data.correct * 10000 + total / 2
+        && data.score is int && data.score == data.served * 10001 + data.accuracy
+        && data.achievedAt is timestamp && data.updatedAt is timestamp;
+    }
+
+    match /kitchenRankings2Min/{boardId}/entries/{entryId} {
+      allow read: if signedIn() && validShortKitchenBoard(boardId);
+      allow create: if signedIn() && validShortKitchenBoard(boardId)
+        && entryId == request.auth.uid && request.resource.data.uid == request.auth.uid
+        && validShortKitchenEntry(request.resource.data)
+        && request.resource.data.achievedAt == request.time
+        && request.resource.data.updatedAt == request.time;
+      allow update: if signedIn() && validShortKitchenBoard(boardId)
+        && entryId == request.auth.uid && resource.data.uid == request.auth.uid
+        && request.resource.data.uid == request.auth.uid
+        && validShortKitchenEntry(request.resource.data)
+        && request.resource.data.updatedAt == request.time
+        && (
+          (request.resource.data.score > resource.data.score
+            && request.resource.data.achievedAt == request.time)
+          || request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name', 'updatedAt'])
+        );
+      allow delete: if false;
+    }
+
   }
 }
