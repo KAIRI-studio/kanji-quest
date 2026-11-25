@@ -1,6 +1,6 @@
 <!doctype html><html lang="ja"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>CASTOR KANJI QUEST</title>
+<title>漢字クエスト | CASTOR KANJI QUEST</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/castor-favicon.png">
@@ -1432,6 +1432,16 @@ html,body{touch-action:manipulation;}
 #app img{-webkit-user-drag:none;}
 </style>
 <script src="analytics.js?v=family1" data-site="kanji-quest" defer></script>
+<meta name="description" content="小1〜小6の漢字の読みを、3択バトルで1回10問ずつ練習できる無料の学習ゲーム。">
+<style>
+a.title-guide{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;min-height:32px;padding:4px 10px;border-radius:8px;font-size:13px;font-weight:650;line-height:1.35;text-align:center;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+a.title-guide:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+#titleScreen .title-guide{position:absolute;left:50%;top:calc(58% + 43px);transform:translateX(-50%);color:#fff4ce;background:#142840e8;border:1px solid #d4b861;pointer-events:auto;flex-direction:column;gap:2px;padding-block:5px}
+#titleScreen .title-guide-context{font-size:11px;font-weight:500}
+#titleScreen .title-guide-label{text-decoration:underline;text-underline-offset:3px}
+#titleScreen .title-guide{text-decoration:none}
+@media(max-width:600px){#titleScreen .title-guide{top:calc(56% + 43px)}}
+</style>
 </head><body class="title-open"><main id="app"><button id="audioToggle" type="button" aria-label="音をミュート" aria-pressed="false" title="音をミュート"><span aria-hidden="true">🔊</span></button><header style="display:none"><div class="player-id"><span class="player-icon" aria-hidden="true"></span><span id="headerPlayerName">なまえなし</span></div><div>スコア <span id="score">00000</span></div><button id="quitBattle" class="battle-back" type="button" style="display:none;">やめる</button></header>
 
 <section id="titleScreen" class="title-screen active">
@@ -1451,6 +1461,7 @@ html,body{touch-action:manipulation;}
 
   <div class="title-main">
     <button id="titleStart" class="title-start" type="button" disabled>はじめる</button>
+    <a class="title-guide" href="/castor/kanji-quest.html"><span class="title-guide-context">小1〜小6の 漢字の読み・10問</span><span class="title-guide-label">あそびかた・学べること</span></a>
   </div>
 
   <img class="title-logo-art" src="assets/stages/title_logo.webp" alt="漢字クエスト KANJI QUEST" decoding="async" fetchpriority="high">
